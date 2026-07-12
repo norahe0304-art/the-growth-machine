@@ -1,8 +1,8 @@
 /**
- * [INPUT]: 依赖 stages/*.ts 全部九站、lib/fs-utils、lib/report、lib/openai-client 的 isMockMode
- * [OUTPUT]: 对外提供 runWave(moment, waveNumber) -> WaveReadout，跑完一整波并落盘所有产出
- * [POS]: src/ 的流水线总装 —— cli.ts 只负责解析参数，真正的六站串联逻辑全在这里
- * [PROTOCOL]: 变更时更新此头部，然后检查 CLAUDE.md
+ * [INPUT]: depends on all nine stages/*.ts files, on lib/fs-utils, on lib/report, on lib/openai-client's isMockMode
+ * [OUTPUT]: exports runWave(moment, waveNumber) -> WaveReadout, runs one full wave and writes every artifact to disk
+ * [POS]: the assembly line of src/ — cli.ts only parses arguments, the real nine-station chaining logic lives entirely here
+ * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */
 import path from "node:path";
 import { writeFile } from "node:fs/promises";
@@ -15,12 +15,13 @@ import { runJudge } from "./stages/judge.js";
 import { runSimulate } from "./stages/simulate.js";
 import { runDecide } from "./stages/decide.js";
 import { runLearn, getInjectedLearnings } from "./stages/learn.js";
-import { waveDir, writeJSON } from "./lib/fs-utils.js";
+import { waveDir, writeJSON, readJSONL, LIBRARY_PATH } from "./lib/fs-utils.js";
 import { renderReport } from "./lib/report.js";
 import type {
   Brief,
   Decision,
   JudgeResult,
+  LearningEntry,
   NamedAsset,
   ProducedAsset,
   SimulatedCurve,
@@ -31,11 +32,11 @@ export async function runWave(moment: string, waveNumber: number): Promise<WaveR
   const dir = waveDir(waveNumber);
   const assetsDir = path.join(dir, "assets");
 
-  // ---- 站 1: insight ----
+  // ---- station 1: insight ----
   const injectedLearnings = await getInjectedLearnings();
   const insight = await runInsight(moment, waveNumber, injectedLearnings);
 
-  // ---- 站 2: brief (每个变体一页) ----
+  // ---- station 2: brief (one page per variant) ----
   const briefs: Brief[] = [];
   for (const variant of insight.variants) {
     const brief = await runBrief(variant, moment);
@@ -43,7 +44,7 @@ export async function runWave(moment: string, waveNumber: number): Promise<WaveR
     await writeJSON(path.join(dir, `brief-${variant.id}.json`), brief);
   }
 
-  // ---- 站 3: naming (确定性，无 LLM) ----
+  // ---- station 3: naming (deterministic, no LLM) ----
   const namedAssets: NamedAsset[] = [];
   for (const variant of insight.variants) {
     const brief = briefs.find((b) => b.variantId === variant.id)!;
@@ -54,11 +55,11 @@ export async function runWave(moment: string, waveNumber: number): Promise<WaveR
     }
   }
 
-  // ---- 站 4: plan ----
+  // ---- station 4: plan ----
   const plan = await runPlan(moment, waveNumber, insight.variants, namedAssets);
   await writeJSON(path.join(dir, "plan.json"), plan);
 
-  // ---- 站 5 + 6: produce + judge (逐资产跑，judge 失败触发最多一次重生成) ----
+  // ---- stations 5 + 6: produce + judge (per asset, judge failure triggers up to one regeneration) ----
   const produced: ProducedAsset[] = [];
   const judged: JudgeResult[] = [];
   for (const namedAsset of namedAssets) {
@@ -69,17 +70,17 @@ export async function runWave(moment: string, waveNumber: number): Promise<WaveR
     judged.push(judgeResult);
   }
 
-  // ---- 站 7: simulate (只对 still 资产跑三周曲线, motion 不进入媒介曲线) ----
+  // ---- station 7: simulate (only still assets get a three-week curve; motion never enters the media curve) ----
   const simulated: SimulatedCurve[] = [];
   for (const namedAsset of namedAssets.filter((n) => n.format === "still")) {
     const variant = insight.variants.find((v) => v.id === namedAsset.variantId)!;
     simulated.push(runSimulate(namedAsset, variant.angleType, plan.dates.days, waveNumber));
   }
 
-  // ---- 站 8: decide ----
+  // ---- station 8: decide ----
   const decided: Decision[] = simulated.map((curve) => runDecide(curve, plan));
 
-  // ---- 站 9: learn (沉淀赢家特征，供下一波注入) ----
+  // ---- station 9: learn (commit winning traits, ready to inject into the next wave) ----
   await runLearn(waveNumber, moment, insight.variants, namedAssets, decided);
 
   const readout: WaveReadout = {
@@ -93,12 +94,14 @@ export async function runWave(moment: string, waveNumber: number): Promise<WaveR
     judged,
     simulated,
     decided,
+    measured: [],
     injectedLearnings,
   };
 
   await writeJSON(path.join(dir, "readout.json"), readout);
 
-  const html = await renderReport(readout);
+  const libraryEntries = await readJSONL<LearningEntry>(LIBRARY_PATH);
+  const html = await renderReport(readout, libraryEntries);
   await writeFile(path.join(dir, "report.html"), html, "utf-8");
 
   return readout;

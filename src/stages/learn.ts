@@ -1,21 +1,45 @@
 /**
- * [INPUT]: 依赖 lib/fs-utils 的 appendJSONL/readJSONL/LIBRARY_PATH，依赖 types.ts 的 LearningEntry/Decision/Variant/NamedAsset
- * [OUTPUT]: 对外提供 runLearn(...) -> LearningEntry(追加进 library.jsonl) / getInjectedLearnings() -> string|null
- * [POS]: 六站流水线第 9 站，是"真进化"发生的地方 —— 把这一波的赢家特征沉淀，供下一波 insight/brief 注入
- * [PROTOCOL]: 变更时更新此头部，然后检查 CLAUDE.md
+ * [INPUT]: depends on lib/fs-utils's appendJSONL/readJSONL/writeJSONL/LIBRARY_PATH, on types.ts's LearningEntry/Decision/Variant/NamedAsset
+ * [OUTPUT]: exports runLearn(...) -> LearningEntry (appended to library.jsonl), updateLibraryEntry(...) (rewrites one wave's entry, used by measure), getInjectedLearnings() -> string|null
+ * [POS]: station 9 of the nine-station pipeline, where "real evolution" happens — this wave's winning traits get committed and injected into the next wave's insight/brief prompts
+ * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */
-import { appendJSONL, readJSONL, LIBRARY_PATH } from "../lib/fs-utils.js";
-import type { Decision, LearningEntry, NamedAsset, Variant } from "../types.js";
+import { appendJSONL, readJSONL, writeJSONL, LIBRARY_PATH } from "../lib/fs-utils.js";
+import type { Decision, DecisionSource, LearningEntry, NamedAsset, Variant } from "../types.js";
 
-function extractTraits(winners: Decision[], variants: Variant[], namedAssets: NamedAsset[]): string[] {
-  const traits: string[] = [];
+interface WinnerTrait {
+  assetName: string;
+  trait: string;
+  source: DecisionSource;
+}
+
+function extractTraits(winners: Decision[], variants: Variant[], namedAssets: NamedAsset[]): WinnerTrait[] {
+  const traits: WinnerTrait[] = [];
   for (const win of winners) {
     const na = namedAssets.find((n) => n.variantId === win.variantId && n.format === win.format);
     const variant = variants.find((v) => v.id === win.variantId);
     if (!variant || !na) continue;
-    traits.push(`${variant.assetKind}型资产「${variant.asset}」+ angleType=${variant.angleType} + HOOK=${na.segments.HOOK}`);
+    traits.push({
+      assetName: na.name,
+      trait: `${variant.assetKind} asset "${variant.asset}" + angleType=${variant.angleType} + HOOK=${na.segments.HOOK}`,
+      source: win.source,
+    });
   }
-  return traits;
+  // measured winners carry more weight than simulated ones — real data goes first
+  return traits.sort((a, b) => (a.source === b.source ? 0 : a.source === "measured" ? -1 : 1));
+}
+
+function buildLearnings(waveNumber: number, traits: WinnerTrait[]): string {
+  if (traits.length === 0) {
+    return `Wave ${waveNumber} produced no SCALE verdicts. The next wave should try assets closer to audience-known context and avoid repeating the failed angle.`;
+  }
+  const measuredCount = traits.filter((t) => t.source === "measured").length;
+  const traitList = traits.map((t) => (t.source === "measured" ? `${t.trait} [measured]` : t.trait)).join("; ");
+  const priorityNote =
+    measuredCount > 0
+      ? ` ${measuredCount} of these winner(s) are backed by real measured data — prioritize those traits first.`
+      : "";
+  return `Winning traits from wave ${waveNumber}: ${traitList}. Prioritize reusing these asset shapes and angleType combinations in new variants.${priorityNote}`;
 }
 
 export async function runLearn(
@@ -26,38 +50,64 @@ export async function runLearn(
   decisions: Decision[]
 ): Promise<LearningEntry> {
   const winnerDecisions = decisions.filter((d) => d.verdict === "SCALE");
-  const winners = winnerDecisions.map((d) => {
-    const na = namedAssets.find((n) => n.variantId === d.variantId && n.format === d.format);
-    return na?.name ?? `${d.variantId}_${d.format}`;
-  });
   const traits = extractTraits(winnerDecisions, variants, namedAssets);
-
-  const learnings =
-    traits.length > 0
-      ? `上一波(wave ${waveNumber})的赢家特征: ${traits.join("; ")}。优先在新变体中复用这些 asset 形态与 angleType 组合。`
-      : `上一波(wave ${waveNumber})没有 SCALE 判决，下一波应尝试更贴近受众已知语境的 asset，避免重复失败角度。`;
 
   const entry: LearningEntry = {
     wave: waveNumber,
     moment,
     timestamp: new Date().toISOString(),
-    winners,
-    traits,
-    learnings,
+    winners: traits.map((t) => t.assetName),
+    traits: traits.map((t) => t.trait),
+    learnings: buildLearnings(waveNumber, traits),
+    sources: Object.fromEntries(traits.map((t) => [t.assetName, t.source])),
   };
 
   await appendJSONL(LIBRARY_PATH, entry);
   return entry;
 }
 
-// 供 insight/brief 站在下一波开跑前读取：取 library.jsonl 最后一条的 learnings 文本
+// Used by the measure stage: a measured decide pass can change a wave's
+// winners after the fact, so its library.jsonl entry needs to be rewritten
+// in place rather than appended as a duplicate.
+export async function updateLibraryEntry(
+  waveNumber: number,
+  moment: string,
+  variants: Variant[],
+  namedAssets: NamedAsset[],
+  decisions: Decision[]
+): Promise<LearningEntry> {
+  const winnerDecisions = decisions.filter((d) => d.verdict === "SCALE");
+  const traits = extractTraits(winnerDecisions, variants, namedAssets);
+
+  const entries = await readJSONL<LearningEntry>(LIBRARY_PATH);
+  const existing = entries.find((e) => e.wave === waveNumber);
+
+  const entry: LearningEntry = {
+    wave: waveNumber,
+    moment,
+    timestamp: existing?.timestamp ?? new Date().toISOString(),
+    winners: traits.map((t) => t.assetName),
+    traits: traits.map((t) => t.trait),
+    learnings: buildLearnings(waveNumber, traits),
+    sources: Object.fromEntries(traits.map((t) => [t.assetName, t.source])),
+  };
+
+  const updated = existing
+    ? entries.map((e) => (e.wave === waveNumber ? entry : e))
+    : [...entries, entry];
+  await writeJSONL(LIBRARY_PATH, updated);
+  return entry;
+}
+
+// used by insight/brief for the next wave, before it starts: reads the
+// learnings text off the last entry in library.jsonl
 export async function getInjectedLearnings(): Promise<string | null> {
   const entries = await readJSONL<LearningEntry>(LIBRARY_PATH);
   if (entries.length === 0) return null;
   return entries[entries.length - 1].learnings;
 }
 
-// next 命令用：从 library.jsonl 还原上一次跑的 moment 与最新 wave 序号
+// used by the `next` command: reconstructs the last run's moment and latest wave number from library.jsonl
 export async function getLastRunState(): Promise<{ moment: string; lastWave: number } | null> {
   const entries = await readJSONL<LearningEntry>(LIBRARY_PATH);
   if (entries.length === 0) return null;

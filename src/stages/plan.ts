@@ -1,17 +1,21 @@
 /**
- * [INPUT]: 依赖 lib/openai-client 的 chatComplete/isMockMode，依赖 types.ts 的 Plan/PlanArm/NamedAsset/Brief
- * [OUTPUT]: 对外提供 runPlan(...) -> Plan，PRE_REGISTERED_THRESHOLDS 常量表(阈值预注册)
- * [POS]: 六站流水线第 4 站，规则决定阈值与流量分配，LLM 只负责一句 rationale
- * [PROTOCOL]: 变更时更新此头部，然后检查 CLAUDE.md
+ * [INPUT]: depends on lib/openai-client's chatComplete/isMockMode, on types.ts's AngleType/NamedAsset/Plan/PlanArm/PreRegisteredThresholds/Variant
+ * [OUTPUT]: exports runPlan(...) -> Plan, PRE_REGISTERED_THRESHOLDS (simulated-CTR decide path) and ENGAGEMENT_THRESHOLDS (measured-engagementRate decide path) constant tables
+ * [POS]: station 4 of the nine-station pipeline; rules decide thresholds and traffic split, the LLM only contributes one rationale sentence
+ * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */
 import { chatComplete, isMockMode, DEFAULT_MODEL } from "../lib/openai-client.js";
 import type { AngleType, NamedAsset, Plan, PlanArm, PreRegisteredThresholds, Variant } from "../types.js";
 
 // ============================================================
-// 预注册阈值常量表 —— 写死，不允许运行时篡改，这是"预注册"的意义所在
-// scaleAt/killAt 是 CTR(0-1)，fatigueSlope 是曲线末段斜率阈值(越负越疲劳)
-// 三种角度类型的阈值不同：moment 型见顶快、容忍疲劳；evergreen 型要求稳；
-// ugc-loop 型给最长的观察窗与最高的 scale 门槛(因为它要滚雪球)
+// Preregistered threshold table — hardcoded, never mutated at decide time;
+// that immutability is the whole point of preregistration, you can't move
+// the goalposts after seeing the curve.
+// scaleAt/killAt are CTR (0-1), fatigueSlope is the tail-slope threshold
+// (more negative = more fatigued). The three angle types get different
+// thresholds: moment peaks fast and tolerates fatigue; evergreen demands
+// stability; ugc-loop gets the longest observation window and the highest
+// scale bar, because it's built to compound.
 // ============================================================
 export const PRE_REGISTERED_THRESHOLDS: Record<AngleType, PreRegisteredThresholds> = {
   moment: { scaleAt: 0.045, killAt: 0.015, fatigueSlope: -0.004 },
@@ -19,10 +23,22 @@ export const PRE_REGISTERED_THRESHOLDS: Record<AngleType, PreRegisteredThreshold
   "ugc-loop": { scaleAt: 0.05, killAt: 0.018, fatigueSlope: -0.002 },
 };
 
-const OBSERVATION_WINDOW_DAYS = 21; // 三周日级曲线，固定窗口
+// ============================================================
+// Engagement-rate threshold table — the measured-data decide path uses this
+// instead of PRE_REGISTERED_THRESHOLDS. engagementRate = (likes + comments +
+// shares + saves) / impressions, which typically runs an order of magnitude
+// higher than CTR, so the bars are set on a different scale, same shape.
+// ============================================================
+export const ENGAGEMENT_THRESHOLDS: Record<AngleType, PreRegisteredThresholds> = {
+  moment: { scaleAt: 0.08, killAt: 0.02, fatigueSlope: -0.01 },
+  evergreen: { scaleAt: 0.06, killAt: 0.015, fatigueSlope: -0.004 },
+  "ugc-loop": { scaleAt: 0.1, killAt: 0.025, fatigueSlope: -0.006 },
+};
+
+const OBSERVATION_WINDOW_DAYS = 21; // fixed three-week, day-level curve window
 
 function budgetFor(angleType: AngleType): number {
-  // 示意预算，非真实媒介预算：moment 型集中花，evergreen/ugc-loop 型摊薄
+  // illustrative budget, not a real media budget: moment spends in a burst, evergreen/ugc-loop spread thin
   if (angleType === "moment") return 500;
   if (angleType === "ugc-loop") return 350;
   return 250;
@@ -32,13 +48,13 @@ function trafficSplitFor(arms: number): number {
   return Math.round((100 / arms) * 100) / 100;
 }
 
-const PLAN_SYSTEM_PROMPT = `你是 The Growth Machine 的 plan 站引擎。
-阈值和流量分配已经由规则算好，你只需要用一句话说明这版测试计划的逻辑(为什么这样分流量、为什么这个观察窗)。
-输出严格 JSON：{"rationale":"..."}
-不要输出任何 JSON 之外的文字。`;
+const PLAN_SYSTEM_PROMPT = `You are the plan-station engine of The Growth Machine.
+Thresholds and traffic split are already computed by rules; you only need one sentence explaining this test plan's logic (why this split, why this observation window).
+Output must be strict JSON, in English: {"rationale":"..."}
+Output nothing outside the JSON.`;
 
 function mockRationale(moment: string, waveNumber: number): string {
-  return `第 ${waveNumber} 波围绕「${moment}」等量分流三个变体，21 天观察窗覆盖疲劳曲线的完整拐点`;
+  return `Wave ${waveNumber} splits traffic evenly across three variants for "${moment}"; the 21-day observation window covers the full fatigue-curve inflection point`;
 }
 
 export async function runPlan(
@@ -69,7 +85,7 @@ export async function runPlan(
     ? mockRationale(moment, waveNumber)
     : await chatComplete({
         system: PLAN_SYSTEM_PROMPT,
-        user: `moment: "${moment}"\n第 ${waveNumber} 波\narms: ${JSON.stringify(arms)}`,
+        user: `moment: "${moment}"\nwave ${waveNumber}\narms: ${JSON.stringify(arms)}`,
         model: DEFAULT_MODEL,
       }).then((raw) => {
         try {
@@ -86,6 +102,7 @@ export async function runPlan(
     waveNumber,
     arms,
     preRegisteredThresholds: PRE_REGISTERED_THRESHOLDS,
+    engagementThresholds: ENGAGEMENT_THRESHOLDS,
     dates: {
       start: start.toISOString().slice(0, 10),
       end: end.toISOString().slice(0, 10),

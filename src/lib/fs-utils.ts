@@ -1,8 +1,8 @@
 /**
- * [INPUT]: 依赖 node:fs/promises, node:path
- * [OUTPUT]: 对外提供 waveDir() / ensureDir() / writeJSON() / readJSON() / appendJSONL() / readJSONL()
- * [POS]: lib/ 的文件系统网关，cli.ts 与所有 stages/*.ts 通过此文件读写 waves/ 目录与 library.jsonl
- * [PROTOCOL]: 变更时更新此头部，然后检查 CLAUDE.md
+ * [INPUT]: depends on node:fs/promises, node:path
+ * [OUTPUT]: exports waveDir() / ensureDir() / writeJSON() / readJSON() / appendJSONL() / readJSONL() / fileExists()
+ * [POS]: the filesystem gateway of lib/; cli.ts and every stages/*.ts file reads and writes waves/ and library.jsonl through this file
+ * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */
 import { mkdir, writeFile, readFile, appendFile, access } from "node:fs/promises";
 import path from "node:path";
@@ -55,4 +55,14 @@ export async function readJSONL<T>(filePath: string): Promise<T[]> {
     .map((line) => line.trim())
     .filter(Boolean)
     .map((line) => JSON.parse(line) as T);
+}
+
+// Rewrites library.jsonl wholesale from a full list of entries — used by the
+// measure stage to update a single wave's entry in place (e.g. after a
+// measured decide pass changes its winners/sources) without disturbing the
+// append-only semantics readJSONL/appendJSONL provide for the normal flow.
+export async function writeJSONL<T>(filePath: string, entries: T[]): Promise<void> {
+  await ensureDir(path.dirname(filePath));
+  const body = entries.map((e) => JSON.stringify(e)).join("\n") + (entries.length > 0 ? "\n" : "");
+  await writeFile(filePath, body, "utf-8");
 }

@@ -1,8 +1,8 @@
 /**
- * [INPUT]: 依赖 node:fs/promises 读图片资产，依赖 types.ts 的 WaveReadout 及其全部子类型
- * [OUTPUT]: 对外提供 renderReport(readout) -> Promise<string>，单文件自包含 report.html 的 HTML 字符串
- * [POS]: 六站流水线的终端呈现层，不属于 stages/(不参与决策)，只负责把 WaveReadout 画成编辑级排版
- * [PROTOCOL]: 变更时更新此头部，然后检查 CLAUDE.md
+ * [INPUT]: depends on node:fs/promises to read image assets, on types.ts's WaveReadout and all its sub-types, plus optional LearningEntry[] for the library summary block
+ * [OUTPUT]: exports renderReport(readout, libraryEntries?) -> Promise<string>, a self-contained report.html string
+ * [POS]: the terminal presentation layer of the nine-station pipeline, outside stages/ (it doesn't participate in decisions) — paints a WaveReadout into an editorial layout, with a predicted-vs-measured overlay once measure.ts has run
+ * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */
 import { readFile } from "node:fs/promises";
 import path from "node:path";
@@ -10,6 +10,8 @@ import type {
   Brief,
   Decision,
   JudgeResult,
+  LearningEntry,
+  MeasuredAssetSummary,
   NamedAsset,
   ProducedAsset,
   SimulatedCurve,
@@ -33,30 +35,65 @@ async function assetDataURI(assetPath: string | null): Promise<string | null> {
   return `data:${mime};base64,${buf.toString("base64")}`;
 }
 
-// 三周日级折线图，内联 SVG，纯函数，无外部依赖
-function sparklineSVG(series: number[], color: string, width = 560, height = 140): string {
-  const max = Math.max(...series, 0.0001);
+// A day-level line chart, inline SVG, pure function, no external deps.
+// predicted always renders as a dashed line. When measured points are
+// supplied they render as a solid line connecting the actual check-ins
+// (a lone point still renders as a dot) — dashed vs solid IS the legend.
+function curveSVG(params: {
+  predicted: number[];
+  measured?: { day: number; value: number }[];
+  color: string;
+  measuredColor?: string;
+  width?: number;
+  height?: number;
+}): string {
+  const { predicted, measured, color, measuredColor = "#c2410c", width = 560, height = 140 } = params;
+  const measuredValues = measured?.map((m) => m.value) ?? [];
+  const max = Math.max(...predicted, ...measuredValues, 0.0001);
   const min = 0;
-  const stepX = width / (series.length - 1);
-  const points = series
-    .map((v, i) => {
-      const x = i * stepX;
-      const y = height - ((v - min) / (max - min)) * (height - 20) - 10;
-      return `${x.toFixed(1)},${y.toFixed(1)}`;
-    })
-    .join(" ");
+  const stepX = width / (predicted.length - 1);
+  const toY = (v: number) => height - ((v - min) / (max - min)) * (height - 20) - 10;
+
+  const predictedPoints = predicted.map((v, i) => `${(i * stepX).toFixed(1)},${toY(v).toFixed(1)}`).join(" ");
   const gridLines = [0.25, 0.5, 0.75]
     .map((f) => `<line x1="0" y1="${height * f}" x2="${width}" y2="${height * f}" stroke="#e8e5dd" stroke-width="1"/>`)
     .join("");
+
+  let measuredMarkup = "";
+  if (measured && measured.length > 0) {
+    const sorted = [...measured].sort((a, b) => a.day - b.day);
+    const pts = sorted.map((m) => `${((m.day - 1) * stepX).toFixed(1)},${toY(m.value).toFixed(1)}`);
+    const line = pts.length >= 2 ? `<polyline points="${pts.join(" ")}" fill="none" stroke="${measuredColor}" stroke-width="2.5"/>` : "";
+    const dots = sorted
+      .map((m) => `<circle cx="${((m.day - 1) * stepX).toFixed(1)}" cy="${toY(m.value).toFixed(1)}" r="3.5" fill="${measuredColor}"><title>day ${m.day}: ${(m.value * 100).toFixed(2)}%</title></circle>`)
+      .join("");
+    measuredMarkup = `${line}${dots}`;
+  }
+
   return `<svg viewBox="0 0 ${width} ${height}" width="100%" height="${height}" preserveAspectRatio="none">
     ${gridLines}
-    <polyline points="${points}" fill="none" stroke="${color}" stroke-width="2"/>
+    <polyline points="${predictedPoints}" fill="none" stroke="${color}" stroke-width="2" stroke-dasharray="4 4"/>
+    ${measuredMarkup}
   </svg>`;
+}
+
+function curveLegend(hasMeasured: boolean, color: string, measuredColor = "#c2410c"): string {
+  if (!hasMeasured) return "";
+  return `<div class="curve-legend">
+    <span class="legend-item"><span class="legend-swatch legend-dashed" style="border-color:${color}"></span>predicted</span>
+    <span class="legend-item"><span class="legend-swatch legend-solid" style="background:${measuredColor}"></span>measured</span>
+  </div>`;
 }
 
 function verdictBadge(verdict: Decision["verdict"]): string {
   const cls = verdict === "SCALE" ? "badge-scale" : verdict === "KILL" ? "badge-kill" : "badge-iterate";
   return `<span class="badge ${cls}">${verdict}</span>`;
+}
+
+function sourceBadge(source: Decision["source"] | undefined): string {
+  if (!source) return "";
+  const cls = source === "measured" ? "badge-measured" : "badge-simulated";
+  return `<span class="badge ${cls}">${source}</span>`;
 }
 
 function judgeBadge(judge: JudgeResult | undefined): string {
@@ -78,12 +115,28 @@ async function renderVariantCard(params: {
   motionJudge: JudgeResult | undefined;
   stillCurve: SimulatedCurve | undefined;
   stillDecision: Decision | undefined;
+  stillMeasured: MeasuredAssetSummary | undefined;
 }): Promise<string> {
-  const { variant, brief, stillNamed, motionNamed, stillProduced, stillJudge, motionJudge, stillCurve, stillDecision } = params;
+  const {
+    variant,
+    brief,
+    stillNamed,
+    motionNamed,
+    stillProduced,
+    stillJudge,
+    motionJudge,
+    stillCurve,
+    stillDecision,
+    stillMeasured,
+  } = params;
 
   const imgURI = await assetDataURI(stillProduced?.assetPath ?? null);
-  const curveSVG = stillCurve ? sparklineSVG(stillCurve.predictedCTR, "#1a1a1a") : "";
-  const shareSVG = stillCurve ? sparklineSVG(stillCurve.shareRate, "#a8a59c") : "";
+  const measuredPoints = stillMeasured?.readings.map((r) => ({ day: r.day, value: r.engagementRate }));
+  const hasMeasured = Boolean(measuredPoints && measuredPoints.length > 0);
+  const ctrCurve = stillCurve
+    ? curveSVG({ predicted: stillCurve.predictedCTR, measured: measuredPoints, color: "#1a1a1a" })
+    : "";
+  const shareCurve = stillCurve ? curveSVG({ predicted: stillCurve.shareRate, color: "#a8a59c" }) : "";
 
   return `
   <article class="variant-card">
@@ -111,7 +164,7 @@ async function renderVariantCard(params: {
         <div class="meta-row"><span class="meta-key">still name</span><span class="meta-val mono">${escapeHTML(stillNamed?.name ?? "")}</span></div>
         <div class="meta-row"><span class="meta-key">motion name</span><span class="meta-val mono">${escapeHTML(motionNamed?.name ?? "")}</span></div>
         <div class="badges">
-          ${judgeBadge(stillJudge)} ${judgeBadge(motionJudge)} ${stillDecision ? verdictBadge(stillDecision.verdict) : ""}
+          ${judgeBadge(stillJudge)} ${judgeBadge(motionJudge)} ${stillDecision ? verdictBadge(stillDecision.verdict) : ""} ${sourceBadge(stillDecision?.source)}
         </div>
       </div>
     </div>
@@ -135,12 +188,13 @@ async function renderVariantCard(params: {
       stillCurve && stillDecision
         ? `<div class="curves">
       <div class="curve-block">
-        <div class="curve-label">predicted CTR, 21 days, final ${(stillDecision.finalCTR * 100).toFixed(2)}%</div>
-        ${curveSVG}
+        <div class="curve-label">predicted CTR${hasMeasured ? " vs measured engagementRate" : ""}, 21 days, final ${(stillDecision.finalCTR * 100).toFixed(2)}%</div>
+        ${ctrCurve}
+        ${curveLegend(hasMeasured, "#1a1a1a")}
       </div>
       <div class="curve-block">
         <div class="curve-label">share rate, 21 days</div>
-        ${shareSVG}
+        ${shareCurve}
       </div>
       <div class="decision-reason">${escapeHTML(stillDecision.reason)}</div>
     </div>`
@@ -149,7 +203,32 @@ async function renderVariantCard(params: {
   </article>`;
 }
 
-export async function renderReport(readout: WaveReadout): Promise<string> {
+function librarySection(libraryEntries: LearningEntry[] | undefined): string {
+  if (!libraryEntries || libraryEntries.length === 0) return "";
+  const rows = libraryEntries
+    .map((entry) => {
+      const winnerBadges =
+        entry.winners.length > 0
+          ? entry.winners
+              .map((w) => {
+                const source = entry.sources?.[w] ?? "simulated";
+                return `<span class="lib-winner"><span class="mono">${escapeHTML(w)}</span> ${sourceBadge(source)}</span>`;
+              })
+              .join("")
+          : `<span class="lib-none">no SCALE verdicts</span>`;
+      return `<div class="lib-row">
+        <div class="lib-wave">wave ${entry.wave}</div>
+        <div class="lib-winners">${winnerBadges}</div>
+      </div>`;
+    })
+    .join("");
+  return `<div class="library-summary">
+    <span class="learnings-label">library — cross-wave winners</span>
+    ${rows}
+  </div>`;
+}
+
+export async function renderReport(readout: WaveReadout, libraryEntries?: LearningEntry[]): Promise<string> {
   const cards = await Promise.all(
     readout.variants.map((variant) => {
       const brief = readout.briefs.find((b) => b.variantId === variant.id)!;
@@ -161,6 +240,7 @@ export async function renderReport(readout: WaveReadout): Promise<string> {
       const motionJudge = readout.judged.find((j) => j.variantId === variant.id && j.format === "motion");
       const stillCurve = readout.simulated.find((s) => s.variantId === variant.id && s.format === "still");
       const stillDecision = readout.decided.find((d) => d.variantId === variant.id && d.format === "still");
+      const stillMeasured = readout.measured?.find((m) => m.variantId === variant.id && m.format === "still");
       return renderVariantCard({
         variant,
         brief,
@@ -172,6 +252,7 @@ export async function renderReport(readout: WaveReadout): Promise<string> {
         motionJudge,
         stillCurve,
         stillDecision,
+        stillMeasured,
       });
     })
   );
@@ -200,9 +281,16 @@ export async function renderReport(readout: WaveReadout): Promise<string> {
   header.masthead { border-bottom: 2px solid #1a1a1a; padding-bottom: 20px; margin-bottom: 36px; }
   header.masthead h1 { font-family: Georgia, "Times New Roman", serif; font-size: 34px; margin: 0 0 6px; }
   header.masthead .sub { color: #6b6b63; font-size: 14px; }
-  .learnings { border: 1px solid #d8d5cd; background: #f6f4ee; padding: 16px 20px; margin-bottom: 40px; }
+  .learnings { border: 1px solid #d8d5cd; background: #f6f4ee; padding: 16px 20px; margin-bottom: 24px; }
   .learnings-label { text-transform: uppercase; letter-spacing: 0.06em; font-size: 11px; color: #8a8779; }
   .learnings p { margin: 8px 0 0; font-size: 14px; }
+  .library-summary { border: 1px solid #d8d5cd; padding: 16px 20px; margin-bottom: 40px; }
+  .lib-row { display: flex; gap: 14px; align-items: baseline; padding: 6px 0; border-top: 1px solid #f0eee7; font-size: 12px; }
+  .lib-row:first-of-type { border-top: none; margin-top: 8px; }
+  .lib-wave { min-width: 60px; color: #8a8779; text-transform: uppercase; letter-spacing: 0.04em; font-size: 10px; }
+  .lib-winners { display: flex; flex-wrap: wrap; gap: 10px; }
+  .lib-winner { display: inline-flex; align-items: center; gap: 6px; }
+  .lib-none { color: #a8a59c; font-style: italic; }
   .variant-card { border-top: 1px solid #d8d5cd; padding: 32px 0; }
   .variant-card:first-of-type { border-top: none; }
   .atom-line { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; font-size: 13px; }
@@ -224,6 +312,8 @@ export async function renderReport(readout: WaveReadout): Promise<string> {
   .badge-iterate { background: #f0eee7; color: #1a1a1a; }
   .badge-pass { border-color: #6b8f6b; color: #4a6b4a; }
   .badge-fail { border-color: #a85c5c; color: #8a3f3f; }
+  .badge-measured { border-color: #c2410c; color: #c2410c; }
+  .badge-simulated { border-color: #8a8779; color: #8a8779; }
   .prompts { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin: 20px 0; }
   .prompt-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: #8a8779; margin-bottom: 6px; }
   .prompt-block pre {
@@ -232,6 +322,11 @@ export async function renderReport(readout: WaveReadout): Promise<string> {
   }
   .curves { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; margin-top: 16px; }
   .curve-label { font-size: 11px; color: #8a8779; margin-bottom: 6px; }
+  .curve-legend { display: flex; gap: 14px; margin-top: 6px; font-size: 10px; color: #8a8779; }
+  .legend-item { display: inline-flex; align-items: center; gap: 5px; }
+  .legend-swatch { display: inline-block; width: 16px; height: 0; }
+  .legend-dashed { border-top: 2px dashed #1a1a1a; }
+  .legend-solid { height: 3px; background: #c2410c; }
   .decision-reason { grid-column: 1 / -1; font-size: 13px; border-left: 3px solid #1a1a1a; padding-left: 12px; margin-top: 4px; }
   footer.colophon { margin-top: 60px; padding-top: 20px; border-top: 1px solid #d8d5cd; font-size: 11px; color: #8a8779; }
   @media (max-width: 640px) {
@@ -249,11 +344,12 @@ export async function renderReport(readout: WaveReadout): Promise<string> {
     </header>
 
     ${learningsBlock}
+    ${librarySection(libraryEntries)}
 
     ${cards.join("\n")}
 
     <footer class="colophon">
-      generation is real (OpenAI API). market response is simulated (three response models).
+      generation is real (OpenAI API). market response is simulated (three response models) unless a "measured" badge marks real channel data recorded via <span class="mono">growth-machine measure</span>.
       plan rationale: ${escapeHTML(readout.plan.rationale)}
     </footer>
   </div>

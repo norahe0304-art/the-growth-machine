@@ -26,6 +26,10 @@ export OPENAI_API_KEY=sk-...
 
 # continue the same moment from where library.jsonl left off
 ./bin/growth-machine next
+
+# record real channel numbers against a wave that's already run, and get a
+# real-vs-predicted overlay back
+./bin/growth-machine measure --wave 1 --file metrics.json
 ```
 
 Each wave writes to `waves/wave-NN/`:
@@ -79,6 +83,48 @@ moment
   +-- loops back into [1] insight.ts for wave N+1
 ```
 
+There's a tenth file, `measure.ts`, that isn't part of the six-station loop above — it runs after the fact, against a wave that has already shipped a report. See "Measure: simulator to instrument" below.
+
+## Measure: simulator to instrument
+
+Everything above this line predicts. `growth-machine measure` is where the prediction meets a real channel number.
+
+```bash
+# interactive: prompts once per still asset in the wave
+./bin/growth-machine measure --wave 1
+
+# or feed it a file
+./bin/growth-machine measure --wave 1 --file metrics.json
+```
+
+`metrics.json` is a flat list of channel readings, one per asset per check-in:
+
+```json
+{
+  "wave": 1,
+  "entries": [
+    {
+      "assetName": "WEB_ENGT_MOF_EVG_STIL_THEW_THEWOR_THEW_V01",
+      "channel": "xiaohongshu",
+      "day": 3,
+      "impressions": 15000,
+      "likes": 620,
+      "comments": 48,
+      "shares": 133,
+      "saves": 210
+    }
+  ]
+}
+```
+
+Each reading normalizes to `engagementRate = (likes + comments + shares + saves) / impressions`. Run `measure` again later in the same wave's window with a new `day` and the reading gets appended, not overwritten — call it three times across three weeks and you get an actual three-point measured curve, not a single snapshot dressed up as one.
+
+Any asset that has at least one measured reading gets **re-decided** — SCALE/KILL/ITERATE is recomputed from real `engagementRate` against the `engagementThresholds` table (see below), not from the simulated CTR curve. Everything else in the wave stays exactly as the simulated pass left it. `readout.json`, `report.html`, and that wave's line in `library.jsonl` are all rewritten in place — the report's predicted curve renders dashed, the measured points render as a solid line connecting the actual check-ins, and every winner in the library summary carries a `measured` or `simulated` badge so you can tell which verdicts are real. The next wave's `learn` injection prioritizes measured winners over simulated ones when it writes the carry-forward traits.
+
+The operator's version of this: a simulator that never gets checked against reality is just a very confident guess generator. The moment real numbers get backfilled through `measure`, every prediction this machine made for that wave gets graded — the dashed line either tracks the solid one or it doesn't, and either way you now know something you didn't before. That's the difference between a simulator and an instrument: an instrument's predictions are falsifiable on a schedule, wave after wave, and this one's schedule is "whenever you paste in the numbers."
+
+`metrics.demo.json` at the repo root is illustrative — hand-built numbers, not a real campaign — checked in so `./bin/growth-machine measure --wave 1 --file metrics.demo.json` reproduces the predicted-vs-measured overlay in `waves/wave-01/report.html` without needing a live channel to pull from.
+
 ## Taxonomy: the nine-segment name
 
 `CHANNEL_OBJ_FUNNEL_TEMP_FORMAT_HOOK_MOMENT_PERSONA_VER`
@@ -108,6 +154,14 @@ Written into `src/stages/plan.ts` as a constant, not computed at decision time �
 | moment | 0.045 | 0.015 | -0.004 |
 | evergreen | 0.035 | 0.012 | -0.0015 |
 | ugc-loop | 0.050 | 0.018 | -0.002 |
+
+`measure`'s decide path uses a parallel table, `ENGAGEMENT_THRESHOLDS` in the same file, scaled for `engagementRate` instead of CTR:
+
+| angleType | scaleAt | killAt | fatigueSlope |
+|---|---|---|---|
+| moment | 0.08 | 0.02 | -0.01 |
+| evergreen | 0.06 | 0.015 | -0.004 |
+| ugc-loop | 0.10 | 0.025 | -0.006 |
 
 ## Config
 

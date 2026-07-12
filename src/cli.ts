@@ -1,25 +1,27 @@
 /**
- * [INPUT]: 依赖 node:util 的 parseArgs(原生, 无第三方 CLI 框架)，依赖 orchestrator.ts 的 runWave，依赖 stages/learn.ts 的 getLastRunState，依赖 lib/openai-client 的 setForcedMock/isMockMode
- * [OUTPUT]: 对外提供 CLI 入口 —— `growth-machine run "<moment>" [--waves N] [--mock]` 与 `growth-machine next`
- * [POS]: bin/growth-machine 的直接目标，src/ 的唯一可执行入口
- * [PROTOCOL]: 变更时更新此头部，然后检查 CLAUDE.md
+ * [INPUT]: depends on node:util's parseArgs (native, no third-party CLI framework), on orchestrator.ts's runWave, on stages/learn.ts's getLastRunState, on stages/measure.ts's runMeasure/loadMeasuredInputFile/collectInteractiveEntries, on lib/openai-client's setForcedMock/isMockMode
+ * [OUTPUT]: exports the CLI entry point —— `growth-machine run "<moment>" [--waves N] [--mock]`, `growth-machine next`, `growth-machine measure --wave N [--file metrics.json]`
+ * [POS]: the direct target of bin/growth-machine, the sole executable entry point of src/
+ * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */
 import { parseArgs } from "node:util";
 import { runWave } from "./orchestrator.js";
 import { getLastRunState } from "./stages/learn.js";
+import { runMeasure, loadMeasuredInputFile, collectInteractiveEntries } from "./stages/measure.js";
 import { setForcedMock, isMockMode } from "./lib/openai-client.js";
 
 function printUsage(): void {
   console.log(`The Growth Machine
 
-用法:
-  growth-machine run "<moment>" [--waves N] [--mock]   跑 N 波(默认 1)
-  growth-machine next                                   从 library.jsonl 续跑下一波
+usage:
+  growth-machine run "<moment>" [--waves N] [--mock]        run N waves (default 1)
+  growth-machine next                                        continue from library.jsonl's last wave
+  growth-machine measure --wave N [--file metrics.json]      record real channel data against a wave's assets
 
-环境变量:
-  OPENAI_API_KEY   缺失时强制 mock
-  MODEL            默认 gpt-5.4
-  IMAGE_MODEL      默认 gpt-image-2，404/未知模型时自动回退 gpt-image-1
+env vars:
+  OPENAI_API_KEY   missing -> forced mock
+  MODEL            default gpt-5.4
+  IMAGE_MODEL      default gpt-image-2, falls back to gpt-image-1 on a 404/unknown-model error
 `);
 }
 
@@ -35,7 +37,7 @@ async function runCommand(args: string[]): Promise<void> {
 
   const moment = positionals[0];
   if (!moment) {
-    console.error("缺少 moment 参数。用法: growth-machine run \"<moment>\" [--waves N] [--mock]");
+    console.error('missing moment argument. usage: growth-machine run "<moment>" [--waves N] [--mock]');
     process.exitCode = 1;
     return;
   }
@@ -72,15 +74,51 @@ async function nextCommand(args: string[]): Promise<void> {
 
   const state = await getLastRunState();
   if (!state) {
-    console.error("library.jsonl 为空，找不到可续跑的上一波。请先用 `growth-machine run` 起波。");
+    console.error("library.jsonl is empty, nothing to continue from. Run `growth-machine run` first.");
     process.exitCode = 1;
     return;
   }
 
   const nextWave = state.lastWave + 1;
-  console.log(`[growth-machine] 续跑 moment="${state.moment}" wave=${nextWave} mock=${isMockMode()}`);
+  console.log(`[growth-machine] continuing moment="${state.moment}" wave=${nextWave} mock=${isMockMode()}`);
   const readout = await runWave(state.moment, nextWave);
   console.log(`[growth-machine] wave ${nextWave} done: ${readout.produced.length} assets produced`);
+}
+
+async function measureCommand(args: string[]): Promise<void> {
+  const { values } = parseArgs({
+    args,
+    options: {
+      wave: { type: "string" },
+      file: { type: "string" },
+    },
+    allowPositionals: true,
+  });
+
+  const waveNumber = parseInt(String(values.wave ?? ""), 10);
+  if (!waveNumber || waveNumber < 1) {
+    console.error("missing or invalid --wave N. usage: growth-machine measure --wave N [--file metrics.json]");
+    process.exitCode = 1;
+    return;
+  }
+
+  const entries = values.file
+    ? (await loadMeasuredInputFile(String(values.file))).entries
+    : await collectInteractiveEntries(waveNumber);
+
+  if (entries.length === 0) {
+    console.log("[growth-machine] no entries recorded, nothing to measure");
+    return;
+  }
+
+  console.log(`[growth-machine] measuring wave ${waveNumber}: ${entries.length} channel reading(s)`);
+  const readout = await runMeasure(waveNumber, entries);
+  const measuredCount = readout.measured.length;
+  const scaleCount = readout.decided.filter((d) => d.verdict === "SCALE" && d.source === "measured").length;
+  console.log(
+    `[growth-machine] wave ${waveNumber} measured: ${measuredCount} asset(s) now carry real data, ${scaleCount} SCALE verdict(s) backed by measured engagementRate`
+  );
+  console.log(`[growth-machine] report.html and library.jsonl updated in place.`);
 }
 
 async function main(): Promise<void> {
@@ -90,6 +128,8 @@ async function main(): Promise<void> {
     await runCommand(rest);
   } else if (command === "next") {
     await nextCommand(rest);
+  } else if (command === "measure") {
+    await measureCommand(rest);
   } else {
     printUsage();
     process.exitCode = command ? 1 : 0;

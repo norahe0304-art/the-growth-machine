@@ -18,9 +18,16 @@
   header.masthead { border-bottom: 2px solid #1a1a1a; padding-bottom: 20px; margin-bottom: 36px; }
   header.masthead h1 { font-family: Georgia, "Times New Roman", serif; font-size: 34px; margin: 0 0 6px; }
   header.masthead .sub { color: #6b6b63; font-size: 14px; }
-  .learnings { border: 1px solid #d8d5cd; background: #f6f4ee; padding: 16px 20px; margin-bottom: 40px; }
+  .learnings { border: 1px solid #d8d5cd; background: #f6f4ee; padding: 16px 20px; margin-bottom: 24px; }
   .learnings-label { text-transform: uppercase; letter-spacing: 0.06em; font-size: 11px; color: #8a8779; }
   .learnings p { margin: 8px 0 0; font-size: 14px; }
+  .library-summary { border: 1px solid #d8d5cd; padding: 16px 20px; margin-bottom: 40px; }
+  .lib-row { display: flex; gap: 14px; align-items: baseline; padding: 6px 0; border-top: 1px solid #f0eee7; font-size: 12px; }
+  .lib-row:first-of-type { border-top: none; margin-top: 8px; }
+  .lib-wave { min-width: 60px; color: #8a8779; text-transform: uppercase; letter-spacing: 0.04em; font-size: 10px; }
+  .lib-winners { display: flex; flex-wrap: wrap; gap: 10px; }
+  .lib-winner { display: inline-flex; align-items: center; gap: 6px; }
+  .lib-none { color: #a8a59c; font-style: italic; }
   .variant-card { border-top: 1px solid #d8d5cd; padding: 32px 0; }
   .variant-card:first-of-type { border-top: none; }
   .atom-line { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; font-size: 13px; }
@@ -42,6 +49,8 @@
   .badge-iterate { background: #f0eee7; color: #1a1a1a; }
   .badge-pass { border-color: #6b8f6b; color: #4a6b4a; }
   .badge-fail { border-color: #a85c5c; color: #8a3f3f; }
+  .badge-measured { border-color: #c2410c; color: #c2410c; }
+  .badge-simulated { border-color: #8a8779; color: #8a8779; }
   .prompts { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin: 20px 0; }
   .prompt-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: #8a8779; margin-bottom: 6px; }
   .prompt-block pre {
@@ -50,6 +59,11 @@
   }
   .curves { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; margin-top: 16px; }
   .curve-label { font-size: 11px; color: #8a8779; margin-bottom: 6px; }
+  .curve-legend { display: flex; gap: 14px; margin-top: 6px; font-size: 10px; color: #8a8779; }
+  .legend-item { display: inline-flex; align-items: center; gap: 5px; }
+  .legend-swatch { display: inline-block; width: 16px; height: 0; }
+  .legend-dashed { border-top: 2px dashed #1a1a1a; }
+  .legend-solid { height: 3px; background: #c2410c; }
   .decision-reason { grid-column: 1 / -1; font-size: 13px; border-left: 3px solid #1a1a1a; padding-left: 12px; margin-top: 4px; }
   footer.colophon { margin-top: 60px; padding-top: 20px; border-top: 1px solid #d8d5cd; font-size: 11px; color: #8a8779; }
   @media (max-width: 640px) {
@@ -67,34 +81,44 @@
     </header>
 
     <div class="learnings"><span class="learnings-label">first wave</span><p>no prior learnings to carry forward.</p></div>
+    <div class="library-summary">
+    <span class="learnings-label">library — cross-wave winners</span>
+    <div class="lib-row">
+        <div class="lib-wave">wave 1</div>
+        <div class="lib-winners"><span class="lib-winner"><span class="mono">WEB_CONV_TOF_HOT_STIL_GRAF_THEWOR_ANAU_V01</span> <span class="badge badge-measured">measured</span></span><span class="lib-winner"><span class="mono">WEB_CONV_MOF_EVG_STIL_GRAF_THEWOR_ANAU_V01</span> <span class="badge badge-simulated">simulated</span></span></div>
+      </div><div class="lib-row">
+        <div class="lib-wave">wave 2</div>
+        <div class="lib-winners"><span class="lib-winner"><span class="mono">WEB_CONV_MOF_EVG_STIL_GRAF_THEWOR_ANAU_V02</span> <span class="badge badge-simulated">simulated</span></span></div>
+      </div>
+  </div>
 
     
   <article class="variant-card">
     <header class="variant-head">
       <div class="atom-line">
         <span class="atom-label">Asset</span>
-        <span class="atom-value">一个保温杯</span>
+        <span class="atom-value">your selfie</span>
         <span class="atom-op">x</span>
         <span class="atom-label">New Element</span>
-        <span class="atom-value">the world cup final 的核心张力</span>
+        <span class="atom-value">final night stands</span>
       </div>
-      <div class="formula-line">一个保温杯 x the world cup final 的核心张力 — W1变体1</div>
+      <div class="formula-line">your selfie x final night stands — Selfie Final</div>
     </header>
 
     <div class="variant-body">
       <div class="variant-media">
-        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTM2IiBoZWlnaHQ9IjEwMjQiIHZpZXdCb3g9IjAgMCAxNTM2IDEwMjQiPgogIDxyZWN0IHdpZHRoPSIxNTM2IiBoZWlnaHQ9IjEwMjQiIGZpbGw9IiNmYWZhZjgiLz4KICA8cmVjdCB4PSIxIiB5PSIxIiB3aWR0aD0iMTUzNCIgaGVpZ2h0PSIxMDIyIiBmaWxsPSJub25lIiBzdHJva2U9IiNkOGQ1Y2QiIHN0cm9rZS13aWR0aD0iMiIvPgogIDx0ZXh0IHg9Ijc2OCIgeT0iNDgwIiBmb250LWZhbWlseT0iR2VvcmdpYSwgc2VyaWYiIGZvbnQtc2l6ZT0iMzQiIGZpbGw9IiMxYTFhMWEiIHRleHQtYW5jaG9yPSJtaWRkbGUiPldFQl9DT05WX1RPRl9IT1RfU1RJTF9USEVXX1RIRVdPUl9USEVXX1YwMTwvdGV4dD4KICA8dGV4dCB4PSI3NjgiIHk9IjU0MCIgZm9udC1mYW1pbHk9Ikdlb3JnaWEsIHNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSIjNmI2YjYzIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7nlLvpnaLkuLvkvZPmmK/kuIDkuKrkv53muKnmna/vvIzlnKjlhbbkuIrlq4HmjqV0aGUgd29ybGQgY3VwIGZpbmFsIOeahOaguOW/g+W8oOWKm+eahOinhuiniee7huiKgu+8jOmjjuagvO+8mue8lui+kee6p+aRhOW9se+8jOa1heaZr+a3se+8jOaehOWbvuWxheS4reeVmeeZve+8jOWFiee6v+iHqueEtu+8jDE2Ojk8L3RleHQ+CiAgPHRleHQgeD0iNzY4IiB5PSI5NjAiIGZvbnQtZmFtaWx5PSJtb25vc3BhY2UiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiNhOGE1OWMiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk1PQ0sgQVNTRVQg4oCUIG5vIHJlYWwgZ2VuZXJhdGlvbjwvdGV4dD4KPC9zdmc+" alt="WEB_CONV_TOF_HOT_STIL_THEW_THEWOR_THEW_V01" />
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTM2IiBoZWlnaHQ9IjEwMjQiIHZpZXdCb3g9IjAgMCAxNTM2IDEwMjQiPgogIDxyZWN0IHdpZHRoPSIxNTM2IiBoZWlnaHQ9IjEwMjQiIGZpbGw9IiNmYWZhZjgiLz4KICA8cmVjdCB4PSIxIiB5PSIxIiB3aWR0aD0iMTUzNCIgaGVpZ2h0PSIxMDIyIiBmaWxsPSJub25lIiBzdHJva2U9IiNkOGQ1Y2QiIHN0cm9rZS13aWR0aD0iMiIvPgogIDx0ZXh0IHg9Ijc2OCIgeT0iNDgwIiBmb250LWZhbWlseT0iR2VvcmdpYSwgc2VyaWYiIGZvbnQtc2l6ZT0iMzQiIGZpbGw9IiMxYTFhMWEiIHRleHQtYW5jaG9yPSJtaWRkbGUiPldFQl9DT05WX1RPRl9IT1RfU1RJTF9HUkFGX1RIRVdPUl9BTkFVX1YwMTwvdGV4dD4KICA8dGV4dCB4PSI3NjgiIHk9IjU0MCIgZm9udC1mYW1pbHk9Ikdlb3JnaWEsIHNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSIjNmI2YjYzIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5TdWJqZWN0IGlzIHlvdXIgc2VsZmllLCB3aXRoIHZpc3VhbCBkZXRhaWxzIGdyYWZ0aW5nIGluIGZpbmFsIG5pZ2h0IHN0YW5kcy4gU3R5bGU6IGVkaXQuLi48L3RleHQ+CiAgPHRleHQgeD0iNzY4IiB5PSI5NjAiIGZvbnQtZmFtaWx5PSJtb25vc3BhY2UiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiNhOGE1OWMiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk1PQ0sgQVNTRVQg4oCUIG5vIHJlYWwgZ2VuZXJhdGlvbjwvdGV4dD4KPC9zdmc+" alt="WEB_CONV_TOF_HOT_STIL_GRAF_THEWOR_ANAU_V01" />
       </div>
 
       <div class="variant-meta">
-        <div class="meta-row"><span class="meta-key">audience</span><span class="meta-val">关注「the world cup final」的年轻受众</span></div>
-        <div class="meta-row"><span class="meta-key">insight</span><span class="meta-val">受众对「一个保温杯」眼熟到会自动忽略，但「the world cup final 的核心张力」能让他们停下来多看一眼</span></div>
+        <div class="meta-row"><span class="meta-key">audience</span><span class="meta-val">an audience following &quot;the world cup final&quot;</span></div>
+        <div class="meta-row"><span class="meta-key">insight</span><span class="meta-val">the audience is so used to seeing &quot;your selfie&quot; that they scroll past it, but &quot;final night stands&quot; is enough to make them stop for a second look</span></div>
         <div class="meta-row"><span class="meta-key">angle type</span><span class="meta-val">moment</span></div>
-        <div class="meta-row"><span class="meta-key">success metric</span><span class="meta-val">48小时内分享率</span></div>
-        <div class="meta-row"><span class="meta-key">still name</span><span class="meta-val mono">WEB_CONV_TOF_HOT_STIL_THEW_THEWOR_THEW_V01</span></div>
-        <div class="meta-row"><span class="meta-key">motion name</span><span class="meta-val mono">WEB_CONV_TOF_HOT_MOTN_THEW_THEWOR_THEW_V01</span></div>
+        <div class="meta-row"><span class="meta-key">success metric</span><span class="meta-val">48-hour share rate</span></div>
+        <div class="meta-row"><span class="meta-key">still name</span><span class="meta-val mono">WEB_CONV_TOF_HOT_STIL_GRAF_THEWOR_ANAU_V01</span></div>
+        <div class="meta-row"><span class="meta-key">motion name</span><span class="meta-val mono">WEB_CONV_TOF_HOT_MOTN_GRAF_THEWOR_ANAU_V01</span></div>
         <div class="badges">
-          <span class="badge badge-pass">judge PASS</span> <span class="badge badge-pass">judge PASS (regenerated)</span> <span class="badge badge-kill">KILL</span>
+          <span class="badge badge-pass">judge PASS</span> <span class="badge badge-pass">judge PASS</span> <span class="badge badge-scale">SCALE</span> <span class="badge badge-measured">measured</span>
         </div>
       </div>
     </div>
@@ -102,34 +126,40 @@
     <div class="prompts">
       <div class="prompt-block">
         <div class="prompt-label">image prompt</div>
-        <pre>画面主体是一个保温杯，在其上嫁接the world cup final 的核心张力的视觉细节，风格：编辑级摄影，浅景深，构图居中留白，光线自然，16:9</pre>
+        <pre>Subject is your selfie, with visual details grafting in final night stands. Style: editorial photography, shallow depth of field, centered composition with negative space, natural light, 16:9</pre>
       </div>
       <div class="prompt-block">
         <div class="prompt-label">motion prompt</div>
-        <pre>[for ChatCut] 三镜头脚本：镜头1建立一个保温杯的日常语境；镜头2引入the world cup final 的核心张力制造反差；镜头3给出钩子文案落版，时长6秒</pre>
+        <pre>[for ChatCut] three-shot script: shot 1 establishes your selfie in its everyday context; shot 2 introduces final night stands to create contrast; shot 3 lands the hook copy, 6 seconds total</pre>
       </div>
       <div class="prompt-block">
         <div class="prompt-label">copy prompt</div>
-        <pre>写一句不超过20字的钩子文案，围绕&quot;把「the world cup final」嫁接到「一个保温杯」上&quot;，语气克制不喧哗，禁用感叹号</pre>
+        <pre>Write one hook line, 20 words or fewer, built around &quot;graft &quot;the world cup final&quot; onto &quot;your selfie&quot;&quot;, restrained tone, no exclamation marks</pre>
       </div>
     </div>
 
     <div class="curves">
       <div class="curve-block">
-        <div class="curve-label">predicted CTR, 21 days, final 0.18%</div>
+        <div class="curve-label">predicted CTR vs measured engagementRate, 21 days, final 9.62%</div>
         <svg viewBox="0 0 560 140" width="100%" height="140" preserveAspectRatio="none">
     <line x1="0" y1="35" x2="560" y2="35" stroke="#e8e5dd" stroke-width="1"/><line x1="0" y1="70" x2="560" y2="70" stroke="#e8e5dd" stroke-width="1"/><line x1="0" y1="105" x2="560" y2="105" stroke="#e8e5dd" stroke-width="1"/>
-    <polyline points="0.0,87.5 28.0,52.3 56.0,10.0 84.0,36.1 112.0,54.8 140.0,68.6 168.0,78.5 196.0,93.0 224.0,100.7 252.0,106.2 280.0,108.1 308.0,115.6 336.0,115.0 364.0,123.3 392.0,124.4 420.0,123.6 448.0,121.8 476.0,126.6 504.0,125.1 532.0,125.8 560.0,128.2" fill="none" stroke="#1a1a1a" stroke-width="2"/>
+    <polyline points="0.0,107.4 28.0,79.2 56.0,53.5 84.0,71.5 112.0,81.7 140.0,91.8 168.0,101.4 196.0,107.6 224.0,108.2 252.0,111.5 280.0,116.1 308.0,121.7 336.0,123.7 364.0,121.6 392.0,124.4 420.0,124.8 448.0,124.7 476.0,128.2 504.0,129.9 532.0,126.4 560.0,130.0" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-dasharray="4 4"/>
+    <polyline points="56.0,46.8 252.0,13.5 448.0,10.0" fill="none" stroke="#c2410c" stroke-width="2.5"/><circle cx="56.0" cy="46.8" r="3.5" fill="#c2410c"><title>day 3: 6.67%</title></circle><circle cx="252.0" cy="13.5" r="3.5" fill="#c2410c"><title>day 10: 9.33%</title></circle><circle cx="448.0" cy="10.0" r="3.5" fill="#c2410c"><title>day 17: 9.62%</title></circle>
   </svg>
+        <div class="curve-legend">
+    <span class="legend-item"><span class="legend-swatch legend-dashed" style="border-color:#1a1a1a"></span>predicted</span>
+    <span class="legend-item"><span class="legend-swatch legend-solid" style="background:#c2410c"></span>measured</span>
+  </div>
       </div>
       <div class="curve-block">
         <div class="curve-label">share rate, 21 days</div>
         <svg viewBox="0 0 560 140" width="100%" height="140" preserveAspectRatio="none">
     <line x1="0" y1="35" x2="560" y2="35" stroke="#e8e5dd" stroke-width="1"/><line x1="0" y1="70" x2="560" y2="70" stroke="#e8e5dd" stroke-width="1"/><line x1="0" y1="105" x2="560" y2="105" stroke="#e8e5dd" stroke-width="1"/>
-    <polyline points="0.0,90.9 28.0,51.4 56.0,10.0 84.0,38.0 112.0,55.8 140.0,69.5 168.0,74.0 196.0,90.2 224.0,101.2 252.0,110.2 280.0,109.5 308.0,111.6 336.0,114.4 364.0,120.2 392.0,124.9 420.0,120.9 448.0,119.9 476.0,128.9 504.0,125.1 532.0,128.9 560.0,127.7" fill="none" stroke="#a8a59c" stroke-width="2"/>
+    <polyline points="0.0,95.3 28.0,55.8 56.0,10.0 84.0,43.5 112.0,58.8 140.0,73.3 168.0,86.3 196.0,96.6 224.0,96.8 252.0,98.3 280.0,107.4 308.0,119.1 336.0,121.9 364.0,119.8 392.0,122.4 420.0,124.5 448.0,124.9 476.0,129.8 504.0,130.0 532.0,125.9 560.0,130.0" fill="none" stroke="#a8a59c" stroke-width="2" stroke-dasharray="4 4"/>
+    
   </svg>
       </div>
-      <div class="decision-reason">末3日均CTR 0.0018 低于预注册 killAt 0.015，判定砍掉</div>
+      <div class="decision-reason">measured engagementRate 0.0962 reached the preregistered scaleAt 0.08 — verdict: scale</div>
     </div>
   </article>
 
@@ -137,28 +167,28 @@
     <header class="variant-head">
       <div class="atom-line">
         <span class="atom-label">Asset</span>
-        <span class="atom-value">开会前的寒暄</span>
+        <span class="atom-value">friend group photo</span>
         <span class="atom-op">x</span>
         <span class="atom-label">New Element</span>
-        <span class="atom-value">the world cup final 的核心张力</span>
+        <span class="atom-value">team poster style</span>
       </div>
-      <div class="formula-line">开会前的寒暄 x the world cup final 的核心张力 — W1变体2</div>
+      <div class="formula-line">friend group photo x team poster style — Team Poster</div>
     </header>
 
     <div class="variant-body">
       <div class="variant-media">
-        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTM2IiBoZWlnaHQ9IjEwMjQiIHZpZXdCb3g9IjAgMCAxNTM2IDEwMjQiPgogIDxyZWN0IHdpZHRoPSIxNTM2IiBoZWlnaHQ9IjEwMjQiIGZpbGw9IiNmYWZhZjgiLz4KICA8cmVjdCB4PSIxIiB5PSIxIiB3aWR0aD0iMTUzNCIgaGVpZ2h0PSIxMDIyIiBmaWxsPSJub25lIiBzdHJva2U9IiNkOGQ1Y2QiIHN0cm9rZS13aWR0aD0iMiIvPgogIDx0ZXh0IHg9Ijc2OCIgeT0iNDgwIiBmb250LWZhbWlseT0iR2VvcmdpYSwgc2VyaWYiIGZvbnQtc2l6ZT0iMzQiIGZpbGw9IiMxYTFhMWEiIHRleHQtYW5jaG9yPSJtaWRkbGUiPldFQl9FTkdUX01PRl9FVkdfU1RJTF9USEVXX1RIRVdPUl9USEVXX1YwMTwvdGV4dD4KICA8dGV4dCB4PSI3NjgiIHk9IjU0MCIgZm9udC1mYW1pbHk9Ikdlb3JnaWEsIHNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSIjNmI2YjYzIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7nlLvpnaLkuLvkvZPmmK/lvIDkvJrliY3nmoTlr5LmmoTvvIzlnKjlhbbkuIrlq4HmjqV0aGUgd29ybGQgY3VwIGZpbmFsIOeahOaguOW/g+W8oOWKm+eahOinhuiniee7huiKgu+8jOmjjuagvO+8mue8lui+kee6p+aRhOW9se+8jOa1heaZr+a3se+8jOaehOWbvuWxheS4reeVmeeZve+8jOWFiee6v+iHqueEtu+8jDE2Ojk8L3RleHQ+CiAgPHRleHQgeD0iNzY4IiB5PSI5NjAiIGZvbnQtZmFtaWx5PSJtb25vc3BhY2UiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiNhOGE1OWMiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk1PQ0sgQVNTRVQg4oCUIG5vIHJlYWwgZ2VuZXJhdGlvbjwvdGV4dD4KPC9zdmc+" alt="WEB_ENGT_MOF_EVG_STIL_THEW_THEWOR_THEW_V01" />
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTM2IiBoZWlnaHQ9IjEwMjQiIHZpZXdCb3g9IjAgMCAxNTM2IDEwMjQiPgogIDxyZWN0IHdpZHRoPSIxNTM2IiBoZWlnaHQ9IjEwMjQiIGZpbGw9IiNmYWZhZjgiLz4KICA8cmVjdCB4PSIxIiB5PSIxIiB3aWR0aD0iMTUzNCIgaGVpZ2h0PSIxMDIyIiBmaWxsPSJub25lIiBzdHJva2U9IiNkOGQ1Y2QiIHN0cm9rZS13aWR0aD0iMiIvPgogIDx0ZXh0IHg9Ijc2OCIgeT0iNDgwIiBmb250LWZhbWlseT0iR2VvcmdpYSwgc2VyaWYiIGZvbnQtc2l6ZT0iMzQiIGZpbGw9IiMxYTFhMWEiIHRleHQtYW5jaG9yPSJtaWRkbGUiPldFQl9DT05WX01PRl9FVkdfU1RJTF9HUkFGX1RIRVdPUl9BTkFVX1YwMTwvdGV4dD4KICA8dGV4dCB4PSI3NjgiIHk9IjU0MCIgZm9udC1mYW1pbHk9Ikdlb3JnaWEsIHNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSIjNmI2YjYzIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5TdWJqZWN0IGlzIGZyaWVuZCBncm91cCBwaG90bywgd2l0aCB2aXN1YWwgZGV0YWlscyBncmFmdGluZyBpbiB0ZWFtIHBvc3RlciBzdHlsZS4gU3R5bGUuLi48L3RleHQ+CiAgPHRleHQgeD0iNzY4IiB5PSI5NjAiIGZvbnQtZmFtaWx5PSJtb25vc3BhY2UiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiNhOGE1OWMiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk1PQ0sgQVNTRVQg4oCUIG5vIHJlYWwgZ2VuZXJhdGlvbjwvdGV4dD4KPC9zdmc+" alt="WEB_CONV_MOF_EVG_STIL_GRAF_THEWOR_ANAU_V01" />
       </div>
 
       <div class="variant-meta">
-        <div class="meta-row"><span class="meta-key">audience</span><span class="meta-val">关注「the world cup final」的年轻受众</span></div>
-        <div class="meta-row"><span class="meta-key">insight</span><span class="meta-val">受众对「开会前的寒暄」眼熟到会自动忽略，但「the world cup final 的核心张力」能让他们停下来多看一眼</span></div>
+        <div class="meta-row"><span class="meta-key">audience</span><span class="meta-val">an audience following &quot;the world cup final&quot;</span></div>
+        <div class="meta-row"><span class="meta-key">insight</span><span class="meta-val">the audience is so used to seeing &quot;friend group photo&quot; that they scroll past it, but &quot;team poster style&quot; is enough to make them stop for a second look</span></div>
         <div class="meta-row"><span class="meta-key">angle type</span><span class="meta-val">evergreen</span></div>
-        <div class="meta-row"><span class="meta-key">success metric</span><span class="meta-val">7日留存曝光</span></div>
-        <div class="meta-row"><span class="meta-key">still name</span><span class="meta-val mono">WEB_ENGT_MOF_EVG_STIL_THEW_THEWOR_THEW_V01</span></div>
-        <div class="meta-row"><span class="meta-key">motion name</span><span class="meta-val mono">WEB_ENGT_MOF_EVG_MOTN_THEW_THEWOR_THEW_V01</span></div>
+        <div class="meta-row"><span class="meta-key">success metric</span><span class="meta-val">7-day retained exposure</span></div>
+        <div class="meta-row"><span class="meta-key">still name</span><span class="meta-val mono">WEB_CONV_MOF_EVG_STIL_GRAF_THEWOR_ANAU_V01</span></div>
+        <div class="meta-row"><span class="meta-key">motion name</span><span class="meta-val mono">WEB_CONV_MOF_EVG_MOTN_GRAF_THEWOR_ANAU_V01</span></div>
         <div class="badges">
-          <span class="badge badge-pass">judge PASS</span> <span class="badge badge-fail">judge FAIL (regenerated)</span> <span class="badge badge-scale">SCALE</span>
+          <span class="badge badge-pass">judge PASS</span> <span class="badge badge-pass">judge PASS</span> <span class="badge badge-scale">SCALE</span> <span class="badge badge-simulated">simulated</span>
         </div>
       </div>
     </div>
@@ -166,34 +196,37 @@
     <div class="prompts">
       <div class="prompt-block">
         <div class="prompt-label">image prompt</div>
-        <pre>画面主体是开会前的寒暄，在其上嫁接the world cup final 的核心张力的视觉细节，风格：编辑级摄影，浅景深，构图居中留白，光线自然，16:9</pre>
+        <pre>Subject is friend group photo, with visual details grafting in team poster style. Style: editorial photography, shallow depth of field, centered composition with negative space, natural light, 16:9</pre>
       </div>
       <div class="prompt-block">
         <div class="prompt-label">motion prompt</div>
-        <pre>[for ChatCut] 三镜头脚本：镜头1建立开会前的寒暄的日常语境；镜头2引入the world cup final 的核心张力制造反差；镜头3给出钩子文案落版，时长6秒</pre>
+        <pre>[for ChatCut] three-shot script: shot 1 establishes friend group photo in its everyday context; shot 2 introduces team poster style to create contrast; shot 3 lands the hook copy, 6 seconds total</pre>
       </div>
       <div class="prompt-block">
         <div class="prompt-label">copy prompt</div>
-        <pre>写一句不超过20字的钩子文案，围绕&quot;把「the world cup final」嫁接到「开会前的寒暄」上&quot;，语气克制不喧哗，禁用感叹号</pre>
+        <pre>Write one hook line, 20 words or fewer, built around &quot;graft &quot;the world cup final&quot; onto &quot;friend group photo&quot;&quot;, restrained tone, no exclamation marks</pre>
       </div>
     </div>
 
     <div class="curves">
       <div class="curve-block">
-        <div class="curve-label">predicted CTR, 21 days, final 3.82%</div>
+        <div class="curve-label">predicted CTR, 21 days, final 3.81%</div>
         <svg viewBox="0 0 560 140" width="100%" height="140" preserveAspectRatio="none">
     <line x1="0" y1="35" x2="560" y2="35" stroke="#e8e5dd" stroke-width="1"/><line x1="0" y1="70" x2="560" y2="70" stroke="#e8e5dd" stroke-width="1"/><line x1="0" y1="105" x2="560" y2="105" stroke="#e8e5dd" stroke-width="1"/>
-    <polyline points="0.0,66.8 28.0,54.0 56.0,51.5 84.0,42.3 112.0,35.8 140.0,38.8 168.0,31.0 196.0,38.2 224.0,25.1 252.0,26.2 280.0,26.3 308.0,25.0 336.0,24.6 364.0,16.7 392.0,16.2 420.0,19.9 448.0,18.9 476.0,21.2 504.0,19.8 532.0,14.1 560.0,10.0" fill="none" stroke="#1a1a1a" stroke-width="2"/>
+    <polyline points="0.0,58.7 28.0,50.2 56.0,50.2 84.0,41.1 112.0,34.4 140.0,31.5 168.0,33.1 196.0,28.7 224.0,30.7 252.0,27.7 280.0,23.7 308.0,19.6 336.0,27.5 364.0,16.1 392.0,23.0 420.0,13.1 448.0,22.1 476.0,10.0 504.0,13.8 532.0,13.3 560.0,10.1" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-dasharray="4 4"/>
+    
   </svg>
+        
       </div>
       <div class="curve-block">
         <div class="curve-label">share rate, 21 days</div>
         <svg viewBox="0 0 560 140" width="100%" height="140" preserveAspectRatio="none">
     <line x1="0" y1="35" x2="560" y2="35" stroke="#e8e5dd" stroke-width="1"/><line x1="0" y1="70" x2="560" y2="70" stroke="#e8e5dd" stroke-width="1"/><line x1="0" y1="105" x2="560" y2="105" stroke="#e8e5dd" stroke-width="1"/>
-    <polyline points="0.0,71.9 28.0,48.6 56.0,52.0 84.0,52.5 112.0,30.2 140.0,35.0 168.0,25.4 196.0,39.8 224.0,27.6 252.0,37.3 280.0,31.3 308.0,27.6 336.0,28.0 364.0,14.3 392.0,10.0 420.0,21.2 448.0,15.8 476.0,31.0 504.0,32.6 532.0,13.8 560.0,12.3" fill="none" stroke="#a8a59c" stroke-width="2"/>
+    <polyline points="0.0,69.6 28.0,59.0 56.0,59.1 84.0,49.4 112.0,30.0 140.0,31.4 168.0,40.9 196.0,28.3 224.0,43.5 252.0,28.4 280.0,36.3 308.0,32.8 336.0,36.7 364.0,24.3 392.0,21.5 420.0,15.4 448.0,36.2 476.0,23.7 504.0,23.2 532.0,20.6 560.0,10.0" fill="none" stroke="#a8a59c" stroke-width="2" stroke-dasharray="4 4"/>
+    
   </svg>
       </div>
-      <div class="decision-reason">末3日均CTR 0.0382 达到预注册 scaleAt 0.035，判定放大</div>
+      <div class="decision-reason">last-3-day average CTR 0.0381 reached the preregistered scaleAt 0.035 — verdict: scale</div>
     </div>
   </article>
 
@@ -201,28 +234,28 @@
     <header class="variant-head">
       <div class="atom-line">
         <span class="atom-label">Asset</span>
-        <span class="atom-value">一张购物小票</span>
+        <span class="atom-value">your chat highlights</span>
         <span class="atom-op">x</span>
         <span class="atom-label">New Element</span>
-        <span class="atom-value">the world cup final 的核心张力</span>
+        <span class="atom-value">match commentary</span>
       </div>
-      <div class="formula-line">一张购物小票 x the world cup final 的核心张力 — W1变体3</div>
+      <div class="formula-line">your chat highlights x match commentary — Chat Commentary</div>
     </header>
 
     <div class="variant-body">
       <div class="variant-media">
-        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTM2IiBoZWlnaHQ9IjEwMjQiIHZpZXdCb3g9IjAgMCAxNTM2IDEwMjQiPgogIDxyZWN0IHdpZHRoPSIxNTM2IiBoZWlnaHQ9IjEwMjQiIGZpbGw9IiNmYWZhZjgiLz4KICA8cmVjdCB4PSIxIiB5PSIxIiB3aWR0aD0iMTUzNCIgaGVpZ2h0PSIxMDIyIiBmaWxsPSJub25lIiBzdHJva2U9IiNkOGQ1Y2QiIHN0cm9rZS13aWR0aD0iMiIvPgogIDx0ZXh0IHg9Ijc2OCIgeT0iNDgwIiBmb250LWZhbWlseT0iR2VvcmdpYSwgc2VyaWYiIGZvbnQtc2l6ZT0iMzQiIGZpbGw9IiMxYTFhMWEiIHRleHQtYW5jaG9yPSJtaWRkbGUiPldFQl9DT05WX0JPRl9MT09QX1NUSUxfVEhFV19USEVXT1JfVEhFV19WMDE8L3RleHQ+CiAgPHRleHQgeD0iNzY4IiB5PSI1NDAiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLCBzZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzZiNmI2MyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+55S76Z2i5Li75L2T5piv5LiA5byg6LSt54mp5bCP56Wo77yM5Zyo5YW25LiK5auB5o6ldGhlIHdvcmxkIGN1cCBmaW5hbCDnmoTmoLjlv4PlvKDlipvnmoTop4bop4nnu4boioLvvIzpo47moLzvvJrnvJbovpHnuqfmkYTlvbHvvIzmtYXmma/mt7HvvIzmnoTlm77lsYXkuK3nlZnnmb3vvIzlhYnnur/oh6rnhLbvvIwxNjo5PC90ZXh0PgogIDx0ZXh0IHg9Ijc2OCIgeT0iOTYwIiBmb250LWZhbWlseT0ibW9ub3NwYWNlIiBmb250LXNpemU9IjE0IiBmaWxsPSIjYThhNTljIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5NT0NLIEFTU0VUIOKAlCBubyByZWFsIGdlbmVyYXRpb248L3RleHQ+Cjwvc3ZnPg==" alt="WEB_CONV_BOF_LOOP_STIL_THEW_THEWOR_THEW_V01" />
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTM2IiBoZWlnaHQ9IjEwMjQiIHZpZXdCb3g9IjAgMCAxNTM2IDEwMjQiPgogIDxyZWN0IHdpZHRoPSIxNTM2IiBoZWlnaHQ9IjEwMjQiIGZpbGw9IiNmYWZhZjgiLz4KICA8cmVjdCB4PSIxIiB5PSIxIiB3aWR0aD0iMTUzNCIgaGVpZ2h0PSIxMDIyIiBmaWxsPSJub25lIiBzdHJva2U9IiNkOGQ1Y2QiIHN0cm9rZS13aWR0aD0iMiIvPgogIDx0ZXh0IHg9Ijc2OCIgeT0iNDgwIiBmb250LWZhbWlseT0iR2VvcmdpYSwgc2VyaWYiIGZvbnQtc2l6ZT0iMzQiIGZpbGw9IiMxYTFhMWEiIHRleHQtYW5jaG9yPSJtaWRkbGUiPldFQl9FTkdUX0JPRl9MT09QX1NUSUxfR1JBRl9USEVXT1JfQU5BVV9WMDE8L3RleHQ+CiAgPHRleHQgeD0iNzY4IiB5PSI1NDAiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLCBzZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzZiNmI2MyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+U3ViamVjdCBpcyB5b3VyIGNoYXQgaGlnaGxpZ2h0cywgd2l0aCB2aXN1YWwgZGV0YWlscyBncmFmdGluZyBpbiBtYXRjaCBjb21tZW50YXJ5LiBTdHlsLi4uPC90ZXh0PgogIDx0ZXh0IHg9Ijc2OCIgeT0iOTYwIiBmb250LWZhbWlseT0ibW9ub3NwYWNlIiBmb250LXNpemU9IjE0IiBmaWxsPSIjYThhNTljIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5NT0NLIEFTU0VUIOKAlCBubyByZWFsIGdlbmVyYXRpb248L3RleHQ+Cjwvc3ZnPg==" alt="WEB_ENGT_BOF_LOOP_STIL_GRAF_THEWOR_ANAU_V01" />
       </div>
 
       <div class="variant-meta">
-        <div class="meta-row"><span class="meta-key">audience</span><span class="meta-val">关注「the world cup final」的年轻受众</span></div>
-        <div class="meta-row"><span class="meta-key">insight</span><span class="meta-val">受众对「一张购物小票」眼熟到会自动忽略，但「the world cup final 的核心张力」能让他们停下来多看一眼</span></div>
+        <div class="meta-row"><span class="meta-key">audience</span><span class="meta-val">an audience following &quot;the world cup final&quot;</span></div>
+        <div class="meta-row"><span class="meta-key">insight</span><span class="meta-val">the audience is so used to seeing &quot;your chat highlights&quot; that they scroll past it, but &quot;match commentary&quot; is enough to make them stop for a second look</span></div>
         <div class="meta-row"><span class="meta-key">angle type</span><span class="meta-val">ugc-loop</span></div>
-        <div class="meta-row"><span class="meta-key">success metric</span><span class="meta-val">7日留存曝光</span></div>
-        <div class="meta-row"><span class="meta-key">still name</span><span class="meta-val mono">WEB_CONV_BOF_LOOP_STIL_THEW_THEWOR_THEW_V01</span></div>
-        <div class="meta-row"><span class="meta-key">motion name</span><span class="meta-val mono">WEB_CONV_BOF_LOOP_MOTN_THEW_THEWOR_THEW_V01</span></div>
+        <div class="meta-row"><span class="meta-key">success metric</span><span class="meta-val">7-day retained exposure</span></div>
+        <div class="meta-row"><span class="meta-key">still name</span><span class="meta-val mono">WEB_ENGT_BOF_LOOP_STIL_GRAF_THEWOR_ANAU_V01</span></div>
+        <div class="meta-row"><span class="meta-key">motion name</span><span class="meta-val mono">WEB_ENGT_BOF_LOOP_MOTN_GRAF_THEWOR_ANAU_V01</span></div>
         <div class="badges">
-          <span class="badge badge-pass">judge PASS</span> <span class="badge badge-pass">judge PASS</span> <span class="badge badge-iterate">ITERATE</span>
+          <span class="badge badge-pass">judge PASS (regenerated)</span> <span class="badge badge-pass">judge PASS</span> <span class="badge badge-kill">KILL</span> <span class="badge badge-measured">measured</span>
         </div>
       </div>
     </div>
@@ -230,40 +263,46 @@
     <div class="prompts">
       <div class="prompt-block">
         <div class="prompt-label">image prompt</div>
-        <pre>画面主体是一张购物小票，在其上嫁接the world cup final 的核心张力的视觉细节，风格：编辑级摄影，浅景深，构图居中留白，光线自然，16:9</pre>
+        <pre>Subject is your chat highlights, with visual details grafting in match commentary. Style: editorial photography, shallow depth of field, centered composition with negative space, natural light, 16:9</pre>
       </div>
       <div class="prompt-block">
         <div class="prompt-label">motion prompt</div>
-        <pre>[for ChatCut] 三镜头脚本：镜头1建立一张购物小票的日常语境；镜头2引入the world cup final 的核心张力制造反差；镜头3给出钩子文案落版，时长6秒</pre>
+        <pre>[for ChatCut] three-shot script: shot 1 establishes your chat highlights in its everyday context; shot 2 introduces match commentary to create contrast; shot 3 lands the hook copy, 6 seconds total</pre>
       </div>
       <div class="prompt-block">
         <div class="prompt-label">copy prompt</div>
-        <pre>写一句不超过20字的钩子文案，围绕&quot;把「the world cup final」嫁接到「一张购物小票」上&quot;，语气克制不喧哗，禁用感叹号</pre>
+        <pre>Write one hook line, 20 words or fewer, built around &quot;graft &quot;the world cup final&quot; onto &quot;your chat highlights&quot;&quot;, restrained tone, no exclamation marks</pre>
       </div>
     </div>
 
     <div class="curves">
       <div class="curve-block">
-        <div class="curve-label">predicted CTR, 21 days, final 2.36%</div>
+        <div class="curve-label">predicted CTR vs measured engagementRate, 21 days, final 2.44%</div>
         <svg viewBox="0 0 560 140" width="100%" height="140" preserveAspectRatio="none">
     <line x1="0" y1="35" x2="560" y2="35" stroke="#e8e5dd" stroke-width="1"/><line x1="0" y1="70" x2="560" y2="70" stroke="#e8e5dd" stroke-width="1"/><line x1="0" y1="105" x2="560" y2="105" stroke="#e8e5dd" stroke-width="1"/>
-    <polyline points="0.0,26.3 28.0,30.0 56.0,18.7 84.0,33.3 112.0,23.9 140.0,18.0 168.0,32.6 196.0,23.3 224.0,29.5 252.0,27.3 280.0,17.6 308.0,15.7 336.0,16.9 364.0,28.4 392.0,12.7 420.0,10.0 448.0,11.6 476.0,13.8 504.0,21.3 532.0,19.0 560.0,19.9" fill="none" stroke="#1a1a1a" stroke-width="2"/>
+    <polyline points="0.0,89.9 28.0,87.3 56.0,91.4 84.0,88.4 112.0,89.8 140.0,83.9 168.0,84.4 196.0,89.1 224.0,88.1 252.0,88.5 280.0,86.0 308.0,85.7 336.0,88.1 364.0,87.7 392.0,86.6 420.0,85.4 448.0,80.4 476.0,84.8 504.0,84.0 532.0,87.0 560.0,87.0" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-dasharray="4 4"/>
+    <polyline points="56.0,10.0 364.0,83.1" fill="none" stroke="#c2410c" stroke-width="2.5"/><circle cx="56.0" cy="10.0" r="3.5" fill="#c2410c"><title>day 3: 6.25%</title></circle><circle cx="364.0" cy="83.1" r="3.5" fill="#c2410c"><title>day 14: 2.44%</title></circle>
   </svg>
+        <div class="curve-legend">
+    <span class="legend-item"><span class="legend-swatch legend-dashed" style="border-color:#1a1a1a"></span>predicted</span>
+    <span class="legend-item"><span class="legend-swatch legend-solid" style="background:#c2410c"></span>measured</span>
+  </div>
       </div>
       <div class="curve-block">
         <div class="curve-label">share rate, 21 days</div>
         <svg viewBox="0 0 560 140" width="100%" height="140" preserveAspectRatio="none">
     <line x1="0" y1="35" x2="560" y2="35" stroke="#e8e5dd" stroke-width="1"/><line x1="0" y1="70" x2="560" y2="70" stroke="#e8e5dd" stroke-width="1"/><line x1="0" y1="105" x2="560" y2="105" stroke="#e8e5dd" stroke-width="1"/>
-    <polyline points="0.0,24.2 28.0,34.1 56.0,21.1 84.0,30.9 112.0,20.7 140.0,22.7 168.0,30.2 196.0,26.4 224.0,32.0 252.0,27.3 280.0,24.5 308.0,15.6 336.0,19.4 364.0,29.2 392.0,10.0 420.0,13.5 448.0,18.7 476.0,16.0 504.0,27.6 532.0,22.2 560.0,19.7" fill="none" stroke="#a8a59c" stroke-width="2"/>
+    <polyline points="0.0,26.3 28.0,27.7 56.0,34.6 84.0,30.1 112.0,31.1 140.0,19.5 168.0,21.3 196.0,28.7 224.0,26.4 252.0,30.6 280.0,20.9 308.0,24.5 336.0,29.8 364.0,29.2 392.0,23.7 420.0,18.4 448.0,10.0 476.0,19.2 504.0,14.1 532.0,19.0 560.0,18.3" fill="none" stroke="#a8a59c" stroke-width="2" stroke-dasharray="4 4"/>
+    
   </svg>
       </div>
-      <div class="decision-reason">末3日均CTR 0.0236 处于 killAt/scaleAt 之间，斜率未触发疲劳阈值，判定迭代</div>
+      <div class="decision-reason">measured engagementRate 0.0244 fell below the preregistered killAt 0.025 — verdict: kill</div>
     </div>
   </article>
 
     <footer class="colophon">
-      generation is real (OpenAI API). market response is simulated (three response models).
-      plan rationale: 第 1 波围绕「the world cup final」等量分流三个变体，21 天观察窗覆盖疲劳曲线的完整拐点
+      generation is real (OpenAI API). market response is simulated (three response models) unless a "measured" badge marks real channel data recorded via <span class="mono">growth-machine measure</span>.
+      plan rationale: Wave 1 splits traffic evenly across three variants for &quot;the world cup final&quot;; the 21-day observation window covers the full fatigue-curve inflection point
     </footer>
   </div>
 </body>

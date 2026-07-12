@@ -1,26 +1,26 @@
 /**
- * [INPUT]: 无依赖，纯类型定义
- * [OUTPUT]: 对外提供贯穿六站流水线的共享类型 —— Variant / Brief / NamedAsset / Plan / ProducedAsset / JudgeResult / SimulatedCurve / Decision / LearningEntry
- * [POS]: src/ 的类型根，所有 stages/*.ts 与 lib/*.ts 从此导入，是流水线各站之间的契约
- * [PROTOCOL]: 变更时更新此头部，然后检查 CLAUDE.md
+ * [INPUT]: no dependencies, pure type definitions
+ * [OUTPUT]: exports the shared types that run through the nine-station pipeline —— Variant / Brief / NamedAsset / Plan / ProducedAsset / JudgeResult / SimulatedCurve / Decision / LearningEntry / measure-module types
+ * [POS]: the type root of src/ — every stages/*.ts and lib/*.ts file imports from here; this is the contract between stations
+ * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */
 
 // ============================================================
-// 公式原语：existing asset x one new element
-// asset 两种形态：things people own(物) / interactions people know(互动)
+// Formula primitive: existing asset x one new element
+// asset has two shapes: things people own / interactions people know
 // ============================================================
 export type AssetKind = "thing" | "interaction";
 
-// 角度类型决定 simulate 阶段选用哪种响应模型
+// angleType decides which response model the simulate stage picks
 export type AngleType = "moment" | "evergreen" | "ugc-loop";
 
 export interface Variant {
   id: string; // v1, v2, v3
-  asset: string; // existing asset 的具体描述
+  asset: string; // the concrete description of the existing asset
   assetKind: AssetKind;
-  newElement: string; // one new element
-  angle: string; // 角度的自然语言描述
-  angleType: AngleType; // 决定 simulate 响应曲线族
+  newElement: string; // the one new element
+  angle: string; // natural-language description of the angle
+  angleType: AngleType; // decides which simulate response curve family applies
   workingTitle: string;
 }
 
@@ -31,12 +31,12 @@ export interface InsightResult {
 }
 
 // ============================================================
-// Brief：一页交付物，generationPrompts 是一等公民
+// Brief: a one-page deliverable, generationPrompts is a first-class citizen
 // ============================================================
 export interface GenerationPrompts {
-  image: string; // 拿去就能用的 Images API prompt
-  motion: string; // 标注 for ChatCut 的动态脚本 prompt
-  copy: string; // 文案生成 prompt
+  image: string; // an Images API prompt that can be run as-is
+  motion: string; // a motion script prompt tagged for ChatCut
+  copy: string; // a copy-generation prompt
 }
 
 export interface Brief {
@@ -44,14 +44,14 @@ export interface Brief {
   workingTitle: string;
   audience: string;
   insight: string;
-  assetXElement: string; // "asset x newElement" 公式化描述
+  assetXElement: string; // "asset x newElement" formula-shaped description
   formats: Array<"still" | "motion">;
   successMetric: string;
   generationPrompts: GenerationPrompts;
 }
 
 // ============================================================
-// Naming：九段命名，无 LLM，确定性函数
+// Naming: deterministic nine-segment name, no LLM
 // ============================================================
 export interface NamingInput {
   variant: Variant;
@@ -69,12 +69,12 @@ export interface NamedAsset {
 }
 
 // ============================================================
-// Plan：测试计划，规则 + LLM 混合
+// Plan: the test plan, rules + LLM hybrid
 // ============================================================
 export interface PreRegisteredThresholds {
-  scaleAt: number; // CTR 达到此值 -> SCALE
-  killAt: number; // CTR 低于此值 -> KILL
-  fatigueSlope: number; // 曲线斜率低于此值(负值越小越疲劳) -> KILL 信号
+  scaleAt: number; // metric reaching this value -> SCALE
+  killAt: number; // metric falling below this value -> KILL
+  fatigueSlope: number; // tail slope below this (more negative = more fatigued) -> KILL signal
 }
 
 export interface PlanArm {
@@ -82,7 +82,7 @@ export interface PlanArm {
   format: "still" | "motion";
   name: string;
   trafficSplitPct: number;
-  budgetIllustrative: number; // 纯示意，非真实媒介预算
+  budgetIllustrative: number; // purely illustrative, not a real media budget
 }
 
 export interface Plan {
@@ -90,26 +90,27 @@ export interface Plan {
   waveNumber: number;
   arms: PlanArm[];
   preRegisteredThresholds: Record<AngleType, PreRegisteredThresholds>;
+  engagementThresholds: Record<AngleType, PreRegisteredThresholds>; // measured-data decide path, engagementRate-scale thresholds
   dates: { start: string; end: string; days: number };
-  rationale: string; // LLM 生成的一句计划逻辑
+  rationale: string; // one LLM-generated sentence explaining the plan logic
 }
 
 // ============================================================
-// Produce：真生成交付物
+// Produce: the real generation deliverable
 // ============================================================
 export interface ProducedAsset {
   variantId: string;
   format: "still" | "motion";
   name: string;
-  assetPath: string | null; // still: png/svg 路径；motion: null(不真渲染)
+  assetPath: string | null; // still: png/svg path; motion: null (never really rendered)
   copy: string;
-  motionScript: string[] | null; // motion: 分镜三行
+  motionScript: string[] | null; // motion: three-shot storyboard
   imageModelUsed: string | null;
   regeneratedCount: number;
 }
 
 // ============================================================
-// Judge：三分制自检
+// Judge: three-point self-check
 // ============================================================
 export interface JudgeScore {
   onBrief: 1 | 2 | 3;
@@ -121,52 +122,101 @@ export interface JudgeResult {
   variantId: string;
   format: "still" | "motion";
   score: JudgeScore;
-  passed: boolean; // 任一维度 == 1 视为 fail
+  passed: boolean; // any dimension == 1 counts as fail
   regenerated: boolean;
   notes: string;
 }
 
 // ============================================================
-// Simulate：三周日级曲线
+// Simulate: a three-week, day-level curve
 // ============================================================
 export interface SimulatedCurve {
   variantId: string;
   format: "still" | "motion";
   angleType: AngleType;
   days: number;
-  predictedCTR: number[]; // 长度 = days
-  shareRate: number[]; // 长度 = days
+  predictedCTR: number[]; // length == days
+  shareRate: number[]; // length == days
   seed: string;
 }
 
 // ============================================================
-// Decide：SCALE / KILL / ITERATE
+// Decide: SCALE / KILL / ITERATE
 // ============================================================
 export type Verdict = "SCALE" | "KILL" | "ITERATE";
+export type DecisionSource = "simulated" | "measured";
 
 export interface Decision {
   variantId: string;
   format: "still" | "motion";
   verdict: Verdict;
-  reason: string; // 一句机器理由
-  finalCTR: number;
+  reason: string; // one machine-readable sentence
+  finalCTR: number; // for measured decisions, this holds the final engagementRate
   slope: number;
+  source: DecisionSource;
 }
 
 // ============================================================
-// Learn：跨波进化
+// Learn: cross-wave evolution
 // ============================================================
 export interface LearningEntry {
   wave: number;
   moment: string;
   timestamp: string;
-  winners: string[]; // 资产名列表(SCALE 判决)
-  traits: string[]; // 从赢家提炼的可复用特征
-  learnings: string; // 一段给下一波 prompt 用的注入文本
+  winners: string[]; // asset names with a SCALE verdict
+  traits: string[]; // reusable traits extracted from the winners
+  learnings: string; // a paragraph injected into the next wave's prompts
+  sources: Record<string, DecisionSource>; // asset name -> which decide path produced its verdict
 }
 
 // ============================================================
-// Wave：一波完整产出的汇总视图，供 report.ts 消费
+// Measure: real channel data recorded against a wave's assets, the
+// simulator's real-world check-in point
+// ============================================================
+export type Channel = "x" | "xiaohongshu" | "linkedin";
+
+export interface MeasuredChannelMetrics {
+  channel: Channel;
+  impressions: number;
+  likes: number;
+  comments: number;
+  shares: number;
+  saves: number;
+}
+
+export interface MeasuredReading {
+  day: number; // day index inside the wave's observation window (1-based)
+  engagementRate: number; // normalized (likes+comments+shares+saves)/impressions
+  metrics: MeasuredChannelMetrics;
+}
+
+export interface MeasuredAssetSummary {
+  assetName: string;
+  variantId: string;
+  format: "still" | "motion";
+  channel: Channel;
+  readings: MeasuredReading[]; // sorted by day ascending
+  engagementRate: number; // latest reading's engagementRate, used by decide
+}
+
+export interface MeasuredInputEntry {
+  assetName: string;
+  day?: number; // optional, defaults to "today" relative to plan.dates.start
+  channel: Channel;
+  impressions: number;
+  likes: number;
+  comments: number;
+  shares: number;
+  saves: number;
+}
+
+export interface MeasuredInputFile {
+  wave: number;
+  entries: MeasuredInputEntry[];
+}
+
+// ============================================================
+// Wave: the full readout for one wave, consumed by report.ts
 // ============================================================
 export interface WaveReadout {
   moment: string;
@@ -179,5 +229,6 @@ export interface WaveReadout {
   judged: JudgeResult[];
   simulated: SimulatedCurve[];
   decided: Decision[];
-  injectedLearnings: string | null; // 上一波注入的学习(若有)
+  measured: MeasuredAssetSummary[]; // empty until `measure` has been run against this wave
+  injectedLearnings: string | null; // learnings injected from the previous wave, if any
 }

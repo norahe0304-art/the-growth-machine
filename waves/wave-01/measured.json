@@ -1,0 +1,80 @@
+[
+  {
+    "assetName": "WEB_CONV_TOF_HOT_STIL_GRAF_THEWOR_ANAU_V01",
+    "variantId": "v1",
+    "format": "still",
+    "channel": "xiaohongshu",
+    "readings": [
+      {
+        "day": 3,
+        "engagementRate": 0.06666666666666667,
+        "metrics": {
+          "channel": "xiaohongshu",
+          "impressions": 12000,
+          "likes": 500,
+          "comments": 40,
+          "shares": 90,
+          "saves": 170
+        }
+      },
+      {
+        "day": 10,
+        "engagementRate": 0.09333333333333334,
+        "metrics": {
+          "channel": "xiaohongshu",
+          "impressions": 30000,
+          "likes": 1800,
+          "comments": 140,
+          "shares": 350,
+          "saves": 510
+        }
+      },
+      {
+        "day": 17,
+        "engagementRate": 0.09615384615384616,
+        "metrics": {
+          "channel": "xiaohongshu",
+          "impressions": 52000,
+          "likes": 3200,
+          "comments": 260,
+          "shares": 610,
+          "saves": 930
+        }
+      }
+    ],
+    "engagementRate": 0.09615384615384616
+  },
+  {
+    "assetName": "WEB_ENGT_BOF_LOOP_STIL_GRAF_THEWOR_ANAU_V01",
+    "variantId": "v3",
+    "format": "still",
+    "channel": "x",
+    "readings": [
+      {
+        "day": 3,
+        "engagementRate": 0.0625,
+        "metrics": {
+          "channel": "x",
+          "impressions": 8000,
+          "likes": 300,
+          "comments": 40,
+          "shares": 60,
+          "saves": 100
+        }
+      },
+      {
+        "day": 14,
+        "engagementRate": 0.024444444444444446,
+        "metrics": {
+          "channel": "x",
+          "impressions": 9000,
+          "likes": 150,
+          "comments": 20,
+          "shares": 20,
+          "saves": 30
+        }
+      }
+    ],
+    "engagementRate": 0.024444444444444446
+  }
+]
