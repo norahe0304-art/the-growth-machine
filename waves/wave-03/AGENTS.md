@@ -11,6 +11,6 @@ plan.json: 变体流量、预算、阈值与 21 天观测窗口。
 
 职责边界：简报定义创意意图，计划定义实验约束，`assets/` 只保存可投放成品。
 
-变更日志：2026-07-12 建立 Wave 3 地图并登记 Fan Reel Slot 资产目录。2026-07-12 补作业：为 SCALE 赢家 v2 Crest Profile 写入 rollout 播放手册（4 渠道），readout.json/report.html 重出。
+变更日志：2026-07-12 建立 Wave 3 地图并登记 Fan Reel Slot 资产目录。2026-07-12 补作业：为 SCALE 赢家 v2 Crest Profile 写入 rollout 播放手册（4 渠道），readout.json/report.html 重出。2026-07-12 渠道成品落地：四渠道按 nativeFormat 交付（TikTok 三镜头脚本+封面帧、IG UGC 实拍、X 横图带 hook、in-app 圆形安全区），assets/rollout/ 四图 + channelCopy 合入 readout，报告重出。
 
 [PROTOCOL]: 变更时更新此头部，然后检查 AGENTS.md

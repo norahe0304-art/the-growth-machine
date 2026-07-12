@@ -596,7 +596,12 @@
         {
           "channel": "instagram",
           "role": "discovery",
-          "assetSpec": "Square 1:1 feed crop plus a 9:16 Reel cut, the crest graft framed as the thumbnail focal point so the reveal reads at a glance.",
+          "nativeFormat": "ugc-still",
+          "assetName": "IG_CONV_MOF_EVG_STIL_THEP_THEWOR_FANS_V03",
+          "assetPath": "waves/wave-03/assets/rollout/IG_CONV_MOF_EVG_STIL_THEP_THEWOR_FANS_V03.png",
+          "channelCopy": "Same photo I always use, it just picked a side.",
+          "channelScript": null,
+          "assetSpec": "Creator aesthetic 1:1 still that reads as shot on a phone, candid window light, the crest visible on the sweater but unretouched and unstaged.",
           "executionSteps": [
             "Post the reveal Reel in the first 48 hours of the observation window.",
             "Lead the caption with the hook: your profile picture x a vintage team crest grafted over one corner.",
@@ -609,7 +614,16 @@
         {
           "channel": "tiktok",
           "role": "amplification",
-          "assetSpec": "Vertical 9:16 cut under 15 seconds, the crest painting itself on in one stroke restated as on screen text in the first 2 seconds.",
+          "nativeFormat": "video",
+          "assetName": "TT_CONV_MOF_EVG_STIL_THEP_THEWOR_FANS_V03",
+          "assetPath": "waves/wave-03/assets/rollout/TT_CONV_MOF_EVG_STIL_THEP_THEWOR_FANS_V03.png",
+          "channelCopy": "Same picture. New badge.",
+          "channelScript": [
+            "Shot 1 (establish): the untouched profile picture fills the frame, everyday and familiar, no sound cue yet",
+            "Shot 2 (contrast): the vintage crest paints itself onto the sweater corner in one stroke, cut on the beat",
+            "Shot 3 (land): hook copy locks in: Same picture. New badge. Frame holds for 1.5s, end"
+          ],
+          "assetSpec": "Native vertical video under 15 seconds, delivered as a ChatCut ready three shot script plus a 9:16 cover frame, the hook restated as large on screen text in the first 2 seconds.",
           "executionSteps": [
             "Ship the tiktok cut inside the first 48 hours of the observation window.",
             "Lead with the formula hook: your profile picture x a vintage team crest grafted over one corner.",
@@ -622,6 +636,11 @@
         {
           "channel": "in-app profile surface",
           "role": "retention",
+          "nativeFormat": "surface",
+          "assetName": "APP_CONV_MOF_EVG_STIL_THEP_THEWOR_FANS_V03",
+          "assetPath": "waves/wave-03/assets/rollout/APP_CONV_MOF_EVG_STIL_THEP_THEWOR_FANS_V03.png",
+          "channelCopy": "One tap and your profile wears the badge.",
+          "channelScript": null,
           "assetSpec": "1:1 crop tuned for the platform's own circular mask, the crest positioned in the lower corner so it survives the crop.",
           "executionSteps": [
             "Surface the grafted picture as a one tap profile photo update inside the first 48 hours.",
@@ -635,6 +654,11 @@
         {
           "channel": "x",
           "role": "conversion",
+          "nativeFormat": "still",
+          "assetName": "XTW_CONV_MOF_EVG_STIL_THEP_THEWOR_FANS_V03",
+          "assetPath": "waves/wave-03/assets/rollout/XTW_CONV_MOF_EVG_STIL_THEP_THEWOR_FANS_V03.png",
+          "channelCopy": "Your profile picture picked a side.",
+          "channelScript": null,
           "assetSpec": "16:9 still posted natively, the hook line carried as the post text, the crest kept legible at preview size.",
           "executionSteps": [
             "Post the still natively inside the first 48 hours of the observation window.",
