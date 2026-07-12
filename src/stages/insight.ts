@@ -1,7 +1,7 @@
 /**
  * [INPUT]: depends on lib/openai-client's chatComplete/isMockMode, on types.ts's AngleType/AssetKind/Variant/InsightResult
  * [OUTPUT]: exports runInsight(moment, waveNumber, injectedLearnings) -> InsightResult (3 variants)
- * [POS]: station 1 of the nine-station pipeline, the entry point of the whole flow — a moment gets cracked into 3 asset x newElement variants here
+ * [POS]: station 1 of the nine-station pipeline, the entry point of the whole flow: a moment gets cracked into 3 asset x newElement variants here
  * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */
 import { chatComplete, isMockMode, DEFAULT_MODEL } from "../lib/openai-client.js";
@@ -11,8 +11,8 @@ import type { AngleType, AssetKind, InsightResult, Variant } from "../types.js";
 // The formula is fixed in the prompt, not left to the LLM's discretion:
 // existing asset x one new element
 //   asset has exactly two allowed shapes:
-//   1. things people own     — a concrete object the audience already owns and recognizes (a chair / a pair of shoes / a mug)
-//   2. interactions people know — a concrete interaction the audience already knows how to do (a handshake / a toast / standing in line)
+//   1. things people own    : a concrete object the audience already owns and recognizes (a chair / a pair of shoes / a mug)
+//   2. interactions people know: a concrete interaction the audience already knows how to do (a handshake / a toast / standing in line)
 //   newElement is the one variable that gets swapped/grafted in; everything
 //   else must stay recognizable.
 // ============================================================
@@ -21,15 +21,15 @@ crack a moment (a news event, a topic, a cultural beat) into 3 creative variants
 
 Formula rules:
 1. asset must be something the audience already owns or already recognizes. It can only be one of two shapes:
-   - "thing": things people own — a concrete object the audience already owns
-   - "interaction": interactions people know — a concrete interaction the audience already knows how to do
-2. newElement is the single new variable — the one thing that grafts the moment's core tension onto the asset
-3. Nothing about the asset itself may be redesigned except for the newElement graft — it must stay fully recognizable
+   - "thing": things people own: a concrete object the audience already owns
+   - "interaction": interactions people know: a concrete interaction the audience already knows how to do
+2. newElement is the single new variable: the one thing that grafts the moment's core tension onto the asset
+3. Nothing about the asset itself may be redesigned except for the newElement graft: it must stay fully recognizable
 4. angle is a one-sentence description of this variant's hook logic
 5. angleType must be exactly one of three values, and it decides which distribution-curve family this variant gets:
    - "moment": trend-riding, attention decays fast
    - "evergreen": doesn't depend on topical heat, settles into steady, durable reach
-   - "ugc-loop": a UGC loop — gets reused/remixed wave after wave, compounding
+   - "ugc-loop": a UGC loop: gets reused/remixed wave after wave, compounding
 6. workingTitle is a working codename of 5 words or fewer
 
 Output must be strict JSON, in English, in this shape:
@@ -158,7 +158,7 @@ export async function runInsight(
   }
 
   const learningsBlock = injectedLearnings
-    ? `\n\nWinning traits from the previous wave (extend these while keeping the formula rules intact — this is where real evolution happens):\n${injectedLearnings}`
+    ? `\n\nWinning traits from the previous wave (extend these while keeping the formula rules intact: this is where real evolution happens):\n${injectedLearnings}`
     : "";
   const userPrompt = `moment: "${moment}"\nwave ${waveNumber}.${learningsBlock}\nProduce 3 variants.`;
 

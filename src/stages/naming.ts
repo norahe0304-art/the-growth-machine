@@ -1,7 +1,7 @@
 /**
  * [INPUT]: depends on src/taxonomy.ts's nine-segment dictionaries and slug utilities, on types.ts's NamingInput/NamedAsset
  * [OUTPUT]: exports runNaming(input) -> NamedAsset, a deterministic nine-segment name, no LLM involved
- * [POS]: station 3 of the nine-station pipeline, the only station that never calls a model — same input, always the same output
+ * [POS]: station 3 of the nine-station pipeline, the only station that never calls a model: same input, always the same output
  * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */
 import {

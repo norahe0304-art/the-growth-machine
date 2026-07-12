@@ -1,7 +1,7 @@
 /**
  * [INPUT]: depends on lib/openai-client's chatComplete/generateImage/isMockMode, on lib/fs-utils's ensureDir, on node:fs
  * [OUTPUT]: exports runProduce(...) -> ProducedAsset, real still-image + copy generation; motion only ever delivers a prompt, never rendered
- * [POS]: station 5 of the nine-station pipeline, the only station that makes a real Images API call — degrades to a placeholder SVG in mock mode
+ * [POS]: station 5 of the nine-station pipeline, the only station that makes a real Images API call: degrades to a placeholder SVG in mock mode
  * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */
 import { writeFile } from "node:fs/promises";
@@ -17,13 +17,13 @@ function placeholderSVG(assetName: string, prompt: string): string {
   <rect x="1" y="1" width="1534" height="1022" fill="none" stroke="#d8d5cd" stroke-width="2"/>
   <text x="768" y="480" font-family="Georgia, serif" font-size="34" fill="#1a1a1a" text-anchor="middle">${assetName}</text>
   <text x="768" y="540" font-family="Georgia, serif" font-size="18" fill="#6b6b63" text-anchor="middle">${wrapped}</text>
-  <text x="768" y="960" font-family="monospace" font-size="14" fill="#a8a59c" text-anchor="middle">MOCK ASSET — no real generation</text>
+  <text x="768" y="960" font-family="monospace" font-size="14" fill="#a8a59c" text-anchor="middle">MOCK ASSET: no real generation</text>
 </svg>`;
 }
 
 async function produceCopy(brief: Brief): Promise<string> {
   if (isMockMode()) {
-    return `[mock copy] ${brief.assetXElement} — ${brief.insight}`;
+    return `[mock copy] ${brief.assetXElement}: ${brief.insight}`;
   }
   return chatComplete({
     system: "You are a copy generator. Output exactly one line of copy per the user's prompt, in English, with no explanation and no surrounding quotes.",

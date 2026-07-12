@@ -1,7 +1,7 @@
 /**
  * [INPUT]: depends on types.ts's SimulatedCurve/Plan/Decision/Verdict/MeasuredAssetSummary/PreRegisteredThresholds, no LLM involved
  * [OUTPUT]: exports runDecide(curve, plan) -> Decision (simulated path), runDecideMeasured(measured, thresholds) -> Decision (measured path), and the shared tailSlope/finalValue helpers
- * [POS]: station 8 of the nine-station pipeline, the pure-rules conversion from a curve to a machine verdict — thresholds come from the preregistered constant tables in plan.ts
+ * [POS]: station 8 of the nine-station pipeline, the pure-rules conversion from a curve to a machine verdict: thresholds come from the preregistered constant tables in plan.ts
  * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */
 import type { Decision, MeasuredAssetSummary, Plan, PreRegisteredThresholds, SimulatedCurve } from "../types.js";
@@ -38,16 +38,16 @@ export function runDecide(curve: SimulatedCurve, plan: Plan): Decision {
 
   if (ctr >= thresholds.scaleAt) {
     verdict = "SCALE";
-    reason = `last-3-day average CTR ${ctr.toFixed(4)} reached the preregistered scaleAt ${thresholds.scaleAt} — verdict: scale`;
+    reason = `last-3-day average CTR ${ctr.toFixed(4)} reached the preregistered scaleAt ${thresholds.scaleAt}: verdict: scale`;
   } else if (ctr <= thresholds.killAt) {
     verdict = "KILL";
-    reason = `last-3-day average CTR ${ctr.toFixed(4)} fell below the preregistered killAt ${thresholds.killAt} — verdict: kill`;
+    reason = `last-3-day average CTR ${ctr.toFixed(4)} fell below the preregistered killAt ${thresholds.killAt}: verdict: kill`;
   } else if (slope <= thresholds.fatigueSlope) {
     verdict = "KILL";
-    reason = `last-7-day slope ${slope.toFixed(5)} tripped the preregistered fatigueSlope ${thresholds.fatigueSlope} — fatigue signal, verdict: kill`;
+    reason = `last-7-day slope ${slope.toFixed(5)} tripped the preregistered fatigueSlope ${thresholds.fatigueSlope}: fatigue signal, verdict: kill`;
   } else {
     verdict = "ITERATE";
-    reason = `last-3-day average CTR ${ctr.toFixed(4)} sits between killAt and scaleAt, slope has not tripped the fatigue threshold — verdict: iterate`;
+    reason = `last-3-day average CTR ${ctr.toFixed(4)} sits between killAt and scaleAt, slope has not tripped the fatigue threshold: verdict: iterate`;
   }
 
   return {
@@ -65,7 +65,7 @@ export function runDecide(curve: SimulatedCurve, plan: Plan): Decision {
 // Measured decide path: same rule shape as runDecide, but reads real
 // engagementRate readings off a wave's measure.ts output instead of a
 // simulated CTR curve. With fewer than 2 readings, tailSlope degrades to 0
-// (no fatigue signal can fire yet) — this is real data, you don't get a
+// (no fatigue signal can fire yet): this is real data, you don't get a
 // fatigue trend until you have at least two check-ins.
 // ============================================================
 export function runDecideMeasured(measured: MeasuredAssetSummary, thresholds: PreRegisteredThresholds): Decision {
@@ -78,16 +78,16 @@ export function runDecideMeasured(measured: MeasuredAssetSummary, thresholds: Pr
 
   if (rate >= thresholds.scaleAt) {
     verdict = "SCALE";
-    reason = `measured engagementRate ${rate.toFixed(4)} reached the preregistered scaleAt ${thresholds.scaleAt} — verdict: scale`;
+    reason = `measured engagementRate ${rate.toFixed(4)} reached the preregistered scaleAt ${thresholds.scaleAt}: verdict: scale`;
   } else if (rate <= thresholds.killAt) {
     verdict = "KILL";
-    reason = `measured engagementRate ${rate.toFixed(4)} fell below the preregistered killAt ${thresholds.killAt} — verdict: kill`;
+    reason = `measured engagementRate ${rate.toFixed(4)} fell below the preregistered killAt ${thresholds.killAt}: verdict: kill`;
   } else if (series.length >= 2 && slope <= thresholds.fatigueSlope) {
     verdict = "KILL";
-    reason = `measured readings slope ${slope.toFixed(5)} tripped the preregistered fatigueSlope ${thresholds.fatigueSlope} — fatigue signal, verdict: kill`;
+    reason = `measured readings slope ${slope.toFixed(5)} tripped the preregistered fatigueSlope ${thresholds.fatigueSlope}: fatigue signal, verdict: kill`;
   } else {
     verdict = "ITERATE";
-    reason = `measured engagementRate ${rate.toFixed(4)} sits between killAt and scaleAt, slope has not tripped the fatigue threshold — verdict: iterate`;
+    reason = `measured engagementRate ${rate.toFixed(4)} sits between killAt and scaleAt, slope has not tripped the fatigue threshold: verdict: iterate`;
   }
 
   return {

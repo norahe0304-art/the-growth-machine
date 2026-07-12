@@ -1,7 +1,7 @@
 /**
  * [INPUT]: depends on lib/fs-utils's readJSON/writeJSON/readJSONL/fileExists/waveDir, on lib/prompt's createPrompter, on stages/plan.ts's ENGAGEMENT_THRESHOLDS, on stages/decide.ts's runDecideMeasured, on stages/learn.ts's updateLibraryEntry, on lib/report.ts's renderReport
  * [OUTPUT]: exports computeEngagementRate() / normalizeInputEntry() / mergeReadings() / runMeasure(waveNumber, entries) -> WaveReadout, and collectInteractiveEntries() for the CLI's interactive path
- * [POS]: the tenth, post-hoc station — turns the simulator into an instrument. Runs after a wave has already been produced; reads real channel data, re-decides the assets it covers against ENGAGEMENT_THRESHOLDS, and rewrites that wave's readout/report/library entry in place
+ * [POS]: the tenth, post-hoc station: turns the simulator into an instrument. Runs after a wave has already been produced; reads real channel data, re-decides the assets it covers against ENGAGEMENT_THRESHOLDS, and rewrites that wave's readout/report/library entry in place
  * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */
 import { writeFile } from "node:fs/promises";
@@ -91,7 +91,7 @@ export async function runMeasure(waveNumber: number, entries: MeasuredInputEntry
   const dir = waveDir(waveNumber);
   const readoutPath = path.join(dir, "readout.json");
   if (!(await fileExists(readoutPath))) {
-    throw new Error(`measure: wave ${waveNumber} has no readout.json yet — run "growth-machine run" first`);
+    throw new Error(`measure: wave ${waveNumber} has no readout.json yet: run "growth-machine run" first`);
   }
   const readout = await readJSON<WaveReadout>(readoutPath);
 
@@ -166,7 +166,7 @@ export async function collectInteractiveEntries(waveNumber: number): Promise<Mea
   const dir = waveDir(waveNumber);
   const readoutPath = path.join(dir, "readout.json");
   if (!(await fileExists(readoutPath))) {
-    throw new Error(`measure: wave ${waveNumber} has no readout.json yet — run "growth-machine run" first`);
+    throw new Error(`measure: wave ${waveNumber} has no readout.json yet: run "growth-machine run" first`);
   }
   const readout = await readJSON<WaveReadout>(readoutPath);
   const stillAssets = readout.namedAssets.filter((n) => n.format === "still");
@@ -174,7 +174,7 @@ export async function collectInteractiveEntries(waveNumber: number): Promise<Mea
   const prompter = createPrompter();
   const entries: MeasuredInputEntry[] = [];
   try {
-    console.log(`[measure] wave ${waveNumber} — ${stillAssets.length} still asset(s). Press Enter to skip an asset (impressions=0).`);
+    console.log(`[measure] wave ${waveNumber}: ${stillAssets.length} still asset(s). Press Enter to skip an asset (impressions=0).`);
     for (const na of stillAssets) {
       console.log(`\n  asset: ${na.name}`);
       const channel = (await prompter.ask("  channel (x/xiaohongshu/linkedin)", "x")) as Channel;

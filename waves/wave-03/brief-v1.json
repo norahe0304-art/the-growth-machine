@@ -1,0 +1,17 @@
+{
+  "variantId": "v1",
+  "workingTitle": "Final Night Seat",
+  "audience": "fans following the world cup final without a ticket",
+  "insight": "the final is the one night every fan wants proof of presence, and almost none of them can be in the building",
+  "assetXElement": "your selfie x the final night stands behind you",
+  "formats": [
+    "still",
+    "motion"
+  ],
+  "successMetric": "generation to share rate within 48 hours",
+  "generationPrompts": {
+    "image": "Editorial phone frame composition: a casual selfie recomposed so the subject stands inside a packed stadium at night during a cup final, gold confetti falling, floodlights blooming, crowd bokeh behind. Before and after split, left the original plain selfie, right the final night version. Photorealistic, warm light, subtle grain, 16:9, short overlay copy area at bottom left.",
+    "motion": "[for ChatCut] three shot script: shot 1 the plain selfie on a phone screen; shot 2 the same face placed into the roaring final night stands, confetti mid air; shot 3 the hook line lands over the crowd, 6 seconds total",
+    "copy": "Write one hook line, 20 words or fewer, present tense, about being at the final without a ticket, restrained tone, no exclamation marks"
+  }
+}

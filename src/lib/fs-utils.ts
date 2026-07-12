@@ -57,7 +57,7 @@ export async function readJSONL<T>(filePath: string): Promise<T[]> {
     .map((line) => JSON.parse(line) as T);
 }
 
-// Rewrites library.jsonl wholesale from a full list of entries — used by the
+// Rewrites library.jsonl wholesale from a full list of entries: used by the
 // measure stage to update a single wave's entry in place (e.g. after a
 // measured decide pass changes its winners/sources) without disturbing the
 // append-only semantics readJSONL/appendJSONL provide for the normal flow.

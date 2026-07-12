@@ -1,0 +1,591 @@
+{
+  "moment": "the world cup final",
+  "waveNumber": 3,
+  "variants": [
+    {
+      "id": "v1",
+      "asset": "your selfie",
+      "assetKind": "thing",
+      "newElement": "the final night stands behind you",
+      "angle": "being at the final without a ticket, proof of presence for the one night every fan wants it",
+      "angleType": "moment",
+      "workingTitle": "Final Night Seat"
+    },
+    {
+      "id": "v2",
+      "asset": "your profile picture",
+      "assetKind": "thing",
+      "newElement": "a vintage team crest grafted over one corner",
+      "angle": "the picture everyone already curates quietly wears the badge",
+      "angleType": "evergreen",
+      "workingTitle": "Crest Profile"
+    },
+    {
+      "id": "v3",
+      "asset": "your match day photos",
+      "assetKind": "thing",
+      "newElement": "a credited slot in the weekly fan reel",
+      "angle": "the archive fans already shoot becomes a stage that restocks itself",
+      "angleType": "ugc-loop",
+      "workingTitle": "Fan Reel Slot"
+    }
+  ],
+  "briefs": [
+    {
+      "variantId": "v1",
+      "workingTitle": "Final Night Seat",
+      "audience": "fans following the world cup final without a ticket",
+      "insight": "the final is the one night every fan wants proof of presence, and almost none of them can be in the building",
+      "assetXElement": "your selfie x the final night stands behind you",
+      "formats": [
+        "still",
+        "motion"
+      ],
+      "successMetric": "generation to share rate within 48 hours",
+      "generationPrompts": {
+        "image": "Editorial phone frame composition: a casual selfie recomposed so the subject stands inside a packed stadium at night during a cup final, gold confetti falling, floodlights blooming, crowd bokeh behind. Before and after split, left the original plain selfie, right the final night version. Photorealistic, warm light, subtle grain, 16:9, short overlay copy area at bottom left.",
+        "motion": "[for ChatCut] three shot script: shot 1 the plain selfie on a phone screen; shot 2 the same face placed into the roaring final night stands, confetti mid air; shot 3 the hook line lands over the crowd, 6 seconds total",
+        "copy": "Write one hook line, 20 words or fewer, present tense, about being at the final without a ticket, restrained tone, no exclamation marks"
+      }
+    },
+    {
+      "variantId": "v2",
+      "workingTitle": "Crest Profile",
+      "audience": "fans whose profile picture is their most curated possession",
+      "insight": "a profile picture is the one image everyone already maintains, and a small crest graft signals fandom while the face stays untouched",
+      "assetXElement": "your profile picture x a vintage team crest grafted over one corner",
+      "formats": [
+        "still",
+        "motion"
+      ],
+      "successMetric": "7 day adoption of the grafted picture as an actual profile photo",
+      "generationPrompts": {
+        "image": "A profile picture recomposed with a small vintage football crest painted over the lower corner, enamel pin texture, the face untouched and fully recognizable, studio light, square crop presented on a 16:9 paper white field with a thin hairline frame.",
+        "motion": "[for ChatCut] three shot script: shot 1 the untouched profile picture; shot 2 the crest paints itself on in one stroke; shot 3 the picture snaps into a social profile header, 6 seconds total",
+        "copy": "Write one hook line, 20 words or fewer, about wearing the badge on the picture you already use, restrained tone, no exclamation marks"
+      }
+    },
+    {
+      "variantId": "v3",
+      "workingTitle": "Fan Reel Slot",
+      "audience": "fans posting match day photos all tournament",
+      "insight": "fans already shoot the tournament every week, and a credited slot in an official weekly reel turns their archive into a stage",
+      "assetXElement": "your match day photos x a credited slot in the weekly fan reel",
+      "formats": [
+        "still",
+        "motion"
+      ],
+      "successMetric": "submission to publish conversion per weekly reel",
+      "generationPrompts": {
+        "image": "A grid of six varied fan made match day photos arranged as a weekly reel cover, each tile carrying a small credit tag with a handle, one tile highlighted as the week's opener, editorial paper white margins, thin hairlines, 16:9.",
+        "motion": "[for ChatCut] three shot script: shot 1 a fan's camera roll scrolling; shot 2 one photo lifts into the reel grid and gains a credit tag; shot 3 the reel cover locks with the week number, 6 seconds total",
+        "copy": "Write one hook line, 20 words or fewer, inviting fans to submit match day photos for a credited weekly reel, restrained tone, no exclamation marks"
+      }
+    }
+  ],
+  "namedAssets": [
+    {
+      "variantId": "v1",
+      "format": "still",
+      "name": "WEB_CONV_TOF_HOT_STIL_BEIN_THEWOR_FANS_V03",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "CONV",
+        "FUNNEL": "TOF",
+        "TEMP": "HOT",
+        "FORMAT": "STIL",
+        "HOOK": "BEIN",
+        "MOMENT": "THEWOR",
+        "PERSONA": "FANS",
+        "VER": "V03"
+      }
+    },
+    {
+      "variantId": "v1",
+      "format": "motion",
+      "name": "WEB_CONV_TOF_HOT_MOTN_BEIN_THEWOR_FANS_V03",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "CONV",
+        "FUNNEL": "TOF",
+        "TEMP": "HOT",
+        "FORMAT": "MOTN",
+        "HOOK": "BEIN",
+        "MOMENT": "THEWOR",
+        "PERSONA": "FANS",
+        "VER": "V03"
+      }
+    },
+    {
+      "variantId": "v2",
+      "format": "still",
+      "name": "WEB_CONV_MOF_EVG_STIL_THEP_THEWOR_FANS_V03",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "CONV",
+        "FUNNEL": "MOF",
+        "TEMP": "EVG",
+        "FORMAT": "STIL",
+        "HOOK": "THEP",
+        "MOMENT": "THEWOR",
+        "PERSONA": "FANS",
+        "VER": "V03"
+      }
+    },
+    {
+      "variantId": "v2",
+      "format": "motion",
+      "name": "WEB_CONV_MOF_EVG_MOTN_THEP_THEWOR_FANS_V03",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "CONV",
+        "FUNNEL": "MOF",
+        "TEMP": "EVG",
+        "FORMAT": "MOTN",
+        "HOOK": "THEP",
+        "MOMENT": "THEWOR",
+        "PERSONA": "FANS",
+        "VER": "V03"
+      }
+    },
+    {
+      "variantId": "v3",
+      "format": "still",
+      "name": "WEB_CONV_BOF_LOOP_STIL_THEA_THEWOR_FANS_V03",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "CONV",
+        "FUNNEL": "BOF",
+        "TEMP": "LOOP",
+        "FORMAT": "STIL",
+        "HOOK": "THEA",
+        "MOMENT": "THEWOR",
+        "PERSONA": "FANS",
+        "VER": "V03"
+      }
+    },
+    {
+      "variantId": "v3",
+      "format": "motion",
+      "name": "WEB_CONV_BOF_LOOP_MOTN_THEA_THEWOR_FANS_V03",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "CONV",
+        "FUNNEL": "BOF",
+        "TEMP": "LOOP",
+        "FORMAT": "MOTN",
+        "HOOK": "THEA",
+        "MOMENT": "THEWOR",
+        "PERSONA": "FANS",
+        "VER": "V03"
+      }
+    }
+  ],
+  "plan": {
+    "moment": "the world cup final",
+    "waveNumber": 3,
+    "arms": [
+      {
+        "variantId": "v1",
+        "format": "still",
+        "name": "WEB_CONV_TOF_HOT_STIL_BEIN_THEWOR_FANS_V03",
+        "trafficSplitPct": 33.33,
+        "budgetIllustrative": 500
+      },
+      {
+        "variantId": "v2",
+        "format": "still",
+        "name": "WEB_CONV_MOF_EVG_STIL_THEP_THEWOR_FANS_V03",
+        "trafficSplitPct": 33.33,
+        "budgetIllustrative": 250
+      },
+      {
+        "variantId": "v3",
+        "format": "still",
+        "name": "WEB_CONV_BOF_LOOP_STIL_THEA_THEWOR_FANS_V03",
+        "trafficSplitPct": 33.33,
+        "budgetIllustrative": 350
+      }
+    ],
+    "preRegisteredThresholds": {
+      "moment": {
+        "scaleAt": 0.045,
+        "killAt": 0.015,
+        "fatigueSlope": -0.004
+      },
+      "evergreen": {
+        "scaleAt": 0.035,
+        "killAt": 0.012,
+        "fatigueSlope": -0.0015
+      },
+      "ugc-loop": {
+        "scaleAt": 0.05,
+        "killAt": 0.018,
+        "fatigueSlope": -0.002
+      }
+    },
+    "engagementThresholds": {
+      "moment": {
+        "scaleAt": 0.08,
+        "killAt": 0.02,
+        "fatigueSlope": -0.01
+      },
+      "evergreen": {
+        "scaleAt": 0.06,
+        "killAt": 0.015,
+        "fatigueSlope": -0.004
+      },
+      "ugc-loop": {
+        "scaleAt": 0.1,
+        "killAt": 0.025,
+        "fatigueSlope": -0.006
+      }
+    },
+    "dates": {
+      "start": "2026-07-12",
+      "end": "2026-08-02",
+      "days": 21
+    },
+    "rationale": "Wave 3 splits traffic evenly across three variants for \"the world cup final\"; the 21-day observation window covers the full fatigue-curve inflection point"
+  },
+  "produced": [
+    {
+      "variantId": "v1",
+      "format": "still",
+      "name": "WEB_CONV_TOF_HOT_STIL_BEIN_THEWOR_FANS_V03",
+      "assetPath": "waves/wave-03/assets/WEB_CONV_TOF_HOT_STIL_BEIN_THEWOR_FANS_V03.png",
+      "copy": "The final sold out months ago. Your seat did not.",
+      "motionScript": null,
+      "imageModelUsed": "codex-exec",
+      "regeneratedCount": 0
+    },
+    {
+      "variantId": "v1",
+      "format": "motion",
+      "name": "WEB_CONV_TOF_HOT_MOTN_BEIN_THEWOR_FANS_V03",
+      "assetPath": null,
+      "copy": "Ninety thousand seats, one of them suddenly yours.",
+      "motionScript": [
+        "Shot 1: a plain selfie sits on a phone screen",
+        "Shot 2: the same face stands in the roaring final night stands, confetti mid air",
+        "Shot 3: the hook line lands over the crowd, held one beat"
+      ],
+      "imageModelUsed": null,
+      "regeneratedCount": 0
+    },
+    {
+      "variantId": "v2",
+      "format": "still",
+      "name": "WEB_CONV_MOF_EVG_STIL_THEP_THEWOR_FANS_V03",
+      "assetPath": "waves/wave-03/assets/WEB_CONV_MOF_EVG_STIL_THEP_THEWOR_FANS_V03.png",
+      "copy": "The badge goes where everyone already looks.",
+      "motionScript": null,
+      "imageModelUsed": "codex-exec",
+      "regeneratedCount": 0
+    },
+    {
+      "variantId": "v2",
+      "format": "motion",
+      "name": "WEB_CONV_MOF_EVG_MOTN_THEP_THEWOR_FANS_V03",
+      "assetPath": null,
+      "copy": "Same picture you always use, wearing the crest now.",
+      "motionScript": [
+        "Shot 1: the untouched profile picture, square, familiar",
+        "Shot 2: a vintage crest paints itself onto the lower corner in one stroke",
+        "Shot 3: the picture snaps into a social profile header"
+      ],
+      "imageModelUsed": null,
+      "regeneratedCount": 0
+    },
+    {
+      "variantId": "v3",
+      "format": "still",
+      "name": "WEB_CONV_BOF_LOOP_STIL_THEA_THEWOR_FANS_V03",
+      "assetPath": "waves/wave-03/assets/WEB_CONV_BOF_LOOP_STIL_THEA_THEWOR_FANS_V03.png",
+      "copy": "Your match photos, credited, in this week's reel.",
+      "motionScript": null,
+      "imageModelUsed": "codex-exec",
+      "regeneratedCount": 0
+    },
+    {
+      "variantId": "v3",
+      "format": "motion",
+      "name": "WEB_CONV_BOF_LOOP_MOTN_THEA_THEWOR_FANS_V03",
+      "assetPath": null,
+      "copy": "Shot on your phone. Opening this week's reel.",
+      "motionScript": [
+        "Shot 1: a fan's camera roll scrolls past match day photos",
+        "Shot 2: one photo lifts into the reel grid and gains a credit tag",
+        "Shot 3: the reel cover locks with the week number"
+      ],
+      "imageModelUsed": null,
+      "regeneratedCount": 0
+    }
+  ],
+  "judged": [
+    {
+      "variantId": "v1",
+      "format": "still",
+      "score": {
+        "onBrief": 3,
+        "legible": 3,
+        "shareable": 3
+      },
+      "passed": true,
+      "regenerated": false,
+      "notes": "Before and after split lands the graft cleanly; reserved copy area unused, noted only."
+    },
+    {
+      "variantId": "v1",
+      "format": "motion",
+      "score": {
+        "onBrief": 3,
+        "legible": 3,
+        "shareable": 3
+      },
+      "passed": true,
+      "regenerated": false,
+      "notes": "Before and after split lands the graft cleanly; reserved copy area unused, noted only."
+    },
+    {
+      "variantId": "v2",
+      "format": "still",
+      "score": {
+        "onBrief": 3,
+        "legible": 3,
+        "shareable": 2
+      },
+      "passed": true,
+      "regenerated": false,
+      "notes": "Face untouched, crest reads as enamel pin; quiet by design."
+    },
+    {
+      "variantId": "v2",
+      "format": "motion",
+      "score": {
+        "onBrief": 3,
+        "legible": 3,
+        "shareable": 2
+      },
+      "passed": true,
+      "regenerated": false,
+      "notes": "Face untouched, crest reads as enamel pin; quiet by design."
+    },
+    {
+      "variantId": "v3",
+      "format": "still",
+      "score": {
+        "onBrief": 3,
+        "legible": 3,
+        "shareable": 3
+      },
+      "passed": true,
+      "regenerated": false,
+      "notes": "Credit tags and opener highlight make the loop mechanics visible."
+    },
+    {
+      "variantId": "v3",
+      "format": "motion",
+      "score": {
+        "onBrief": 3,
+        "legible": 3,
+        "shareable": 3
+      },
+      "passed": true,
+      "regenerated": false,
+      "notes": "Credit tags and opener highlight make the loop mechanics visible."
+    }
+  ],
+  "simulated": [
+    {
+      "variantId": "v1",
+      "format": "still",
+      "angleType": "moment",
+      "days": 21,
+      "predictedCTR": [
+        0.019514447490684685,
+        0.03935802589077502,
+        0.060639116107486186,
+        0.04943067894048164,
+        0.03787045418450111,
+        0.03095579820409144,
+        0.024300904864613643,
+        0.019768250736417203,
+        0.017254236720740956,
+        0.014512037085965218,
+        0.011918639786980705,
+        0.00842027668702343,
+        0.008546957817763084,
+        0.0048353991410064546,
+        0.005794400636279748,
+        0.0029649879544411777,
+        0.002116880586223426,
+        0.0027146448161623326,
+        0.0021828204592620267,
+        0.0018065530885211121,
+        0
+      ],
+      "shareRate": [
+        0.00889742974131368,
+        0.017881360006565226,
+        0.02665132474876009,
+        0.02286970499362798,
+        0.01729902656962964,
+        0.014409982287480198,
+        0.011745228028745695,
+        0.00917505931375034,
+        0.0068956628243581185,
+        0.005605032513651971,
+        0.005827243465010296,
+        0.0032052568442459653,
+        0.003093208177111295,
+        0.0012058889703308573,
+        0.001782127052250877,
+        0.0020532931224004035,
+        0,
+        0.0008432469534578076,
+        0.00108698377583794,
+        0.0005527826829717229,
+        0.0006034048981964588
+      ],
+      "seed": "2254296756"
+    },
+    {
+      "variantId": "v2",
+      "format": "still",
+      "angleType": "evergreen",
+      "days": 21,
+      "predictedCTR": [
+        0.021958466449493817,
+        0.02528687661085092,
+        0.02533731412183921,
+        0.027387958056561478,
+        0.03128101183205871,
+        0.030221963618404474,
+        0.03199677809063987,
+        0.03073041551634299,
+        0.031000039674351096,
+        0.03456714411943937,
+        0.033662401974054616,
+        0.03311223112821006,
+        0.03391063133739825,
+        0.036761114651976,
+        0.03471873761610052,
+        0.03757761066378812,
+        0.0382607946102678,
+        0.03741389942721894,
+        0.03626529441097044,
+        0.03719059269119545,
+        0.03968601198866963
+      ],
+      "shareRate": [
+        0.005854506036667688,
+        0.005559005528082607,
+        0.006807910361430745,
+        0.007386611719449939,
+        0.007496715537067573,
+        0.007183165798542849,
+        0.007959533520314584,
+        0.008279316012001601,
+        0.00675870431401071,
+        0.008787962438836158,
+        0.008946993972603838,
+        0.008694103251750079,
+        0.009234985739274313,
+        0.00835418792224625,
+        0.009195869558697842,
+        0.008513033533864121,
+        0.009435489939646404,
+        0.009055554989244468,
+        0.00996944089250928,
+        0.00975172609879758,
+        0.010621764282230287
+      ],
+      "seed": "4100086016"
+    },
+    {
+      "variantId": "v3",
+      "format": "still",
+      "angleType": "ugc-loop",
+      "days": 21,
+      "predictedCTR": [
+        0.021728236883878708,
+        0.021951150396838783,
+        0.020969835463911294,
+        0.020868143663741647,
+        0.02398289909865707,
+        0.022909480619244277,
+        0.023488663836382328,
+        0.025978212065249678,
+        0.023948111764341588,
+        0.026835147425718603,
+        0.027250756826438006,
+        0.027034919449314472,
+        0.02538555893413722,
+        0.023903802992962297,
+        0.030259140255190425,
+        0.029119469585157924,
+        0.02710355392124503,
+        0.030743779668845228,
+        0.027868114022798828,
+        0.02922074910093098,
+        0.0307256124869734
+      ],
+      "shareRate": [
+        0.019023539616353807,
+        0.019498771978914736,
+        0.019775295422412454,
+        0.0192848906618543,
+        0.02129036671081558,
+        0.01995749290920794,
+        0.021710074738040566,
+        0.024046274811010803,
+        0.021734735939167436,
+        0.02482434513958171,
+        0.024530533703677353,
+        0.024277205448672172,
+        0.022118779166024175,
+        0.0217777539245598,
+        0.027214015107836567,
+        0.026086838966842735,
+        0.02503301837188377,
+        0.028025144922967992,
+        0.02536719111590832,
+        0.02606759529463201,
+        0.028288616793464866
+      ],
+      "seed": "2669206281"
+    }
+  ],
+  "decided": [
+    {
+      "variantId": "v1",
+      "format": "still",
+      "verdict": "KILL",
+      "reason": "last-3-day average CTR 0.0013 fell below the preregistered killAt 0.015: verdict: kill",
+      "finalCTR": 0.0013297911825943798,
+      "slope": -0.0007012189917014562,
+      "source": "simulated"
+    },
+    {
+      "variantId": "v2",
+      "format": "still",
+      "verdict": "SCALE",
+      "reason": "last-3-day average CTR 0.0377 reached the preregistered scaleAt 0.035: verdict: scale",
+      "finalCTR": 0.037713966363611844,
+      "slope": 0.00043329596332945163,
+      "source": "simulated"
+    },
+    {
+      "variantId": "v3",
+      "format": "still",
+      "verdict": "ITERATE",
+      "reason": "last-3-day average CTR 0.0293 sits between killAt and scaleAt, slope has not tripped the fatigue threshold: verdict: iterate",
+      "finalCTR": 0.029271491870234406,
+      "slope": 0.00008451913673031535,
+      "source": "simulated"
+    }
+  ],
+  "measured": [],
+  "injectedLearnings": "Winning traits from wave 2: thing asset \"your profile picture\" + angleType=evergreen + HOOK=GRAF. Prioritize reusing these asset shapes and angleType combinations in new variants."
+}

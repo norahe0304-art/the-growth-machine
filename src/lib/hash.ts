@@ -1,6 +1,6 @@
 /**
  * [INPUT]: no external dependencies, pure functions
- * [OUTPUT]: exports hashString() / mulberry32() —— deterministic hashing and a reproducible seeded RNG
+ * [OUTPUT]: exports hashString() / mulberry32() :: deterministic hashing and a reproducible seeded RNG
  * [POS]: a lib/ determinism utility; simulate.ts and measure.ts use it to turn asset names into reproducible noise curves
  * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */

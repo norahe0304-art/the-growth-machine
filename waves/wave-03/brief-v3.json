@@ -1,0 +1,17 @@
+{
+  "variantId": "v3",
+  "workingTitle": "Fan Reel Slot",
+  "audience": "fans posting match day photos all tournament",
+  "insight": "fans already shoot the tournament every week, and a credited slot in an official weekly reel turns their archive into a stage",
+  "assetXElement": "your match day photos x a credited slot in the weekly fan reel",
+  "formats": [
+    "still",
+    "motion"
+  ],
+  "successMetric": "submission to publish conversion per weekly reel",
+  "generationPrompts": {
+    "image": "A grid of six varied fan made match day photos arranged as a weekly reel cover, each tile carrying a small credit tag with a handle, one tile highlighted as the week's opener, editorial paper white margins, thin hairlines, 16:9.",
+    "motion": "[for ChatCut] three shot script: shot 1 a fan's camera roll scrolling; shot 2 one photo lifts into the reel grid and gains a credit tag; shot 3 the reel cover locks with the week number, 6 seconds total",
+    "copy": "Write one hook line, 20 words or fewer, inviting fans to submit match day photos for a credited weekly reel, restrained tone, no exclamation marks"
+  }
+}

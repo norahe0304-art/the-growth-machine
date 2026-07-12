@@ -1,7 +1,7 @@
 /**
  * [INPUT]: depends on node:fs/promises to read image assets, on types.ts's WaveReadout and all its sub-types, plus optional LearningEntry[] for the library summary block
  * [OUTPUT]: exports renderReport(readout, libraryEntries?) -> Promise<string>, a self-contained report.html string
- * [POS]: the terminal presentation layer of the nine-station pipeline, outside stages/ (it doesn't participate in decisions) — paints a WaveReadout into an editorial layout, with a predicted-vs-measured overlay once measure.ts has run
+ * [POS]: the terminal presentation layer of the nine-station pipeline, outside stages/ (it doesn't participate in decisions): paints a WaveReadout into an editorial layout, with a predicted-vs-measured overlay once measure.ts has run
  * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */
 import { readFile } from "node:fs/promises";
@@ -38,7 +38,7 @@ async function assetDataURI(assetPath: string | null): Promise<string | null> {
 // A day-level line chart, inline SVG, pure function, no external deps.
 // predicted always renders as a dashed line. When measured points are
 // supplied they render as a solid line connecting the actual check-ins
-// (a lone point still renders as a dot) — dashed vs solid IS the legend.
+// (a lone point still renders as a dot): dashed vs solid IS the legend.
 function curveSVG(params: {
   predicted: number[];
   measured?: { day: number; value: number }[];
@@ -148,7 +148,7 @@ async function renderVariantCard(params: {
         <span class="atom-label">New Element</span>
         <span class="atom-value">${escapeHTML(variant.newElement)}</span>
       </div>
-      <div class="formula-line">${escapeHTML(brief.assetXElement)} — ${escapeHTML(variant.workingTitle)}</div>
+      <div class="formula-line">${escapeHTML(brief.assetXElement)}: ${escapeHTML(variant.workingTitle)}</div>
     </header>
 
     <div class="variant-body">
@@ -223,7 +223,7 @@ function librarySection(libraryEntries: LearningEntry[] | undefined): string {
     })
     .join("");
   return `<div class="library-summary">
-    <span class="learnings-label">library — cross-wave winners</span>
+    <span class="learnings-label">library: cross-wave winners</span>
     ${rows}
   </div>`;
 }

@@ -28,7 +28,7 @@ export function isMockMode(): boolean {
 
 export function getClient(): OpenAI {
   if (isMockMode()) {
-    throw new Error("getClient() must not be called in mock mode — check isMockMode() first");
+    throw new Error("getClient() must not be called in mock mode: check isMockMode() first");
   }
   if (!client) {
     client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });

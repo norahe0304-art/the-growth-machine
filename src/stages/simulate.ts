@@ -1,7 +1,7 @@
 /**
  * [INPUT]: depends on lib/hash's hashString/mulberry32, on types.ts's SimulatedCurve/AngleType/NamedAsset
  * [OUTPUT]: exports runSimulate(namedAsset, angleType, days, waveNumber) -> SimulatedCurve
- * [POS]: station 7 of the nine-station pipeline, where the honest boundary lives — market response is simulated, three response models map to three angleTypes
+ * [POS]: station 7 of the nine-station pipeline, where the honest boundary lives: market response is simulated, three response models map to three angleTypes
  * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */
 import { hashString, mulberry32 } from "../lib/hash.js";

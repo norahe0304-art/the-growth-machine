@@ -8,7 +8,7 @@ import { chatComplete, isMockMode, DEFAULT_MODEL } from "../lib/openai-client.js
 import type { AngleType, NamedAsset, Plan, PlanArm, PreRegisteredThresholds, Variant } from "../types.js";
 
 // ============================================================
-// Preregistered threshold table — hardcoded, never mutated at decide time;
+// Preregistered threshold table: hardcoded, never mutated at decide time;
 // that immutability is the whole point of preregistration, you can't move
 // the goalposts after seeing the curve.
 // scaleAt/killAt are CTR (0-1), fatigueSlope is the tail-slope threshold
@@ -24,7 +24,7 @@ export const PRE_REGISTERED_THRESHOLDS: Record<AngleType, PreRegisteredThreshold
 };
 
 // ============================================================
-// Engagement-rate threshold table — the measured-data decide path uses this
+// Engagement-rate threshold table: the measured-data decide path uses this
 // instead of PRE_REGISTERED_THRESHOLDS. engagementRate = (likes + comments +
 // shares + saves) / impressions, which typically runs an order of magnitude
 // higher than CTR, so the bars are set on a different scale, same shape.

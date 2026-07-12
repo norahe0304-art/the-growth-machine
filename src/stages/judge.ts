@@ -1,7 +1,7 @@
 /**
  * [INPUT]: depends on lib/openai-client's chatComplete/isMockMode, on lib/hash's hashString/mulberry32, on stages/produce.ts's runProduce
  * [OUTPUT]: exports runJudge(...) -> { produced, judgeResult }, three-point self-check with one automatic regeneration on failure
- * [POS]: station 6 of the nine-station pipeline, the quality gate between produce and simulate — any dimension scoring fail(=1) triggers up to one regeneration
+ * [POS]: station 6 of the nine-station pipeline, the quality gate between produce and simulate: any dimension scoring fail(=1) triggers up to one regeneration
  * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */
 import { chatComplete, isMockMode, DEFAULT_MODEL } from "../lib/openai-client.js";

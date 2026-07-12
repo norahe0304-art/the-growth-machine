@@ -1,7 +1,7 @@
 /**
  * [INPUT]: depends on lib/fs-utils's appendJSONL/readJSONL/writeJSONL/LIBRARY_PATH, on types.ts's LearningEntry/Decision/Variant/NamedAsset
  * [OUTPUT]: exports runLearn(...) -> LearningEntry (appended to library.jsonl), updateLibraryEntry(...) (rewrites one wave's entry, used by measure), getInjectedLearnings() -> string|null
- * [POS]: station 9 of the nine-station pipeline, where "real evolution" happens — this wave's winning traits get committed and injected into the next wave's insight/brief prompts
+ * [POS]: station 9 of the nine-station pipeline, where "real evolution" happens: this wave's winning traits get committed and injected into the next wave's insight/brief prompts
  * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */
 import { appendJSONL, readJSONL, writeJSONL, LIBRARY_PATH } from "../lib/fs-utils.js";
@@ -25,7 +25,7 @@ function extractTraits(winners: Decision[], variants: Variant[], namedAssets: Na
       source: win.source,
     });
   }
-  // measured winners carry more weight than simulated ones — real data goes first
+  // measured winners carry more weight than simulated ones: real data goes first
   return traits.sort((a, b) => (a.source === b.source ? 0 : a.source === "measured" ? -1 : 1));
 }
 
@@ -37,7 +37,7 @@ function buildLearnings(waveNumber: number, traits: WinnerTrait[]): string {
   const traitList = traits.map((t) => (t.source === "measured" ? `${t.trait} [measured]` : t.trait)).join("; ");
   const priorityNote =
     measuredCount > 0
-      ? ` ${measuredCount} of these winner(s) are backed by real measured data — prioritize those traits first.`
+      ? ` ${measuredCount} of these winner(s) are backed by real measured data: prioritize those traits first.`
       : "";
   return `Winning traits from wave ${waveNumber}: ${traitList}. Prioritize reusing these asset shapes and angleType combinations in new variants.${priorityNote}`;
 }

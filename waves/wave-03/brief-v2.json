@@ -1,0 +1,17 @@
+{
+  "variantId": "v2",
+  "workingTitle": "Crest Profile",
+  "audience": "fans whose profile picture is their most curated possession",
+  "insight": "a profile picture is the one image everyone already maintains, and a small crest graft signals fandom while the face stays untouched",
+  "assetXElement": "your profile picture x a vintage team crest grafted over one corner",
+  "formats": [
+    "still",
+    "motion"
+  ],
+  "successMetric": "7 day adoption of the grafted picture as an actual profile photo",
+  "generationPrompts": {
+    "image": "A profile picture recomposed with a small vintage football crest painted over the lower corner, enamel pin texture, the face untouched and fully recognizable, studio light, square crop presented on a 16:9 paper white field with a thin hairline frame.",
+    "motion": "[for ChatCut] three shot script: shot 1 the untouched profile picture; shot 2 the crest paints itself on in one stroke; shot 3 the picture snaps into a social profile header, 6 seconds total",
+    "copy": "Write one hook line, 20 words or fewer, about wearing the badge on the picture you already use, restrained tone, no exclamation marks"
+  }
+}

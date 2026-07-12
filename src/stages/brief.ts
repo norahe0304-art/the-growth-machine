@@ -10,7 +10,7 @@ import type { Brief, Variant } from "../types.js";
 const BRIEF_SYSTEM_PROMPT = `You are the brief-station engine of The Growth Machine.
 Input is a creative variant that already satisfies the "existing asset x one new element" formula; compress it into a one-page executable brief.
 
-generationPrompts is the most important deliverable of this station — it must be a "ready to run as-is" complete prompt, not a summary, not an outline:
+generationPrompts is the most important deliverable of this station: it must be a "ready to run as-is" complete prompt, not a summary, not an outline:
 - image: a complete Images API generation prompt, including composition/lighting/style/subject detail
 - motion: a complete motion script prompt, explicitly tagged "for ChatCut", explaining the shot logic
 - copy: a complete copy-generation prompt, specifying tone/length/key points
