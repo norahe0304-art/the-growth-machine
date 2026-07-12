@@ -1,0 +1,570 @@
+{
+  "moment": "the world cup final",
+  "waveNumber": 1,
+  "variants": [
+    {
+      "id": "v1",
+      "asset": "一个保温杯",
+      "assetKind": "thing",
+      "newElement": "the world cup final 的核心张力",
+      "angle": "把「the world cup final」嫁接到「一个保温杯」上",
+      "angleType": "moment",
+      "workingTitle": "W1变体1"
+    },
+    {
+      "id": "v2",
+      "asset": "开会前的寒暄",
+      "assetKind": "interaction",
+      "newElement": "the world cup final 的核心张力",
+      "angle": "把「the world cup final」嫁接到「开会前的寒暄」上",
+      "angleType": "evergreen",
+      "workingTitle": "W1变体2"
+    },
+    {
+      "id": "v3",
+      "asset": "一张购物小票",
+      "assetKind": "thing",
+      "newElement": "the world cup final 的核心张力",
+      "angle": "把「the world cup final」嫁接到「一张购物小票」上",
+      "angleType": "ugc-loop",
+      "workingTitle": "W1变体3"
+    }
+  ],
+  "briefs": [
+    {
+      "variantId": "v1",
+      "workingTitle": "W1变体1",
+      "audience": "关注「the world cup final」的年轻受众",
+      "insight": "受众对「一个保温杯」眼熟到会自动忽略，但「the world cup final 的核心张力」能让他们停下来多看一眼",
+      "assetXElement": "一个保温杯 x the world cup final 的核心张力",
+      "formats": [
+        "still",
+        "motion"
+      ],
+      "successMetric": "48小时内分享率",
+      "generationPrompts": {
+        "image": "画面主体是一个保温杯，在其上嫁接the world cup final 的核心张力的视觉细节，风格：编辑级摄影，浅景深，构图居中留白，光线自然，16:9",
+        "motion": "[for ChatCut] 三镜头脚本：镜头1建立一个保温杯的日常语境；镜头2引入the world cup final 的核心张力制造反差；镜头3给出钩子文案落版，时长6秒",
+        "copy": "写一句不超过20字的钩子文案，围绕\"把「the world cup final」嫁接到「一个保温杯」上\"，语气克制不喧哗，禁用感叹号"
+      }
+    },
+    {
+      "variantId": "v2",
+      "workingTitle": "W1变体2",
+      "audience": "关注「the world cup final」的年轻受众",
+      "insight": "受众对「开会前的寒暄」眼熟到会自动忽略，但「the world cup final 的核心张力」能让他们停下来多看一眼",
+      "assetXElement": "开会前的寒暄 x the world cup final 的核心张力",
+      "formats": [
+        "still",
+        "motion"
+      ],
+      "successMetric": "7日留存曝光",
+      "generationPrompts": {
+        "image": "画面主体是开会前的寒暄，在其上嫁接the world cup final 的核心张力的视觉细节，风格：编辑级摄影，浅景深，构图居中留白，光线自然，16:9",
+        "motion": "[for ChatCut] 三镜头脚本：镜头1建立开会前的寒暄的日常语境；镜头2引入the world cup final 的核心张力制造反差；镜头3给出钩子文案落版，时长6秒",
+        "copy": "写一句不超过20字的钩子文案，围绕\"把「the world cup final」嫁接到「开会前的寒暄」上\"，语气克制不喧哗，禁用感叹号"
+      }
+    },
+    {
+      "variantId": "v3",
+      "workingTitle": "W1变体3",
+      "audience": "关注「the world cup final」的年轻受众",
+      "insight": "受众对「一张购物小票」眼熟到会自动忽略，但「the world cup final 的核心张力」能让他们停下来多看一眼",
+      "assetXElement": "一张购物小票 x the world cup final 的核心张力",
+      "formats": [
+        "still",
+        "motion"
+      ],
+      "successMetric": "7日留存曝光",
+      "generationPrompts": {
+        "image": "画面主体是一张购物小票，在其上嫁接the world cup final 的核心张力的视觉细节，风格：编辑级摄影，浅景深，构图居中留白，光线自然，16:9",
+        "motion": "[for ChatCut] 三镜头脚本：镜头1建立一张购物小票的日常语境；镜头2引入the world cup final 的核心张力制造反差；镜头3给出钩子文案落版，时长6秒",
+        "copy": "写一句不超过20字的钩子文案，围绕\"把「the world cup final」嫁接到「一张购物小票」上\"，语气克制不喧哗，禁用感叹号"
+      }
+    }
+  ],
+  "namedAssets": [
+    {
+      "variantId": "v1",
+      "format": "still",
+      "name": "WEB_CONV_TOF_HOT_STIL_THEW_THEWOR_THEW_V01",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "CONV",
+        "FUNNEL": "TOF",
+        "TEMP": "HOT",
+        "FORMAT": "STIL",
+        "HOOK": "THEW",
+        "MOMENT": "THEWOR",
+        "PERSONA": "THEW",
+        "VER": "V01"
+      }
+    },
+    {
+      "variantId": "v1",
+      "format": "motion",
+      "name": "WEB_CONV_TOF_HOT_MOTN_THEW_THEWOR_THEW_V01",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "CONV",
+        "FUNNEL": "TOF",
+        "TEMP": "HOT",
+        "FORMAT": "MOTN",
+        "HOOK": "THEW",
+        "MOMENT": "THEWOR",
+        "PERSONA": "THEW",
+        "VER": "V01"
+      }
+    },
+    {
+      "variantId": "v2",
+      "format": "still",
+      "name": "WEB_ENGT_MOF_EVG_STIL_THEW_THEWOR_THEW_V01",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "ENGT",
+        "FUNNEL": "MOF",
+        "TEMP": "EVG",
+        "FORMAT": "STIL",
+        "HOOK": "THEW",
+        "MOMENT": "THEWOR",
+        "PERSONA": "THEW",
+        "VER": "V01"
+      }
+    },
+    {
+      "variantId": "v2",
+      "format": "motion",
+      "name": "WEB_ENGT_MOF_EVG_MOTN_THEW_THEWOR_THEW_V01",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "ENGT",
+        "FUNNEL": "MOF",
+        "TEMP": "EVG",
+        "FORMAT": "MOTN",
+        "HOOK": "THEW",
+        "MOMENT": "THEWOR",
+        "PERSONA": "THEW",
+        "VER": "V01"
+      }
+    },
+    {
+      "variantId": "v3",
+      "format": "still",
+      "name": "WEB_CONV_BOF_LOOP_STIL_THEW_THEWOR_THEW_V01",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "CONV",
+        "FUNNEL": "BOF",
+        "TEMP": "LOOP",
+        "FORMAT": "STIL",
+        "HOOK": "THEW",
+        "MOMENT": "THEWOR",
+        "PERSONA": "THEW",
+        "VER": "V01"
+      }
+    },
+    {
+      "variantId": "v3",
+      "format": "motion",
+      "name": "WEB_CONV_BOF_LOOP_MOTN_THEW_THEWOR_THEW_V01",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "CONV",
+        "FUNNEL": "BOF",
+        "TEMP": "LOOP",
+        "FORMAT": "MOTN",
+        "HOOK": "THEW",
+        "MOMENT": "THEWOR",
+        "PERSONA": "THEW",
+        "VER": "V01"
+      }
+    }
+  ],
+  "plan": {
+    "moment": "the world cup final",
+    "waveNumber": 1,
+    "arms": [
+      {
+        "variantId": "v1",
+        "format": "still",
+        "name": "WEB_CONV_TOF_HOT_STIL_THEW_THEWOR_THEW_V01",
+        "trafficSplitPct": 33.33,
+        "budgetIllustrative": 500
+      },
+      {
+        "variantId": "v2",
+        "format": "still",
+        "name": "WEB_ENGT_MOF_EVG_STIL_THEW_THEWOR_THEW_V01",
+        "trafficSplitPct": 33.33,
+        "budgetIllustrative": 250
+      },
+      {
+        "variantId": "v3",
+        "format": "still",
+        "name": "WEB_CONV_BOF_LOOP_STIL_THEW_THEWOR_THEW_V01",
+        "trafficSplitPct": 33.33,
+        "budgetIllustrative": 350
+      }
+    ],
+    "preRegisteredThresholds": {
+      "moment": {
+        "scaleAt": 0.045,
+        "killAt": 0.015,
+        "fatigueSlope": -0.004
+      },
+      "evergreen": {
+        "scaleAt": 0.035,
+        "killAt": 0.012,
+        "fatigueSlope": -0.0015
+      },
+      "ugc-loop": {
+        "scaleAt": 0.05,
+        "killAt": 0.018,
+        "fatigueSlope": -0.002
+      }
+    },
+    "dates": {
+      "start": "2026-07-12",
+      "end": "2026-08-02",
+      "days": 21
+    },
+    "rationale": "第 1 波围绕「the world cup final」等量分流三个变体，21 天观察窗覆盖疲劳曲线的完整拐点"
+  },
+  "produced": [
+    {
+      "variantId": "v1",
+      "format": "still",
+      "name": "WEB_CONV_TOF_HOT_STIL_THEW_THEWOR_THEW_V01",
+      "assetPath": "/Users/nora/Desktop/Desktop Cleanup 2026-06-27_172946/Folders/Desktop Cleanup 2026-05-20_135247/Projects/the-growth-machine/waves/wave-01/assets/WEB_CONV_TOF_HOT_STIL_THEW_THEWOR_THEW_V01.svg",
+      "copy": "[mock copy] 一个保温杯 x the world cup final 的核心张力 — 受众对「一个保温杯」眼熟到会自动忽略，但「the world cup final 的核心张力」能让他们停下来多看一眼",
+      "motionScript": null,
+      "imageModelUsed": null,
+      "regeneratedCount": 0
+    },
+    {
+      "variantId": "v1",
+      "format": "motion",
+      "name": "WEB_CONV_TOF_HOT_MOTN_THEW_THEWOR_THEW_V01",
+      "assetPath": null,
+      "copy": "[mock copy] 一个保温杯 x the world cup final 的核心张力 — 受众对「一个保温杯」眼熟到会自动忽略，但「the world cup final 的核心张力」能让他们停下来多看一眼",
+      "motionScript": [
+        "镜头1(建立): 沿用 一个保温杯 的日常语境，无音效铺垫",
+        "镜头2(反差): 引入新元素制造视觉断点，配合 [for ChatCut] 剪辑节奏加速",
+        "镜头3(落版): 钩子文案定格，画面静止1.5秒，收尾"
+      ],
+      "imageModelUsed": null,
+      "regeneratedCount": 1
+    },
+    {
+      "variantId": "v2",
+      "format": "still",
+      "name": "WEB_ENGT_MOF_EVG_STIL_THEW_THEWOR_THEW_V01",
+      "assetPath": "/Users/nora/Desktop/Desktop Cleanup 2026-06-27_172946/Folders/Desktop Cleanup 2026-05-20_135247/Projects/the-growth-machine/waves/wave-01/assets/WEB_ENGT_MOF_EVG_STIL_THEW_THEWOR_THEW_V01.svg",
+      "copy": "[mock copy] 开会前的寒暄 x the world cup final 的核心张力 — 受众对「开会前的寒暄」眼熟到会自动忽略，但「the world cup final 的核心张力」能让他们停下来多看一眼",
+      "motionScript": null,
+      "imageModelUsed": null,
+      "regeneratedCount": 0
+    },
+    {
+      "variantId": "v2",
+      "format": "motion",
+      "name": "WEB_ENGT_MOF_EVG_MOTN_THEW_THEWOR_THEW_V01",
+      "assetPath": null,
+      "copy": "[mock copy] 开会前的寒暄 x the world cup final 的核心张力 — 受众对「开会前的寒暄」眼熟到会自动忽略，但「the world cup final 的核心张力」能让他们停下来多看一眼",
+      "motionScript": [
+        "镜头1(建立): 沿用 开会前的寒暄 的日常语境，无音效铺垫",
+        "镜头2(反差): 引入新元素制造视觉断点，配合 [for ChatCut] 剪辑节奏加速",
+        "镜头3(落版): 钩子文案定格，画面静止1.5秒，收尾"
+      ],
+      "imageModelUsed": null,
+      "regeneratedCount": 1
+    },
+    {
+      "variantId": "v3",
+      "format": "still",
+      "name": "WEB_CONV_BOF_LOOP_STIL_THEW_THEWOR_THEW_V01",
+      "assetPath": "/Users/nora/Desktop/Desktop Cleanup 2026-06-27_172946/Folders/Desktop Cleanup 2026-05-20_135247/Projects/the-growth-machine/waves/wave-01/assets/WEB_CONV_BOF_LOOP_STIL_THEW_THEWOR_THEW_V01.svg",
+      "copy": "[mock copy] 一张购物小票 x the world cup final 的核心张力 — 受众对「一张购物小票」眼熟到会自动忽略，但「the world cup final 的核心张力」能让他们停下来多看一眼",
+      "motionScript": null,
+      "imageModelUsed": null,
+      "regeneratedCount": 0
+    },
+    {
+      "variantId": "v3",
+      "format": "motion",
+      "name": "WEB_CONV_BOF_LOOP_MOTN_THEW_THEWOR_THEW_V01",
+      "assetPath": null,
+      "copy": "[mock copy] 一张购物小票 x the world cup final 的核心张力 — 受众对「一张购物小票」眼熟到会自动忽略，但「the world cup final 的核心张力」能让他们停下来多看一眼",
+      "motionScript": [
+        "镜头1(建立): 沿用 一张购物小票 的日常语境，无音效铺垫",
+        "镜头2(反差): 引入新元素制造视觉断点，配合 [for ChatCut] 剪辑节奏加速",
+        "镜头3(落版): 钩子文案定格，画面静止1.5秒，收尾"
+      ],
+      "imageModelUsed": null,
+      "regeneratedCount": 0
+    }
+  ],
+  "judged": [
+    {
+      "variantId": "v1",
+      "format": "still",
+      "score": {
+        "onBrief": 2,
+        "legible": 2,
+        "shareable": 3
+      },
+      "passed": true,
+      "regenerated": false,
+      "notes": "[mock judge] attempt 1"
+    },
+    {
+      "variantId": "v1",
+      "format": "motion",
+      "score": {
+        "onBrief": 2,
+        "legible": 2,
+        "shareable": 2
+      },
+      "passed": true,
+      "regenerated": true,
+      "notes": "[mock judge] attempt 2"
+    },
+    {
+      "variantId": "v2",
+      "format": "still",
+      "score": {
+        "onBrief": 2,
+        "legible": 3,
+        "shareable": 3
+      },
+      "passed": true,
+      "regenerated": false,
+      "notes": "[mock judge] attempt 1"
+    },
+    {
+      "variantId": "v2",
+      "format": "motion",
+      "score": {
+        "onBrief": 1,
+        "legible": 1,
+        "shareable": 2
+      },
+      "passed": false,
+      "regenerated": true,
+      "notes": "[mock judge] attempt 2"
+    },
+    {
+      "variantId": "v3",
+      "format": "still",
+      "score": {
+        "onBrief": 3,
+        "legible": 2,
+        "shareable": 2
+      },
+      "passed": true,
+      "regenerated": false,
+      "notes": "[mock judge] attempt 1"
+    },
+    {
+      "variantId": "v3",
+      "format": "motion",
+      "score": {
+        "onBrief": 2,
+        "legible": 2,
+        "shareable": 2
+      },
+      "passed": true,
+      "regenerated": false,
+      "notes": "[mock judge] attempt 1"
+    }
+  ],
+  "simulated": [
+    {
+      "variantId": "v1",
+      "format": "still",
+      "angleType": "moment",
+      "days": 21,
+      "predictedCTR": [
+        0.021412136160768567,
+        0.03911609427817165,
+        0.06039707649033516,
+        0.04728279542467664,
+        0.03784842575599873,
+        0.03089672785162653,
+        0.025930018890817395,
+        0.01864600969572547,
+        0.014744054506771428,
+        0.011954405349343956,
+        0.011008601334385231,
+        0.007253239362974851,
+        0.007542930246233934,
+        0.0033959770812022534,
+        0.0028288669438900215,
+        0.0032208091405590052,
+        0.004134949286320928,
+        0.0016998260658404674,
+        0.002474310823150469,
+        0.002129427987543393,
+        0.0009283359969367578
+      ],
+      "shareRate": [
+        0.008743659039633348,
+        0.01755439929440617,
+        0.026808344250312074,
+        0.020556655586138384,
+        0.01656805979278739,
+        0.013521015896524007,
+        0.012507899219245954,
+        0.008884112247689141,
+        0.006439850996402351,
+        0.004428304525174173,
+        0.004584672257688115,
+        0.004100724203120122,
+        0.003487471641882506,
+        0.0021934924208973877,
+        0.0011313030938465147,
+        0.0020427497402791535,
+        0.0022464472753729475,
+        0.00025154602452016385,
+        0.0010883047356052666,
+        0.000250130183659188,
+        0.0005155325978864727
+      ],
+      "seed": "3900909166"
+    },
+    {
+      "variantId": "v2",
+      "format": "still",
+      "angleType": "evergreen",
+      "days": 21,
+      "predictedCTR": [
+        0.02090271777540659,
+        0.025158439391663307,
+        0.02597452050675134,
+        0.02900147111181898,
+        0.031163391689881966,
+        0.030176056952669526,
+        0.03274608288814024,
+        0.03038245463445412,
+        0.034706886550421,
+        0.034355304749941175,
+        0.03429335327152405,
+        0.03472245335887545,
+        0.034872216893555186,
+        0.03749472378816999,
+        0.0376642924778994,
+        0.03642975841341327,
+        0.03675842696755968,
+        0.03599051447858533,
+        0.036442354973156385,
+        0.0383398946317707,
+        0.03970089597813785
+      ],
+      "shareRate": [
+        0.0049942308842954915,
+        0.006999375691497235,
+        0.006704606976929257,
+        0.0066642544638104316,
+        0.008581546530388366,
+        0.008164420020181513,
+        0.008989090999860058,
+        0.007756057762726215,
+        0.008798582603225977,
+        0.007967450057221041,
+        0.008479538262552256,
+        0.008798160363294616,
+        0.008769940147690837,
+        0.009943454566105696,
+        0.01031342970460867,
+        0.009349920103023227,
+        0.009815593154523131,
+        0.008509064831988565,
+        0.008374512757578029,
+        0.009987802863094322,
+        0.010116722251754253
+      ],
+      "seed": "1244234663"
+    },
+    {
+      "variantId": "v3",
+      "format": "still",
+      "angleType": "ugc-loop",
+      "days": 21,
+      "predictedCTR": [
+        0.022217235217802226,
+        0.02142668502777815,
+        0.023847974633798,
+        0.02072453596442938,
+        0.02274613796174526,
+        0.02399890014156699,
+        0.020865582041442392,
+        0.022859615956805645,
+        0.021526645233295855,
+        0.022017966696433723,
+        0.024081410968117414,
+        0.02449199904538691,
+        0.02423049075100571,
+        0.02176200571041554,
+        0.025131175525598227,
+        0.025714678638726472,
+        0.025369272817037998,
+        0.024908592105023563,
+        0.02329520899813622,
+        0.023786132828444242,
+        0.023598830707482994
+      ],
+      "shareRate": [
+        0.02077138011045754,
+        0.018832085337117315,
+        0.021371098656021055,
+        0.01945180352749303,
+        0.021454913990199567,
+        0.021056874456629158,
+        0.019600845461711286,
+        0.020341060205418617,
+        0.019237655581589786,
+        0.02016253097239882,
+        0.020720397533066568,
+        0.022460883795805277,
+        0.021709710579235108,
+        0.019789282545782622,
+        0.023558479319613426,
+        0.022867418101623654,
+        0.021852134486481545,
+        0.022372903376918284,
+        0.020102411321464925,
+        0.021167774108432232,
+        0.021652642374213785
+      ],
+      "seed": "3670259515"
+    }
+  ],
+  "decided": [
+    {
+      "variantId": "v1",
+      "format": "still",
+      "verdict": "KILL",
+      "reason": "末3日均CTR 0.0018 低于预注册 killAt 0.015，判定砍掉",
+      "finalCTR": 0.0018440249358768733,
+      "slope": -0.000340892628930767
+    },
+    {
+      "variantId": "v2",
+      "format": "still",
+      "verdict": "SCALE",
+      "reason": "末3日均CTR 0.0382 达到预注册 scaleAt 0.035，判定放大",
+      "finalCTR": 0.038161048527688306,
+      "slope": 0.0003433575336795321
+    },
+    {
+      "variantId": "v3",
+      "format": "still",
+      "verdict": "ITERATE",
+      "reason": "末3日均CTR 0.0236 处于 killAt/scaleAt 之间，斜率未触发疲劳阈值，判定迭代",
+      "finalCTR": 0.023560057511354485,
+      "slope": -0.0003760067819218549
+    }
+  ],
+  "injectedLearnings": null
+}

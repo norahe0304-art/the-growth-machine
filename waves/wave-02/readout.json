@@ -1,0 +1,570 @@
+{
+  "moment": "the world cup final",
+  "waveNumber": 2,
+  "variants": [
+    {
+      "id": "v1",
+      "asset": "一副耳机",
+      "assetKind": "thing",
+      "newElement": "the world cup final 的核心张力",
+      "angle": "把「the world cup final」嫁接到「一副耳机」上 + 延续上波赢家特征[上一波(wave 1)的赢家特征: interaction型资产「开会前的寒暄」+ angleType=evergreen + HOOK=THEW。优先在新变体中复用这些 asset 形态与 angleType 组合。]",
+      "angleType": "moment",
+      "workingTitle": "W2变体1"
+    },
+    {
+      "id": "v2",
+      "asset": "刷到广告时的划走",
+      "assetKind": "interaction",
+      "newElement": "the world cup final 的核心张力",
+      "angle": "把「the world cup final」嫁接到「刷到广告时的划走」上 + 延续上波赢家特征[上一波(wave 1)的赢家特征: interaction型资产「开会前的寒暄」+ angleType=evergreen + HOOK=THEW。优先在新变体中复用这些 asset 形态与 angleType 组合。]",
+      "angleType": "evergreen",
+      "workingTitle": "W2变体2"
+    },
+    {
+      "id": "v3",
+      "asset": "一双拖鞋",
+      "assetKind": "thing",
+      "newElement": "the world cup final 的核心张力",
+      "angle": "把「the world cup final」嫁接到「一双拖鞋」上 + 延续上波赢家特征[上一波(wave 1)的赢家特征: interaction型资产「开会前的寒暄」+ angleType=evergreen + HOOK=THEW。优先在新变体中复用这些 asset 形态与 angleType 组合。]",
+      "angleType": "ugc-loop",
+      "workingTitle": "W2变体3"
+    }
+  ],
+  "briefs": [
+    {
+      "variantId": "v1",
+      "workingTitle": "W2变体1",
+      "audience": "关注「the world cup final」的年轻受众",
+      "insight": "受众对「一副耳机」眼熟到会自动忽略，但「the world cup final 的核心张力」能让他们停下来多看一眼",
+      "assetXElement": "一副耳机 x the world cup final 的核心张力",
+      "formats": [
+        "still",
+        "motion"
+      ],
+      "successMetric": "48小时内分享率",
+      "generationPrompts": {
+        "image": "画面主体是一副耳机，在其上嫁接the world cup final 的核心张力的视觉细节，风格：编辑级摄影，浅景深，构图居中留白，光线自然，16:9",
+        "motion": "[for ChatCut] 三镜头脚本：镜头1建立一副耳机的日常语境；镜头2引入the world cup final 的核心张力制造反差；镜头3给出钩子文案落版，时长6秒",
+        "copy": "写一句不超过20字的钩子文案，围绕\"把「the world cup final」嫁接到「一副耳机」上 + 延续上波赢家特征[上一波(wave 1)的赢家特征: interaction型资产「开会前的寒暄」+ angleType=evergreen + HOOK=THEW。优先在新变体中复用这些 asset 形态与 angleType 组合。]\"，语气克制不喧哗，禁用感叹号"
+      }
+    },
+    {
+      "variantId": "v2",
+      "workingTitle": "W2变体2",
+      "audience": "关注「the world cup final」的年轻受众",
+      "insight": "受众对「刷到广告时的划走」眼熟到会自动忽略，但「the world cup final 的核心张力」能让他们停下来多看一眼",
+      "assetXElement": "刷到广告时的划走 x the world cup final 的核心张力",
+      "formats": [
+        "still",
+        "motion"
+      ],
+      "successMetric": "7日留存曝光",
+      "generationPrompts": {
+        "image": "画面主体是刷到广告时的划走，在其上嫁接the world cup final 的核心张力的视觉细节，风格：编辑级摄影，浅景深，构图居中留白，光线自然，16:9",
+        "motion": "[for ChatCut] 三镜头脚本：镜头1建立刷到广告时的划走的日常语境；镜头2引入the world cup final 的核心张力制造反差；镜头3给出钩子文案落版，时长6秒",
+        "copy": "写一句不超过20字的钩子文案，围绕\"把「the world cup final」嫁接到「刷到广告时的划走」上 + 延续上波赢家特征[上一波(wave 1)的赢家特征: interaction型资产「开会前的寒暄」+ angleType=evergreen + HOOK=THEW。优先在新变体中复用这些 asset 形态与 angleType 组合。]\"，语气克制不喧哗，禁用感叹号"
+      }
+    },
+    {
+      "variantId": "v3",
+      "workingTitle": "W2变体3",
+      "audience": "关注「the world cup final」的年轻受众",
+      "insight": "受众对「一双拖鞋」眼熟到会自动忽略，但「the world cup final 的核心张力」能让他们停下来多看一眼",
+      "assetXElement": "一双拖鞋 x the world cup final 的核心张力",
+      "formats": [
+        "still",
+        "motion"
+      ],
+      "successMetric": "7日留存曝光",
+      "generationPrompts": {
+        "image": "画面主体是一双拖鞋，在其上嫁接the world cup final 的核心张力的视觉细节，风格：编辑级摄影，浅景深，构图居中留白，光线自然，16:9",
+        "motion": "[for ChatCut] 三镜头脚本：镜头1建立一双拖鞋的日常语境；镜头2引入the world cup final 的核心张力制造反差；镜头3给出钩子文案落版，时长6秒",
+        "copy": "写一句不超过20字的钩子文案，围绕\"把「the world cup final」嫁接到「一双拖鞋」上 + 延续上波赢家特征[上一波(wave 1)的赢家特征: interaction型资产「开会前的寒暄」+ angleType=evergreen + HOOK=THEW。优先在新变体中复用这些 asset 形态与 angleType 组合。]\"，语气克制不喧哗，禁用感叹号"
+      }
+    }
+  ],
+  "namedAssets": [
+    {
+      "variantId": "v1",
+      "format": "still",
+      "name": "WEB_CONV_TOF_HOT_STIL_THEW_THEWOR_THEW_V02",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "CONV",
+        "FUNNEL": "TOF",
+        "TEMP": "HOT",
+        "FORMAT": "STIL",
+        "HOOK": "THEW",
+        "MOMENT": "THEWOR",
+        "PERSONA": "THEW",
+        "VER": "V02"
+      }
+    },
+    {
+      "variantId": "v1",
+      "format": "motion",
+      "name": "WEB_CONV_TOF_HOT_MOTN_THEW_THEWOR_THEW_V02",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "CONV",
+        "FUNNEL": "TOF",
+        "TEMP": "HOT",
+        "FORMAT": "MOTN",
+        "HOOK": "THEW",
+        "MOMENT": "THEWOR",
+        "PERSONA": "THEW",
+        "VER": "V02"
+      }
+    },
+    {
+      "variantId": "v2",
+      "format": "still",
+      "name": "WEB_ENGT_MOF_EVG_STIL_THEW_THEWOR_THEW_V02",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "ENGT",
+        "FUNNEL": "MOF",
+        "TEMP": "EVG",
+        "FORMAT": "STIL",
+        "HOOK": "THEW",
+        "MOMENT": "THEWOR",
+        "PERSONA": "THEW",
+        "VER": "V02"
+      }
+    },
+    {
+      "variantId": "v2",
+      "format": "motion",
+      "name": "WEB_ENGT_MOF_EVG_MOTN_THEW_THEWOR_THEW_V02",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "ENGT",
+        "FUNNEL": "MOF",
+        "TEMP": "EVG",
+        "FORMAT": "MOTN",
+        "HOOK": "THEW",
+        "MOMENT": "THEWOR",
+        "PERSONA": "THEW",
+        "VER": "V02"
+      }
+    },
+    {
+      "variantId": "v3",
+      "format": "still",
+      "name": "WEB_CONV_BOF_LOOP_STIL_THEW_THEWOR_THEW_V02",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "CONV",
+        "FUNNEL": "BOF",
+        "TEMP": "LOOP",
+        "FORMAT": "STIL",
+        "HOOK": "THEW",
+        "MOMENT": "THEWOR",
+        "PERSONA": "THEW",
+        "VER": "V02"
+      }
+    },
+    {
+      "variantId": "v3",
+      "format": "motion",
+      "name": "WEB_CONV_BOF_LOOP_MOTN_THEW_THEWOR_THEW_V02",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "CONV",
+        "FUNNEL": "BOF",
+        "TEMP": "LOOP",
+        "FORMAT": "MOTN",
+        "HOOK": "THEW",
+        "MOMENT": "THEWOR",
+        "PERSONA": "THEW",
+        "VER": "V02"
+      }
+    }
+  ],
+  "plan": {
+    "moment": "the world cup final",
+    "waveNumber": 2,
+    "arms": [
+      {
+        "variantId": "v1",
+        "format": "still",
+        "name": "WEB_CONV_TOF_HOT_STIL_THEW_THEWOR_THEW_V02",
+        "trafficSplitPct": 33.33,
+        "budgetIllustrative": 500
+      },
+      {
+        "variantId": "v2",
+        "format": "still",
+        "name": "WEB_ENGT_MOF_EVG_STIL_THEW_THEWOR_THEW_V02",
+        "trafficSplitPct": 33.33,
+        "budgetIllustrative": 250
+      },
+      {
+        "variantId": "v3",
+        "format": "still",
+        "name": "WEB_CONV_BOF_LOOP_STIL_THEW_THEWOR_THEW_V02",
+        "trafficSplitPct": 33.33,
+        "budgetIllustrative": 350
+      }
+    ],
+    "preRegisteredThresholds": {
+      "moment": {
+        "scaleAt": 0.045,
+        "killAt": 0.015,
+        "fatigueSlope": -0.004
+      },
+      "evergreen": {
+        "scaleAt": 0.035,
+        "killAt": 0.012,
+        "fatigueSlope": -0.0015
+      },
+      "ugc-loop": {
+        "scaleAt": 0.05,
+        "killAt": 0.018,
+        "fatigueSlope": -0.002
+      }
+    },
+    "dates": {
+      "start": "2026-07-12",
+      "end": "2026-08-02",
+      "days": 21
+    },
+    "rationale": "第 2 波围绕「the world cup final」等量分流三个变体，21 天观察窗覆盖疲劳曲线的完整拐点"
+  },
+  "produced": [
+    {
+      "variantId": "v1",
+      "format": "still",
+      "name": "WEB_CONV_TOF_HOT_STIL_THEW_THEWOR_THEW_V02",
+      "assetPath": "/Users/nora/Desktop/Desktop Cleanup 2026-06-27_172946/Folders/Desktop Cleanup 2026-05-20_135247/Projects/the-growth-machine/waves/wave-02/assets/WEB_CONV_TOF_HOT_STIL_THEW_THEWOR_THEW_V02.svg",
+      "copy": "[mock copy] 一副耳机 x the world cup final 的核心张力 — 受众对「一副耳机」眼熟到会自动忽略，但「the world cup final 的核心张力」能让他们停下来多看一眼",
+      "motionScript": null,
+      "imageModelUsed": null,
+      "regeneratedCount": 0
+    },
+    {
+      "variantId": "v1",
+      "format": "motion",
+      "name": "WEB_CONV_TOF_HOT_MOTN_THEW_THEWOR_THEW_V02",
+      "assetPath": null,
+      "copy": "[mock copy] 一副耳机 x the world cup final 的核心张力 — 受众对「一副耳机」眼熟到会自动忽略，但「the world cup final 的核心张力」能让他们停下来多看一眼",
+      "motionScript": [
+        "镜头1(建立): 沿用 一副耳机 的日常语境，无音效铺垫",
+        "镜头2(反差): 引入新元素制造视觉断点，配合 [for ChatCut] 剪辑节奏加速",
+        "镜头3(落版): 钩子文案定格，画面静止1.5秒，收尾"
+      ],
+      "imageModelUsed": null,
+      "regeneratedCount": 0
+    },
+    {
+      "variantId": "v2",
+      "format": "still",
+      "name": "WEB_ENGT_MOF_EVG_STIL_THEW_THEWOR_THEW_V02",
+      "assetPath": "/Users/nora/Desktop/Desktop Cleanup 2026-06-27_172946/Folders/Desktop Cleanup 2026-05-20_135247/Projects/the-growth-machine/waves/wave-02/assets/WEB_ENGT_MOF_EVG_STIL_THEW_THEWOR_THEW_V02.svg",
+      "copy": "[mock copy] 刷到广告时的划走 x the world cup final 的核心张力 — 受众对「刷到广告时的划走」眼熟到会自动忽略，但「the world cup final 的核心张力」能让他们停下来多看一眼",
+      "motionScript": null,
+      "imageModelUsed": null,
+      "regeneratedCount": 0
+    },
+    {
+      "variantId": "v2",
+      "format": "motion",
+      "name": "WEB_ENGT_MOF_EVG_MOTN_THEW_THEWOR_THEW_V02",
+      "assetPath": null,
+      "copy": "[mock copy] 刷到广告时的划走 x the world cup final 的核心张力 — 受众对「刷到广告时的划走」眼熟到会自动忽略，但「the world cup final 的核心张力」能让他们停下来多看一眼",
+      "motionScript": [
+        "镜头1(建立): 沿用 刷到广告时的划走 的日常语境，无音效铺垫",
+        "镜头2(反差): 引入新元素制造视觉断点，配合 [for ChatCut] 剪辑节奏加速",
+        "镜头3(落版): 钩子文案定格，画面静止1.5秒，收尾"
+      ],
+      "imageModelUsed": null,
+      "regeneratedCount": 1
+    },
+    {
+      "variantId": "v3",
+      "format": "still",
+      "name": "WEB_CONV_BOF_LOOP_STIL_THEW_THEWOR_THEW_V02",
+      "assetPath": "/Users/nora/Desktop/Desktop Cleanup 2026-06-27_172946/Folders/Desktop Cleanup 2026-05-20_135247/Projects/the-growth-machine/waves/wave-02/assets/WEB_CONV_BOF_LOOP_STIL_THEW_THEWOR_THEW_V02.svg",
+      "copy": "[mock copy] 一双拖鞋 x the world cup final 的核心张力 — 受众对「一双拖鞋」眼熟到会自动忽略，但「the world cup final 的核心张力」能让他们停下来多看一眼",
+      "motionScript": null,
+      "imageModelUsed": null,
+      "regeneratedCount": 0
+    },
+    {
+      "variantId": "v3",
+      "format": "motion",
+      "name": "WEB_CONV_BOF_LOOP_MOTN_THEW_THEWOR_THEW_V02",
+      "assetPath": null,
+      "copy": "[mock copy] 一双拖鞋 x the world cup final 的核心张力 — 受众对「一双拖鞋」眼熟到会自动忽略，但「the world cup final 的核心张力」能让他们停下来多看一眼",
+      "motionScript": [
+        "镜头1(建立): 沿用 一双拖鞋 的日常语境，无音效铺垫",
+        "镜头2(反差): 引入新元素制造视觉断点，配合 [for ChatCut] 剪辑节奏加速",
+        "镜头3(落版): 钩子文案定格，画面静止1.5秒，收尾"
+      ],
+      "imageModelUsed": null,
+      "regeneratedCount": 1
+    }
+  ],
+  "judged": [
+    {
+      "variantId": "v1",
+      "format": "still",
+      "score": {
+        "onBrief": 3,
+        "legible": 3,
+        "shareable": 2
+      },
+      "passed": true,
+      "regenerated": false,
+      "notes": "[mock judge] attempt 1"
+    },
+    {
+      "variantId": "v1",
+      "format": "motion",
+      "score": {
+        "onBrief": 3,
+        "legible": 3,
+        "shareable": 2
+      },
+      "passed": true,
+      "regenerated": false,
+      "notes": "[mock judge] attempt 1"
+    },
+    {
+      "variantId": "v2",
+      "format": "still",
+      "score": {
+        "onBrief": 3,
+        "legible": 3,
+        "shareable": 2
+      },
+      "passed": true,
+      "regenerated": false,
+      "notes": "[mock judge] attempt 1"
+    },
+    {
+      "variantId": "v2",
+      "format": "motion",
+      "score": {
+        "onBrief": 1,
+        "legible": 3,
+        "shareable": 2
+      },
+      "passed": false,
+      "regenerated": true,
+      "notes": "[mock judge] attempt 2"
+    },
+    {
+      "variantId": "v3",
+      "format": "still",
+      "score": {
+        "onBrief": 3,
+        "legible": 2,
+        "shareable": 3
+      },
+      "passed": true,
+      "regenerated": false,
+      "notes": "[mock judge] attempt 1"
+    },
+    {
+      "variantId": "v3",
+      "format": "motion",
+      "score": {
+        "onBrief": 3,
+        "legible": 1,
+        "shareable": 1
+      },
+      "passed": false,
+      "regenerated": true,
+      "notes": "[mock judge] attempt 2"
+    }
+  ],
+  "simulated": [
+    {
+      "variantId": "v1",
+      "format": "still",
+      "angleType": "moment",
+      "days": 21,
+      "predictedCTR": [
+        0.01969539527688175,
+        0.041668178490363056,
+        0.061923124057240785,
+        0.04989818978040586,
+        0.03720751837713146,
+        0.03276333618540044,
+        0.026799725760874082,
+        0.019433454981083006,
+        0.015059407045371991,
+        0.011967859677635076,
+        0.011809566339917138,
+        0.0074348691017452765,
+        0.00796694597499072,
+        0.00556123992095916,
+        0.0034726954681666357,
+        0.004685010910350549,
+        0.0014511852151171591,
+        0.004031165189499303,
+        0.0021531045766477715,
+        0.00017849218325828413,
+        0
+      ],
+      "shareRate": [
+        0.009325907278386876,
+        0.01935893018194474,
+        0.028470844752015546,
+        0.021600510371010767,
+        0.017597840878133285,
+        0.014941823960018048,
+        0.011544596983614683,
+        0.009169201443069128,
+        0.006892867010240702,
+        0.005015551287995626,
+        0.006085119614947806,
+        0.003950628936038489,
+        0.004505602442476151,
+        0.0018587205879339358,
+        0.0010209321289170533,
+        0.0028968244028770036,
+        0.00014883506058601564,
+        0.0015001243926009438,
+        0.001452361154301685,
+        0.00009983010412163243,
+        0.0008127064858563244
+      ],
+      "seed": "4136866397"
+    },
+    {
+      "variantId": "v2",
+      "format": "still",
+      "angleType": "evergreen",
+      "days": 21,
+      "predictedCTR": [
+        0.02064591720115607,
+        0.026710057568175728,
+        0.028136899946671526,
+        0.027209202505916186,
+        0.029379538106844114,
+        0.03226900866207411,
+        0.0299433814745088,
+        0.031827785905260614,
+        0.03142134919297892,
+        0.035312320358378536,
+        0.033761383338684774,
+        0.033940606734076374,
+        0.034098148526819014,
+        0.0341156752860973,
+        0.036966299641774204,
+        0.03631855363556902,
+        0.035179518926440105,
+        0.03681565413152298,
+        0.03807392554798388,
+        0.038634739628886125,
+        0.039989778674207624
+      ],
+      "shareRate": [
+        0.006017594895260943,
+        0.007061135876550807,
+        0.00740680281688566,
+        0.007389753107514189,
+        0.007416909503080022,
+        0.007555473035082048,
+        0.007843797849762926,
+        0.008115513553329748,
+        0.007789568213049814,
+        0.008107680148276897,
+        0.009064385073455656,
+        0.00847074150720468,
+        0.009199241912041222,
+        0.009410297741807492,
+        0.009303600439310349,
+        0.008761689411871533,
+        0.007856180206760374,
+        0.0093147727132157,
+        0.00855105100915125,
+        0.008873846146484201,
+        0.009645344586344435
+      ],
+      "seed": "4083393170"
+    },
+    {
+      "variantId": "v3",
+      "format": "still",
+      "angleType": "ugc-loop",
+      "days": 21,
+      "predictedCTR": [
+        0.02181312752421945,
+        0.02352682534419,
+        0.022525501259602607,
+        0.02192939160671085,
+        0.020075819075107575,
+        0.020583794951438902,
+        0.020930689990520477,
+        0.024018606587126852,
+        0.025955978900939227,
+        0.023466726102679965,
+        0.024226721522212027,
+        0.025508183734305204,
+        0.02385600681118667,
+        0.023601748064905403,
+        0.027649402845539153,
+        0.027487346212267876,
+        0.026479924737364054,
+        0.028220157747976482,
+        0.02617621775519103,
+        0.0278547198901698,
+        0.0265366657961905
+      ],
+      "shareRate": [
+        0.020395479097496717,
+        0.02023093125661835,
+        0.02074554929332808,
+        0.020493469111341985,
+        0.01819846925539896,
+        0.018111574996169656,
+        0.018224811089411378,
+        0.020678809532076122,
+        0.02365557565625757,
+        0.02183879200082272,
+        0.021973049039598555,
+        0.022381092078350488,
+        0.021446692235879597,
+        0.021530248911697414,
+        0.024437482956323774,
+        0.025720105004489423,
+        0.022980088824119418,
+        0.025171921391032637,
+        0.023066142058551314,
+        0.025172246101956813,
+        0.023860247342281045
+      ],
+      "seed": "3156060220"
+    }
+  ],
+  "decided": [
+    {
+      "variantId": "v1",
+      "format": "still",
+      "verdict": "KILL",
+      "reason": "末3日均CTR 0.0008 低于预注册 killAt 0.015，判定砍掉",
+      "finalCTR": 0.0007771989199686852,
+      "slope": -0.0006689001606126366
+    },
+    {
+      "variantId": "v2",
+      "format": "still",
+      "verdict": "SCALE",
+      "reason": "末3日均CTR 0.0389 达到预注册 scaleAt 0.035，判定放大",
+      "finalCTR": 0.03889948128369254,
+      "slope": 0.0005927577037670804
+    },
+    {
+      "variantId": "v3",
+      "format": "still",
+      "verdict": "ITERATE",
+      "reason": "末3日均CTR 0.0269 处于 killAt/scaleAt 之间，斜率未触发疲劳阈值，判定迭代",
+      "finalCTR": 0.02685586781385044,
+      "slope": -0.00010382752765768345
+    }
+  ],
+  "injectedLearnings": "上一波(wave 1)的赢家特征: interaction型资产「开会前的寒暄」+ angleType=evergreen + HOOK=THEW。优先在新变体中复用这些 asset 形态与 angleType 组合。"
+}

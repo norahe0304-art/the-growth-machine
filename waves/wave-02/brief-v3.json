@@ -1,0 +1,17 @@
+{
+  "variantId": "v3",
+  "workingTitle": "W2变体3",
+  "audience": "关注「the world cup final」的年轻受众",
+  "insight": "受众对「一双拖鞋」眼熟到会自动忽略，但「the world cup final 的核心张力」能让他们停下来多看一眼",
+  "assetXElement": "一双拖鞋 x the world cup final 的核心张力",
+  "formats": [
+    "still",
+    "motion"
+  ],
+  "successMetric": "7日留存曝光",
+  "generationPrompts": {
+    "image": "画面主体是一双拖鞋，在其上嫁接the world cup final 的核心张力的视觉细节，风格：编辑级摄影，浅景深，构图居中留白，光线自然，16:9",
+    "motion": "[for ChatCut] 三镜头脚本：镜头1建立一双拖鞋的日常语境；镜头2引入the world cup final 的核心张力制造反差；镜头3给出钩子文案落版，时长6秒",
+    "copy": "写一句不超过20字的钩子文案，围绕\"把「the world cup final」嫁接到「一双拖鞋」上 + 延续上波赢家特征[上一波(wave 1)的赢家特征: interaction型资产「开会前的寒暄」+ angleType=evergreen + HOOK=THEW。优先在新变体中复用这些 asset 形态与 angleType 组合。]\"，语气克制不喧哗，禁用感叹号"
+  }
+}
