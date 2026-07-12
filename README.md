@@ -32,6 +32,15 @@ logic. It does not buy media. Do not read the CTR numbers as real performance da
 SCALE/KILL/ITERATE calls as a demonstration of how a machine would decide, given real
 thresholds and a plausible curve shape.
 
+## Every step leaves a record
+
+Nine segment names encode the full provenance of every asset. Judge scores and notes
+persist per asset, including retry counts. Thresholds are preregistered before any data
+exists, and every verdict cites them. Every number carries a simulated or measured source
+flag. `library.jsonl` records what each wave taught the machine. Humans stay in the loop:
+real data enters by hand and nothing publishes itself. This is autonomy with an audit
+trail.
+
 ## Quickstart
 
 Two ways to run this. Skill mode is the main track. CLI headless mode is the fallback for
@@ -94,10 +103,11 @@ SCALE'd, what traits they shared, and a learnings string that gets injected into
 wave's insight/brief prompts. That is the evolution loop. It is not a metaphor. It is an
 actual string concatenated into the next LLM call, whichever mode produced it.
 
-## Six stations, nine files
+## Six stations, ten files
 
 The book names six stations. The code splits two of them into helper stages (naming and
-learn call no LLM, plan is a hybrid). That gives nine files for six conceptual stops.
+learn call no LLM, plan is a hybrid), and adds one conditional station of its own, rollout,
+that only fires on a SCALE verdict. That gives ten files for six conceptual stops.
 
 ```
 moment
@@ -127,6 +137,9 @@ moment
 [8] decide.ts    predicted curve vs preRegisteredThresholds -> SCALE / KILL / ITERATE
   |
   v
+[8b] rollout.ts  SCALE verdict -> a channel by channel playbook, skipped for KILL / ITERATE
+  |
+  v
 [9] learn.ts     append library.jsonl, extract winner traits, inject into next wave
   |
   +-- loops back into [1] insight.ts for wave N+1
@@ -134,12 +147,14 @@ moment
 
 Stations 1, 2, and 6 (insight, brief, judge) are LLM stations. In skill mode the agent
 running `skill/SKILL.md` or `skill/CODEX.md` performs them directly. In CLI mode
-`src/lib/openai-client.ts` calls the OpenAI API for them. Stations 3, 4, 7, 8, and 9
+`src/lib/openai-client.ts` calls the OpenAI API for them. Station 8b (rollout) is a hybrid,
+same shape as plan: rules pick the channel and role pool, one LLM call writes the sentences,
+a schema gate checks them before they reach `readout.json`. Stations 3, 4, 7, 8, and 9
 (naming, plan, simulate, decide, learn) are deterministic. Both modes run the exact same
 code for them, `src/stages/*.ts`, either through `bin/growth-machine` or through
 `scripts/machine.mjs`.
 
-There is a tenth file, `measure.ts`. It is not part of the six station loop above. It runs
+There is an eleventh file, `measure.ts`. It is not part of the six station loop above. It runs
 after the fact, against a wave that has already shipped a report. See "Measure: simulator to
 instrument" below.
 

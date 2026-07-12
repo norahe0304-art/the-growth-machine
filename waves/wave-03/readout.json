@@ -587,5 +587,65 @@
     }
   ],
   "measured": [],
-  "injectedLearnings": "Winning traits from wave 2: thing asset \"your profile picture\" + angleType=evergreen + HOOK=GRAF. Prioritize reusing these asset shapes and angleType combinations in new variants."
+  "injectedLearnings": "Winning traits from wave 2: thing asset \"your profile picture\" + angleType=evergreen + HOOK=GRAF. Prioritize reusing these asset shapes and angleType combinations in new variants.",
+  "rollouts": [
+    {
+      "variantId": "v2",
+      "name": "WEB_CONV_MOF_EVG_STIL_THEP_THEWOR_FANS_V03",
+      "channels": [
+        {
+          "channel": "instagram",
+          "role": "discovery",
+          "assetSpec": "Square 1:1 feed crop plus a 9:16 Reel cut, the crest graft framed as the thumbnail focal point so the reveal reads at a glance.",
+          "executionSteps": [
+            "Post the reveal Reel in the first 48 hours of the observation window.",
+            "Lead the caption with the hook: your profile picture x a vintage team crest grafted over one corner.",
+            "Seed the first posts directly into fans whose profile picture is their most curated possession.",
+            "Track instagram reach and saves against the wave's preregistered thresholds every day."
+          ],
+          "kpi": "3.5% instagram engagement rate inside the 21 day window",
+          "kpiThresholdNote": "Matches the plan's preregistered scaleAt of 0.035 for the evergreen angle. An instagram reading at or above this rate counts as a SCALE equivalent signal for this channel."
+        },
+        {
+          "channel": "tiktok",
+          "role": "amplification",
+          "assetSpec": "Vertical 9:16 cut under 15 seconds, the crest painting itself on in one stroke restated as on screen text in the first 2 seconds.",
+          "executionSteps": [
+            "Ship the tiktok cut inside the first 48 hours of the observation window.",
+            "Lead with the formula hook: your profile picture x a vintage team crest grafted over one corner.",
+            "Cross post the same cut from at least one adjacent fan account to widen reach.",
+            "Track tiktok performance against the wave's preregistered thresholds every day."
+          ],
+          "kpi": "3.5% tiktok engagement rate inside the 21 day window",
+          "kpiThresholdNote": "Matches the plan's preregistered scaleAt of 0.035 for the evergreen angle. A tiktok reading at or above this rate counts as a SCALE equivalent signal for this channel."
+        },
+        {
+          "channel": "in-app profile surface",
+          "role": "retention",
+          "assetSpec": "1:1 crop tuned for the platform's own circular mask, the crest positioned in the lower corner so it survives the crop.",
+          "executionSteps": [
+            "Surface the grafted picture as a one tap profile photo update inside the first 48 hours.",
+            "Prompt the viewer to carry the graft into their own profile before the post ages out.",
+            "Track 7 day adoption of the grafted picture as an actual profile photo every day.",
+            "Report daily adoption counts against the wave's preregistered thresholds."
+          ],
+          "kpi": "12.0% profile photo adoption rate within the 7 day window",
+          "kpiThresholdNote": "Adoption is read against the same preregistered scaleAt of 0.035 for the evergreen angle, scaled up because adoption is a stronger action than a click. A reading at or above 12.0% counts as a SCALE equivalent signal for this channel."
+        },
+        {
+          "channel": "x",
+          "role": "conversion",
+          "assetSpec": "16:9 still posted natively, the hook line carried as the post text, the crest kept legible at preview size.",
+          "executionSteps": [
+            "Post the still natively inside the first 48 hours of the observation window.",
+            "Pin a direct link back to the grafted picture so the call to action has one clear next step.",
+            "Reply to the pinned post with the three shot motion cut once it clears judge.",
+            "Track x engagement rate against the wave's preregistered thresholds every day."
+          ],
+          "kpi": "3.5% x engagement rate inside the 21 day window",
+          "kpiThresholdNote": "Matches the plan's preregistered scaleAt of 0.035 for the evergreen angle. An x reading at or above this rate counts as a SCALE equivalent signal for this channel."
+        }
+      ]
+    }
+  ]
 }
