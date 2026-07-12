@@ -149,10 +149,16 @@ Stations 1, 2, and 6 (insight, brief, judge) are LLM stations. In skill mode the
 running `skill/SKILL.md` or `skill/CODEX.md` performs them directly. In CLI mode
 `src/lib/openai-client.ts` calls the OpenAI API for them. Station 8b (rollout) is a hybrid,
 same shape as plan: rules pick the channel and role pool, one LLM call writes the sentences,
-a schema gate checks them before they reach `readout.json`. Stations 3, 4, 7, 8, and 9
-(naming, plan, simulate, decide, learn) are deterministic. Both modes run the exact same
-code for them, `src/stages/*.ts`, either through `bin/growth-machine` or through
-`scripts/machine.mjs`.
+a schema gate checks them before they reach `readout.json`. Each channel cut is an expansion
+arm off the winning concept, not a fresh idea: the concept already won the wave, and every
+channel cut still earns its own SCALE or KILL verdict against its own threshold, registered
+under a nine-segment name that inherits the winner's lineage and swaps only the CHANNEL
+segment. Format follows the channel: a video channel ships a three-shot script plus a cover
+frame, a ugc channel ships a candid creator still, an editorial channel ships a native
+still, an in-product surface ships a mask-safe crop.
+Stations 3, 4, 7, 8, and 9 (naming, plan, simulate, decide, learn) are
+deterministic. Both modes run the exact same code for them, `src/stages/*.ts`, either
+through `bin/growth-machine` or through `scripts/machine.mjs`.
 
 There is an eleventh file, `measure.ts`. It is not part of the six station loop above. It runs
 after the fact, against a wave that has already shipped a report. See "Measure: simulator to

@@ -1,7 +1,7 @@
 /**
  * [INPUT]: depends on src/types.ts's AssetKind / AngleType
- * [OUTPUT]: exports the nine-segment naming dictionaries —— CHANNEL/OBJ/FUNNEL/TEMP/FORMAT lookup tables + slug utilities
- * [POS]: the sole data source for naming.ts; the dictionary shares the book's decoder-ring style (all-caps abbreviations joined by underscores)
+ * [OUTPUT]: exports the nine-segment naming dictionaries, the CHANNEL/OBJ/FUNNEL/TEMP/FORMAT lookup tables plus slug utilities, plus the rollout-channel CHANNEL token dictionary (channelToken/deriveChannelAssetName) station 8b uses to register a channel cut under the winner's own lineage
+ * [POS]: the sole data source for naming.ts and, for the rollout-channel token half, for stages/rollout.ts; the dictionary shares the book's decoder-ring style (all-caps abbreviations joined by underscores)
  * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */
 import type { AngleType, AssetKind } from "./types.js";
@@ -75,4 +75,37 @@ export function personaCode(audience: string): string {
 // 9. VER — version number, zero-padded to two digits
 export function verCode(version: number): string {
   return `V${String(version).padStart(2, "0")}`;
+}
+
+// ============================================================
+// Rollout-channel CHANNEL tokens: station 8b's channel cut is an expansion
+// arm off an already-won concept, not a new asset. Its name inherits all
+// eight non-CHANNEL segments from the winning still verbatim and swaps only
+// the CHANNEL segment (WEB, "not yet assigned") for the channel it actually
+// ships on. Registering that swap is what puts the channel cut through its
+// own SCALE/KILL verdict against its own threshold, separate from the
+// concept-level test the WEB name ran.
+// ============================================================
+export const CHANNEL_TOKEN_BY_ROLLOUT_CHANNEL: Record<string, string> = {
+  instagram: "IG",
+  tiktok: "TT",
+  x: "XTW",
+  "in-app profile surface": "APP",
+};
+
+// Falls back to slugCode for a channel not yet in the dictionary above, same
+// 3-char decoder-ring shape as WEB/TOF/MOF/HOT/EVG, so an unlisted channel
+// still yields a valid CHANNEL segment instead of failing naming outright.
+export function channelToken(channel: string): string {
+  const normalized = channel.trim().toLowerCase();
+  return CHANNEL_TOKEN_BY_ROLLOUT_CHANNEL[normalized] ?? slugCode(channel, 3);
+}
+
+// Swaps the CHANNEL segment (position 0) of a nine-segment asset name for
+// the given rollout channel's token. The other eight segments are inherited
+// verbatim: same asset, same lineage, one different distribution channel.
+export function deriveChannelAssetName(baseName: string, channel: string): string {
+  const segments = baseName.split("_");
+  segments[0] = channelToken(channel);
+  return segments.join("_");
 }

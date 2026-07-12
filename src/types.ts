@@ -164,9 +164,27 @@ export interface Decision {
 // ============================================================
 export type RolloutRole = "discovery" | "amplification" | "retention" | "conversion";
 
+// Format follows the channel: a channel cut is delivered in the format the
+// channel natively speaks, not a resized copy of the concept still.
+//   video      -> the deliverable is a ChatCut-ready three-shot script plus a
+//                 cover frame image (assetPath holds the cover frame)
+//   ugc-still  -> a creator-aesthetic phone-shot still, candid, unretouched
+//   still      -> a native editorial still, hook line carried in frame
+//   surface    -> a crop tuned for an in-product surface (e.g. circular mask)
+export type RolloutNativeFormat = "video" | "ugc-still" | "still" | "surface";
+
 export interface RolloutChannelPlan {
   channel: string; // e.g. tiktok, instagram, x, in-app profile surface
   role: RolloutRole;
+  nativeFormat: RolloutNativeFormat; // the channel's native delivery format, derived from the channel, never model-chosen
+  // assetName/assetPath/channelCopy/channelScript are the channel cut: this
+  // channel's own expansion arm off the winning concept, not the concept
+  // asset itself. Every channel cut earns its own SCALE/KILL verdict against
+  // its own kpi below, the concept-level WEB name only ever proved the idea.
+  assetName: string; // nine-segment name, CHANNEL segment swapped to this channel's token via taxonomy.deriveChannelAssetName, the other eight segments inherited from the winning still's NamedAsset.name
+  assetPath: string | null; // the rendered channel cut (for video: the cover frame): png when a real image call produced one, svg when mock mode placeholdered it, null when generation was unavailable or failed
+  channelCopy: string; // one line of finished, channel-voiced ad copy, ready to ship as-is
+  channelScript: string[] | null; // video channels only: a ChatCut-ready three-shot script whose shot 3 lands the channelCopy; null for every other nativeFormat
   assetSpec: string; // one sentence: format, ratio, how the hook adapts for this channel
   executionSteps: string[]; // 3 to 4 action sentences
   kpi: string; // one concrete number tied to an outcome

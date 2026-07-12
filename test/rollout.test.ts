@@ -1,12 +1,18 @@
 /**
  * [INPUT]: depends on node:test/node:assert, node:child_process, node:path, node:url, on
- *   src/stages/rollout.ts's validateRolloutDraft, on scripts/machine.mjs as a real subprocess
+ *   src/stages/rollout.ts's validateRolloutDraft, on src/taxonomy.ts's channelToken/
+ *   deriveChannelAssetName, on scripts/machine.mjs as a real subprocess
  * [OUTPUT]: unit tests proving validateRolloutDraft accepts a well-formed RolloutDraft and
  *   rejects the specific ways a hand-authored one can go wrong: bad channel count, bad role,
- *   an em or en dash slipped into a sentence field; plus one subprocess test proving
- *   `machine.mjs rollout-validate` is a faithful wrapper over the in-process validator
- * [POS]: part of test/, covers station 8b's schema gate, the same "skill layer is a thin
- *   wrapper over src/" contract test/machine.test.ts already covers for the scripted stations
+ *   an em or en dash slipped into a sentence field, a missing/malformed channelCopy, an
+ *   assetName whose CHANNEL segment doesn't match its channel or that isn't nine segments, a
+ *   nativeFormat that doesn't match the channel, a video channel without its three-shot
+ *   script; plus asset-name-derivation unit tests for the taxonomy helpers station 8b's
+ *   channel cuts are named through; plus one subprocess test proving `machine.mjs
+ *   rollout-validate` is a faithful wrapper over the in-process validator
+ * [POS]: part of test/, covers station 8b's schema gate and its channel-cut naming lineage,
+ *   the same "skill layer is a thin wrapper over src/" contract test/machine.test.ts already
+ *   covers for the scripted stations
  * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */
 import test from "node:test";
@@ -14,7 +20,8 @@ import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { validateRolloutDraft } from "../src/stages/rollout.js";
+import { validateRolloutDraft, nativeFormatForChannel } from "../src/stages/rollout.js";
+import { channelToken, deriveChannelAssetName } from "../src/taxonomy.js";
 import type { RolloutDraft } from "../src/types.js";
 
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -27,7 +34,12 @@ const validDraft: RolloutDraft = {
     {
       channel: "instagram",
       role: "discovery",
-      assetSpec: "Square 1:1 feed crop, the crest graft framed as the thumbnail focal point.",
+      nativeFormat: "ugc-still",
+      assetName: "IG_CONV_MOF_EVG_STIL_THEP_THEWOR_FANS_V03",
+      assetPath: null,
+      channelCopy: "Swipe closer. New crest, same picture.",
+      channelScript: null,
+      assetSpec: "Creator aesthetic 1:1 still shot on a phone, the crest visible but unretouched.",
       executionSteps: [
         "Post the reveal in the first 48 hours of the observation window.",
         "Lead the caption with the formula hook.",
@@ -39,7 +51,16 @@ const validDraft: RolloutDraft = {
     {
       channel: "tiktok",
       role: "amplification",
-      assetSpec: "Vertical 9:16 cut under 15 seconds, the hook restated as on screen text.",
+      nativeFormat: "video",
+      assetName: "TT_CONV_MOF_EVG_STIL_THEP_THEWOR_FANS_V03",
+      assetPath: null,
+      channelCopy: "Wait for it. New crest, same picture.",
+      channelScript: [
+        "Shot 1 (establish): the untouched profile picture fills the frame, everyday and familiar.",
+        "Shot 2 (contrast): the vintage crest paints itself onto the collar corner in one stroke.",
+        "Shot 3 (land): hook copy locks in: Wait for it. New crest, same picture. Frame holds, end.",
+      ],
+      assetSpec: "Native vertical video under 15 seconds, a three shot script plus a 9:16 cover frame.",
       executionSteps: [
         "Ship the tiktok cut inside the first 48 hours of the observation window.",
         "Cross post the same cut from an adjacent account to widen reach.",
@@ -51,6 +72,11 @@ const validDraft: RolloutDraft = {
     {
       channel: "x",
       role: "conversion",
+      nativeFormat: "still",
+      assetName: "XTW_CONV_MOF_EVG_STIL_THEP_THEWOR_FANS_V03",
+      assetPath: null,
+      channelCopy: "New drop, same thread. New crest, same picture.",
+      channelScript: null,
       assetSpec: "16:9 still posted natively, the copy line carried as the post text.",
       executionSteps: [
         "Post the still natively inside the first 48 hours of the observation window.",
@@ -99,6 +125,87 @@ test("validateRolloutDraft: rejects an em dash or en dash inside a sentence fiel
   if (!result.ok) assert.match(result.errors.join(";"), /channels\[0\]\.assetSpec: contains an em dash or en dash/);
 });
 
+test("validateRolloutDraft: rejects an assetName whose CHANNEL segment does not match channel", () => {
+  const mismatched = {
+    ...validDraft,
+    channels: [
+      { ...validDraft.channels[0], assetName: "TT_CONV_MOF_EVG_STIL_THEP_THEWOR_FANS_V03" }, // instagram channel, tiktok token
+      validDraft.channels[1],
+      validDraft.channels[2],
+    ],
+  };
+  const result = validateRolloutDraft(mismatched);
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.match(result.errors.join(";"), /channels\[0\]\.assetName: CHANNEL segment "TT" does not match channel "instagram" \(expected "IG"\)/);
+});
+
+test("validateRolloutDraft: rejects an assetName that is not nine segments", () => {
+  const tooFewSegments = {
+    ...validDraft,
+    channels: [{ ...validDraft.channels[0], assetName: "IG_CONV_MOF" }, validDraft.channels[1], validDraft.channels[2]],
+  };
+  const result = validateRolloutDraft(tooFewSegments);
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.match(result.errors.join(";"), /channels\[0\]\.assetName: must have 9 underscore separated segments, got 3/);
+});
+
+test("validateRolloutDraft: rejects a missing channelCopy", () => {
+  const noCopy = {
+    ...validDraft,
+    channels: [{ ...validDraft.channels[0], channelCopy: "" }, validDraft.channels[1], validDraft.channels[2]],
+  };
+  const result = validateRolloutDraft(noCopy);
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.match(result.errors.join(";"), /channels\[0\]\.channelCopy: missing or not a string/);
+});
+
+test("validateRolloutDraft: rejects a nativeFormat that does not match the channel", () => {
+  const mismatched = {
+    ...validDraft,
+    channels: [{ ...validDraft.channels[0], nativeFormat: "video" }, validDraft.channels[1], validDraft.channels[2]],
+  };
+  const result = validateRolloutDraft(mismatched);
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.match(result.errors.join(";"), /channels\[0\]\.nativeFormat: "video" does not match channel "instagram" \(expected "ugc-still"\)/);
+});
+
+test("validateRolloutDraft: rejects a video channel without its three-shot script", () => {
+  const noScript = {
+    ...validDraft,
+    channels: [validDraft.channels[0], { ...validDraft.channels[1], channelScript: null }, validDraft.channels[2]],
+  };
+  const result = validateRolloutDraft(noScript);
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.match(result.errors.join(";"), /channels\[1\]\.channelScript: a video channel must carry a three-shot script/);
+});
+
+test("validateRolloutDraft: rejects a channelScript on a non-video channel", () => {
+  const strayScript = {
+    ...validDraft,
+    channels: [{ ...validDraft.channels[0], channelScript: ["only shot"] }, validDraft.channels[1], validDraft.channels[2]],
+  };
+  const result = validateRolloutDraft(strayScript);
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.match(result.errors.join(";"), /channels\[0\]\.channelScript: must be null for a non-video channel/);
+});
+
+test("nativeFormatForChannel: format follows the channel, unlisted channels default to still", () => {
+  assert.equal(nativeFormatForChannel("tiktok"), "video");
+  assert.equal(nativeFormatForChannel("instagram"), "ugc-still");
+  assert.equal(nativeFormatForChannel("x"), "still");
+  assert.equal(nativeFormatForChannel("in-app profile surface"), "surface");
+  assert.equal(nativeFormatForChannel("youtube shorts"), "still");
+});
+
+test("validateRolloutDraft: accepts a null assetPath (generation not yet run, or unavailable)", () => {
+  const nullPath = {
+    ...validDraft,
+    channels: [{ ...validDraft.channels[0], assetPath: null }, validDraft.channels[1], validDraft.channels[2]],
+  };
+  const result = validateRolloutDraft(nullPath);
+  assert.deepEqual(result, { ok: true });
+});
+
 test("scripts/machine.mjs (real subprocess): `rollout-validate` matches validateRolloutDraft in-process", () => {
   const result = spawnSync("node", [MACHINE_MJS, "rollout-validate"], {
     input: JSON.stringify(validDraft),
@@ -109,4 +216,40 @@ test("scripts/machine.mjs (real subprocess): `rollout-validate` matches validate
   assert.equal(result.status, 0, `subprocess failed: ${result.stderr}`);
   const parsed = JSON.parse(result.stdout);
   assert.deepEqual(parsed, validateRolloutDraft(validDraft));
+});
+
+// ============================================================
+// channelToken / deriveChannelAssetName: the CHANNEL-segment swap that
+// registers a channel cut as its own expansion arm off the winning concept.
+// ============================================================
+test("channelToken: known channels resolve to their dictionary token", () => {
+  assert.equal(channelToken("instagram"), "IG");
+  assert.equal(channelToken("tiktok"), "TT");
+  assert.equal(channelToken("x"), "XTW");
+  assert.equal(channelToken("in-app profile surface"), "APP");
+});
+
+test("channelToken: is case and whitespace insensitive", () => {
+  assert.equal(channelToken(" Instagram "), "IG");
+  assert.equal(channelToken("TIKTOK"), "TT");
+});
+
+test("channelToken: falls back to a slugged 3-char code for an unlisted channel", () => {
+  assert.equal(channelToken("youtube shorts"), "YOU");
+});
+
+test("deriveChannelAssetName: swaps only the CHANNEL segment, the other eight are inherited verbatim", () => {
+  const base = "WEB_CONV_MOF_EVG_STIL_THEP_THEWOR_FANS_V03";
+  const derived = deriveChannelAssetName(base, "tiktok");
+  assert.equal(derived, "TT_CONV_MOF_EVG_STIL_THEP_THEWOR_FANS_V03");
+  assert.deepEqual(derived.split("_").slice(1), base.split("_").slice(1));
+});
+
+test("deriveChannelAssetName: different channels on the same base name produce different assetNames", () => {
+  const base = "WEB_CONV_MOF_EVG_STIL_THEP_THEWOR_FANS_V03";
+  const ig = deriveChannelAssetName(base, "instagram");
+  const x = deriveChannelAssetName(base, "x");
+  assert.notEqual(ig, x);
+  assert.equal(ig.split("_")[0], "IG");
+  assert.equal(x.split("_")[0], "XTW");
 });

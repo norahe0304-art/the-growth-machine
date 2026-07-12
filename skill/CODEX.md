@@ -201,7 +201,10 @@ Returns 3 `Decision` objects (SCALE / KILL / ITERATE).
 ## Station 8b, rollout (codex exec, only for SCALE verdicts)
 
 Skip this station entirely for any `KILL` or `ITERATE` decision, there is nothing to roll
-out. For each `SCALE` decision, run one `codex exec` call:
+out. A channel cut is an expansion arm off a concept that already won the wave, not a new
+idea: every channel still earns its own SCALE or KILL verdict against its own kpi below,
+separate from the concept-level test the `WEB` name already ran. For each `SCALE` decision,
+run one `codex exec` call:
 
 ```bash
 codex exec --skip-git-repo-check - <<PROMPT > /tmp/rollout-{name}.json
@@ -211,10 +214,19 @@ Write a channel by channel playbook for the winning asset. Pick 3 to 4 relevant 
 for example tiktok, instagram, x, or an in-app profile surface.
 Every field is a plain declarative sentence. Do not use an em dash or an en dash anywhere
 in the output.
+Each channel is an expansion arm off a concept that already won, not a new idea: it will
+earn its own SCALE or KILL verdict against the kpi you write below, separate from the
+concept-level test.
 role must be exactly one of: discovery, amplification, retention, conversion.
 executionSteps must have 3 to 4 entries, each one action sentence.
 kpi is one concrete number tied to an outcome. kpiThresholdNote is one sentence linking
 that number back to the plan's preregistered threshold system.
+channelCopy is one line of finished, ready to ship ad copy written in that channel's
+native voice: tiktok terse and punchy, instagram a colloquial creator caption, x
+conversational, an in-app surface a one tap prompt.
+Format follows the channel: a video channel ships a three shot script plus a cover frame,
+a ugc channel ships a candid creator still, an editorial channel ships a native still, an
+in-product surface ships a mask safe crop. Write assetSpec accordingly.
 
 variant: <winning Variant JSON>
 brief: <Brief JSON>
@@ -225,12 +237,23 @@ thresholds: <plan.preRegisteredThresholds[variant.angleType]>
 Output strict JSON, nothing outside it:
 {"variantId":"...","name":"...","channels":[{"channel":"...",
 "role":"discovery|amplification|retention|conversion","assetSpec":"...",
-"executionSteps":["...","...","..."],"kpi":"...","kpiThresholdNote":"..."}]}
+"executionSteps":["...","...","..."],"kpi":"...","kpiThresholdNote":"...",
+"channelCopy":"..."}]}
+Do not include assetName, assetPath, nativeFormat, or channelScript, those are assigned
+after this output validates.
 PROMPT
 ```
 
-Pipe the captured output straight through the validator before it goes anywhere near
-`readout.json`:
+Stamp `assetName` onto every channel before validating: take the winning still's
+`NamedAsset.name` and swap only its `CHANNEL` segment for this channel's token
+(`instagram` -> `IG`, `tiktok` -> `TT`, `x` -> `XTW`, `in-app profile surface` -> `APP`, an
+unlisted channel gets a slugged 3-char code), inheriting the other eight segments verbatim.
+Stamp `nativeFormat` too, format follows the channel: `tiktok` -> `video`, `instagram` ->
+`ugc-still`, `x` -> `still`, `in-app profile surface` -> `surface`, an unlisted channel
+defaults to `still`. For a `video` channel write `channelScript`, a ChatCut-ready three-shot
+script whose shot 3 lands the channelCopy; every other format carries `channelScript: null`.
+Set `assetPath` to `null` for now. Pipe the completed object straight through the validator
+before it goes anywhere near `readout.json`:
 
 ```bash
 node scripts/machine.mjs rollout-validate < /tmp/rollout-{name}.json
@@ -238,8 +261,33 @@ node scripts/machine.mjs rollout-validate < /tmp/rollout-{name}.json
 
 Returns `{"ok":true}` or `{"ok":false,"errors":["..."]}`. On a failure, re-run the `codex
 exec` call with the error list appended to the prompt, revalidate, at most one retry, same
-ceiling the judge station enforces. Collect one `RolloutDraft` per `SCALE` verdict into
-`readout.rollouts`.
+ceiling the judge station enforces.
+
+**Produce the channel cut.** Once a draft validates, run one `codex exec` call per channel.
+The deliverable follows `nativeFormat`: a `video` channel's image is its cover frame (the
+script is the main deliverable), `ugc-still` a candid creator restyle, `still` a native
+editorial still, `surface` a mask-safe crop:
+
+```bash
+codex exec --skip-git-repo-check - <<PROMPT
+Generate an image with your image generation tool and save it to
+waves/wave-{NN}/assets/rollout/{assetName}.png :
+{brief.generationPrompts.image} Adapt for the channel's native format: {assetSpec}.
+Use the winning concept image at waves/wave-{NN}/assets/{winning NamedAsset.name}.png as the
+visual anchor, same subject, same graft. Format treatment by nativeFormat: video, a 9:16
+cover frame with the hook restated as large on screen text at the top; ugc-still, a 1:1
+still that reads as shot on a phone, candid light, creator aesthetic, not retouched, not
+staged; still, a 16:9 editorial still with the hook line carried into frame; surface, a 1:1
+crop safe inside a circular mask.
+PROMPT
+```
+
+`Read` the resulting PNG and self-check: same subject and graft as the winning concept
+image, correct ratio and format treatment for that channel, the hook legible at a glance, no
+garbled text, no watermark. On a failure retry the prompt once; if it still fails, ship it
+anyway, set `assetPath` to `null`, and note the defect to the user, same one-retry ceiling
+the judge station enforces. Set each channel's `assetPath` to the PNG path once it exists.
+Collect one `RolloutDraft` per `SCALE` verdict into `readout.rollouts`.
 
 ## Report, assemble and render (scripted)
 

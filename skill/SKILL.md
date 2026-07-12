@@ -249,12 +249,14 @@ EOF
 Returns a `Decision[]`, SCALE / KILL / ITERATE per still asset, checked against the plan's
 preregistered thresholds. Motion assets never get decided (no curve to decide against).
 
-## Station 8b, rollout (you are the model)
+## Station 8b, rollout (you are the model, then codex exec produces the channel cuts)
 
 Runs only for a `SCALE` verdict. `KILL` and `ITERATE` assets skip this station entirely,
-there is nothing to roll out. For each `SCALE` decision, write a `RolloutDraft`: a channel
-by channel playbook for how the winner actually goes out, following this prompt contract
-verbatim:
+there is nothing to roll out. A channel cut is an expansion arm off a concept that already
+won the wave, not a new idea: every channel still earns its own SCALE or KILL verdict
+against its own kpi below, separate from the concept-level test the `WEB` name already ran.
+For each `SCALE` decision, write a `RolloutDraft`: a channel by channel playbook for how the
+winner actually goes out, following this prompt contract verbatim:
 
 > You are the rollout station of The Growth Machine. You run only for a variant that
 > already earned a SCALE verdict.
@@ -262,20 +264,47 @@ verbatim:
 > for example tiktok, instagram, x, or an in-app profile surface.
 > Every field is a plain declarative sentence. Do not use an em dash or an en dash anywhere
 > in the output.
+> Each channel is an expansion arm off a concept that already won, not a new idea: it will
+> earn its own SCALE or KILL verdict against the kpi you write below, separate from the
+> concept-level test.
 > `role` must be exactly one of: discovery, amplification, retention, conversion.
 > `executionSteps` must have 3 to 4 entries, each one action sentence.
 > `kpi` is one concrete number tied to an outcome. `kpiThresholdNote` is one sentence
 > linking that number back to the plan's preregistered threshold system.
+> `channelCopy` is one line of finished, ready to ship ad copy written in that channel's
+> native voice: tiktok terse and punchy, instagram a colloquial creator caption, x
+> conversational, an in-app surface a one tap prompt.
+> Format follows the channel: a video channel ships a three shot script plus a cover frame,
+> a ugc channel ships a candid creator still, an editorial channel ships a native still, an
+> in-product surface ships a mask safe crop. Write `assetSpec` accordingly.
 >
 > Output shape: `{"variantId":"...","name":"...","channels":[{"channel":"...",
 > "role":"discovery|amplification|retention|conversion","assetSpec":"...",
-> "executionSteps":["...","...","..."],"kpi":"...","kpiThresholdNote":"..."}]}`
+> "executionSteps":["...","...","..."],"kpi":"...","kpiThresholdNote":"...",
+> "channelCopy":"..."}]}`
 
 Feed yourself the winning `Variant`, its `Brief`, the `Decision` that scaled it, the still
 asset's `NamedAsset.name`, and `plan.preRegisteredThresholds[variant.angleType]`, the same
 inputs `runRollout` takes in CLI mode. `assetSpec` is one sentence: format, ratio, and how
 the hook changes for that channel. `kpi` should read against the thresholds you were just
 handed, always a real number pulled from that table.
+
+Do not write `assetName` or `assetPath` yourself, `assetName` is a deterministic lineage
+swap, not a model decision. For each channel, take the winning still's `NamedAsset.name`
+(nine segments, `CHANNEL_OBJ_FUNNEL_TEMP_FORMAT_HOOK_MOMENT_PERSONA_VER`) and swap only the
+`CHANNEL` segment for this channel's token: `instagram` -> `IG`, `tiktok` -> `TT`, `x` ->
+`XTW`, `in-app profile surface` -> `APP` (an unlisted channel gets a slugged 3-char code,
+same shape `taxonomy.channelToken` falls back to). The other eight segments are inherited
+verbatim, same asset, new channel. Set `assetPath` to `null` for now, it gets filled in
+after the channel cut is actually produced below.
+
+**Format follows the channel.** `nativeFormat` is a property of the channel, not a model
+decision: `tiktok` -> `video`, `instagram` -> `ugc-still`, `x` -> `still`, `in-app profile
+surface` -> `surface` (an unlisted channel defaults to `still`). Stamp it on every channel
+entry. For a `video` channel also write `channelScript`: a ChatCut-ready three-shot script,
+shot 1 establishes the winning subject in its everyday context, shot 2 lands the new element
+as a visual break, shot 3 locks the `channelCopy` in as on-screen copy and holds the frame.
+Every other `nativeFormat` carries `channelScript: null`.
 
 Write down what you drafted before you touch anything else, then pipe that exact JSON
 through the validator before it goes anywhere near `readout.json`:
@@ -288,8 +317,42 @@ EOF
 
 Returns `{"ok":true}` on a clean draft, or `{"ok":false,"errors":["..."]}` naming the exact
 field that failed, wrong channel count, an invalid `role`, a missing field, an em or en
-dash. Fix the draft and revalidate until it passes. Build one `RolloutDraft` per `SCALE`
-verdict this wave (zero if nothing scaled) and collect them into `readout.rollouts`.
+dash, an `assetName` whose `CHANNEL` segment doesn't match its `channel`, a `nativeFormat`
+that doesn't match its channel, a video channel missing its three-shot script. Fix the
+draft and revalidate until it passes.
+
+**Produce the channel cut.** Once a draft validates, every channel gets one real generation
+call, the same posture station 5 takes for the concept-level still, but the deliverable
+follows `nativeFormat`: a `video` channel's image is its cover frame (the script is the main
+deliverable), a `ugc-still` channel gets a candid creator-aesthetic restyle, a `still`
+channel gets a native editorial still, a `surface` channel gets a mask-safe crop. If `codex`
+is installed and authenticated:
+
+```bash
+codex exec --skip-git-repo-check - <<PROMPT
+Generate an image with your image generation tool and save it to
+waves/wave-{NN}/assets/rollout/{assetName}.png :
+{brief.generationPrompts.image} Adapt for the channel's native format: {assetSpec}.
+Use the winning concept image at waves/wave-{NN}/assets/{winning NamedAsset.name}.png as the
+visual anchor, same subject, same graft. Format treatment by nativeFormat: video, a 9:16
+cover frame with the hook restated as large on screen text at the top; ugc-still, a 1:1
+still that reads as shot on a phone, candid light, creator aesthetic, not retouched, not
+staged; still, a 16:9 editorial still with the hook line carried into frame; surface, a 1:1
+crop safe inside a circular mask.
+PROMPT
+```
+
+Then `Read` the resulting PNG and self-check: same subject and graft as the winning concept
+image, correct ratio and format treatment for that channel, the hook legible at a glance, no
+garbled text, no watermark. If it fails, retry the prompt once; if it still fails, ship it
+anyway, set `assetPath` to `null`, and note the defect directly to the user, same one-retry
+ceiling every other generation call in this pipeline enforces. If `codex` is not installed
+or not authenticated, do not fail the rollout: leave `assetPath` as `null` and hand the
+rewritten prompt to the user so they can run it through whatever image tool they have.
+
+Set each channel's `assetPath` to the PNG path once it exists, then build one `RolloutDraft`
+per `SCALE` verdict this wave (zero if nothing scaled) and collect them into
+`readout.rollouts`.
 
 ## Report, assemble and render
 

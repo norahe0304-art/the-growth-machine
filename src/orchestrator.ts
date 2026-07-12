@@ -95,6 +95,7 @@ export async function runWave(moment: string, waveNumber: number): Promise<WaveR
         decision,
         namedAssetName: namedAsset.name,
         thresholds: plan.preRegisteredThresholds[variant.angleType],
+        assetsDir,
       })
     );
   }
