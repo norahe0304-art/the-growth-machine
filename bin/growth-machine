@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# growth-machine CLI 启动器：定位到项目根，用本地 tsx 直接跑 TypeScript 源码，
+# 不依赖全局安装，不依赖预编译产物。
+set -euo pipefail
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+exec "$DIR/node_modules/.bin/tsx" "$DIR/src/cli.ts" "$@"
