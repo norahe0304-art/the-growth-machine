@@ -1,0 +1,239 @@
+# The Growth Machine — Codex CLI mode
+
+<!--
+[INPUT]: codex exec (insight/brief/judge/produce stations) + scripts/machine.mjs
+  (naming/plan/simulate/decide/report/learn, stdin-JSON-in/stdout-JSON-out) +
+  bin/growth-machine measure (measure station, unchanged, post-hoc)
+[OUTPUT]: waves/wave-NN/{brief-v1.json, brief-v2.json, brief-v3.json, plan.json,
+  assets/*.png, readout.json, report.html} + one appended library.jsonl line per wave
+[POS]: the Codex-CLI twin of skill/SKILL.md — same six stations, same JSON contracts,
+  same scripted stages. Where SKILL.md has Claude Code reason directly inside one
+  conversation, this file drives every LLM station through a separate `codex exec` call,
+  because Codex CLI's exec mode is one-shot and headless rather than a persistent
+  reasoning loop. Whoever runs this (a shell, a script, a human, another agent) is the
+  orchestrator; codex exec is the LLM engine for insight/brief/judge/produce.
+[PROTOCOL]: update this header on change, then check CLAUDE.md
+-->
+
+Same machine, same six stations, same nine files in `src/`. The only thing that changes
+from `SKILL.md` is how the LLM stations get called: instead of one agent reasoning through
+the whole wave in a single conversation, each LLM station is its own `codex exec` call —
+prompt in via stdin heredoc, JSON out via stdout, captured to a file, fed into the next
+station. Deterministic stations (`naming`/`plan`/`simulate`/`decide`/`report`/`learn`) are
+identical to `SKILL.md` — call `scripts/machine.mjs`, do not reimplement.
+
+## Before you start
+
+cwd must be the repo root. Confirm with `ls scripts/machine.mjs`. Do not set
+`OPENAI_API_KEY` — `plan`'s one rationale sentence should stay on its deterministic mock
+path in skill mode.
+
+Prompts always go through stdin, never through a shell argument — a detached/background
+`codex exec` reads an empty stdin if the prompt is passed as an argument instead
+(the same judgment call `30x-covers`' command skeleton already made).
+
+## Station 1 — insight
+
+```bash
+codex exec --skip-git-repo-check - <<'PROMPT' > /tmp/insight.json
+You crack a moment into 3 creative variants that fit the "existing asset x one new
+element" formula.
+
+Formula rules:
+1. asset must be something the audience already owns or already recognizes. It can only
+   be one of two shapes: "thing" (a concrete object the audience already owns) or
+   "interaction" (a concrete interaction the audience already knows how to do).
+2. newElement is the single new variable -- the one thing that grafts the moment's core
+   tension onto the asset.
+3. Nothing about the asset itself may be redesigned except the newElement graft -- it
+   must stay fully recognizable.
+4. angle is a one-sentence description of this variant's hook logic.
+5. angleType must be exactly one of three values, and it decides which distribution-curve
+   family this variant gets: "moment" (trend-riding, attention decays fast), "evergreen"
+   (doesn't depend on topical heat, settles into steady durable reach), "ugc-loop" (a UGC
+   loop -- gets reused/remixed wave after wave, compounding).
+6. workingTitle is a working codename of 5 words or fewer.
+
+moment: "<moment>"
+wave <N>.
+Winning traits from the previous wave, if any (extend these while keeping the formula
+rules intact): <output of `node scripts/machine.mjs learn get`, or "none">
+
+Output strict JSON, nothing outside it:
+{"variants":[{"id":"v1","asset":"...","assetKind":"thing|interaction","newElement":"...","angle":"...","angleType":"moment|evergreen|ugc-loop","workingTitle":"..."}, ...3 total, one of each angleType]}
+PROMPT
+```
+
+Parse `/tmp/insight.json` into the 3 `Variant` objects. Every later station consumes them.
+
+## Station 2 — brief
+
+Run once per variant (3 calls):
+
+```bash
+codex exec --skip-git-repo-check - <<PROMPT > /tmp/brief-v{N}.json
+Input is a creative variant that already satisfies the "existing asset x one new element"
+formula; compress it into a one-page executable brief.
+
+generationPrompts is the most important deliverable of this station -- it must be a
+"ready to run as-is" complete prompt, not a summary, not an outline:
+- image: a complete image-generation prompt, including composition/lighting/style/subject detail.
+- motion: a complete motion-script prompt, explicitly tagged "for ChatCut", explaining the shot logic.
+- copy: a complete copy-generation prompt, specifying tone/length/key points.
+
+moment: "<moment>"
+variant: <the Variant JSON object>
+
+Output strict JSON, nothing outside it:
+{"audience":"...","insight":"...","assetXElement":"...","formats":["still","motion"],"successMetric":"...","generationPrompts":{"image":"...","motion":"...","copy":"..."}}
+PROMPT
+```
+
+Copy each result to `waves/wave-{NN}/brief-v{N}.json` using the `Brief` shape (add
+`variantId` and `workingTitle` from the source variant, they are not part of the model's
+output).
+
+## Station 3 — naming (scripted)
+
+Identical to `SKILL.md`:
+
+```bash
+node scripts/machine.mjs name <<'EOF'
+{"moment":"<moment>","waveNumber":<N>,"variants":[<3 Variant objects>],"audienceByVariant":{"v1":"...","v2":"...","v3":"..."}}
+EOF
+```
+
+Returns 6 `NamedAsset` objects (still + motion per variant).
+
+## Station 4 — plan (scripted)
+
+```bash
+node scripts/machine.mjs plan <<'EOF'
+{"moment":"<moment>","waveNumber":<N>,"variants":[<3>],"namedAssets":[<6>]}
+EOF
+```
+
+Writes `plan.json`, returns the `Plan` object.
+
+## Station 5 — produce (codex exec for image; copy/motion are also codex exec calls here)
+
+**Copy**, once per asset:
+
+```bash
+codex exec --skip-git-repo-check - <<PROMPT
+You are a copy generator. Output exactly one line of copy per this prompt, in English,
+with no explanation and no surrounding quotes:
+<brief.generationPrompts.copy>
+PROMPT
+```
+
+**Motion assets**: write the 3-shot storyboard directly from `brief.generationPrompts.motion`
+(shot 1 establish, shot 2 contrast, shot 3 land the hook) — this never needs a model call,
+it is a fixed template shape. `assetPath` stays `null`.
+
+**Still assets** — the one real generation call in the pipeline:
+
+```bash
+codex exec --skip-git-repo-check - <<PROMPT
+Generate an image with your image generation tool and save it to waves/wave-{NN}/assets/{NamedAsset.name}.png :
+{brief.generationPrompts.image}
+PROMPT
+```
+
+Read the resulting PNG and self-check: subject matches the brief, composition is
+coherent, no garbled text, no watermark. Retry the prompt once on failure; if it still
+fails, ship it and flag the defect in the judge station's notes. If `codex` is not
+installed or not authenticated, skip the image call, set `assetPath` to `null`, and hand
+`brief.generationPrompts.image` to the user instead of failing the wave.
+
+Build a `ProducedAsset` per named asset: `{variantId, format, name, assetPath, copy,
+motionScript, imageModelUsed, regeneratedCount}`.
+
+## Station 6 — judge
+
+Run once per produced asset:
+
+```bash
+codex exec --skip-git-repo-check - <<PROMPT > /tmp/judge-{name}.json
+You are a strict asset referee. Given the brief and the actual produced copy / image
+prompt / storyboard, score the asset on a 3-point scale: 1 = fail, 2 = pass, 3 =
+excellent. Three dimensions:
+- onBrief: did it faithfully execute the brief's assetXElement and insight.
+- legible: can the audience understand what's happening within one second.
+- shareable: does the audience feel an urge to share/remix it.
+
+brief: <Brief JSON>
+produced: <{copy, motionScript, name} from the ProducedAsset>
+
+Output strict JSON, nothing outside it:
+{"onBrief":1|2|3,"legible":1|2|3,"shareable":1|2|3,"notes":"..."}
+PROMPT
+```
+
+Any dimension scoring `1` is a fail. On a fail, regenerate that one asset once (rerun its
+produce step), score the regenerated version, and stop regardless of the second result —
+at most one retry. Build a `JudgeResult`: `{variantId, format, score, passed, regenerated,
+notes}`.
+
+## Station 7 — simulate (scripted)
+
+```bash
+node scripts/machine.mjs simulate <<'EOF'
+{"namedAssets":[<6>],"variants":[<3>],"days":<plan.dates.days>,"waveNumber":<N>}
+EOF
+```
+
+Returns 3 `SimulatedCurve` objects (still assets only).
+
+## Station 8 — decide (scripted)
+
+```bash
+node scripts/machine.mjs decide <<'EOF'
+{"simulated":[<3>],"plan":<Plan>}
+EOF
+```
+
+Returns 3 `Decision` objects (SCALE / KILL / ITERATE).
+
+## Report — assemble and render (scripted)
+
+Assemble the `WaveReadout` (same shape as `SKILL.md`'s Report section) and run:
+
+```bash
+node scripts/machine.mjs report <<'EOF'
+{"readout": <WaveReadout object>}
+EOF
+```
+
+Writes `readout.json` and `report.html`, returns both paths.
+
+## Station 9 — learn (scripted)
+
+```bash
+node scripts/machine.mjs learn commit <<'EOF'
+{"waveNumber":<N>,"moment":"<moment>","variants":[<3>],"namedAssets":[<6>],"decisions":[<3>]}
+EOF
+```
+
+Appends the wave's line to `library.jsonl`. Its `learnings` string is what the next wave's
+`codex exec` insight call above should paste into the "Winning traits from the previous
+wave" slot.
+
+## Continuing a moment
+
+```bash
+node scripts/machine.mjs learn last
+```
+
+Returns `{"moment": "...", "lastWave": N}` or `null`. Use `lastWave + 1` as the new wave
+number, the same moment string, and run stations 1 through 9 again.
+
+## Measure (unchanged, post-hoc)
+
+Not part of the loop above — call the standalone CLI directly:
+
+```bash
+./bin/growth-machine measure --wave <N> --file metrics.json
+```
+
+[PROTOCOL]: 变更时更新此头部，然后检查 CLAUDE.md
