@@ -1,8 +1,8 @@
 /**
- * [INPUT]: 依赖 lib/openai-client 的 chatComplete/generateImage/isMockMode，依赖 lib/fs-utils 的 ensureDir，依赖 node:fs
- * [OUTPUT]: 对外提供 runProduce(...) -> ProducedAsset，真生成 still 图 + copy，motion 只交付 prompt 不真渲染
- * [POS]: 六站流水线第 5 站，是唯一动真格调用 Images API 的站 —— mock 时退化为占位 SVG
- * [PROTOCOL]: 变更时更新此头部，然后检查 CLAUDE.md
+ * [INPUT]: depends on lib/openai-client's chatComplete/generateImage/isMockMode, on lib/fs-utils's ensureDir, on node:fs
+ * [OUTPUT]: exports runProduce(...) -> ProducedAsset, real still-image + copy generation; motion only ever delivers a prompt, never rendered
+ * [POS]: station 5 of the nine-station pipeline, the only station that makes a real Images API call — degrades to a placeholder SVG in mock mode
+ * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */
 import { writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -26,7 +26,7 @@ async function produceCopy(brief: Brief): Promise<string> {
     return `[mock copy] ${brief.assetXElement} — ${brief.insight}`;
   }
   return chatComplete({
-    system: "你是文案生成器，严格按用户给出的 prompt 输出一条文案，不加解释，不加引号。",
+    system: "You are a copy generator. Output exactly one line of copy per the user's prompt, in English, with no explanation and no surrounding quotes.",
     user: brief.generationPrompts.copy,
     model: DEFAULT_MODEL,
   });
@@ -50,9 +50,9 @@ async function produceStillAsset(
 }
 
 const MOTION_STORYBOARD_TEMPLATE = (brief: Brief): string[] => [
-  `镜头1(建立): 沿用 ${brief.assetXElement.split(" x ")[0] ?? "asset"} 的日常语境，无音效铺垫`,
-  `镜头2(反差): 引入新元素制造视觉断点，配合 [for ChatCut] 剪辑节奏加速`,
-  `镜头3(落版): 钩子文案定格，画面静止1.5秒，收尾`,
+  `Shot 1 (establish): stay in the everyday context of ${brief.assetXElement.split(" x ")[0] ?? "the asset"}, no sound cue yet`,
+  `Shot 2 (contrast): introduce the new element as a visual break, cut on the [for ChatCut] rhythm`,
+  `Shot 3 (land): hook copy locks in, frame holds for 1.5s, end`,
 ];
 
 export async function runProduce(

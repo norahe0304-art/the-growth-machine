@@ -1,11 +1,11 @@
 /**
- * [INPUT]: 无外部依赖，纯函数
- * [OUTPUT]: 对外提供 hashString() / mulberry32() —— 确定性哈希与可复现的种子随机数生成器
- * [POS]: lib/ 的确定性工具，simulate.ts 用它把资产名转成可复现的噪声曲线
- * [PROTOCOL]: 变更时更新此头部，然后检查 CLAUDE.md
+ * [INPUT]: no external dependencies, pure functions
+ * [OUTPUT]: exports hashString() / mulberry32() —— deterministic hashing and a reproducible seeded RNG
+ * [POS]: a lib/ determinism utility; simulate.ts and measure.ts use it to turn asset names into reproducible noise curves
+ * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */
 
-// FNV-1a 32位哈希，纯函数，同输入同输出，跨平台稳定
+// FNV-1a 32-bit hash, pure function, same input same output, stable across platforms
 export function hashString(input: string): number {
   let hash = 0x811c9dc5;
   for (let i = 0; i < input.length; i++) {
@@ -15,7 +15,7 @@ export function hashString(input: string): number {
   return hash >>> 0;
 }
 
-// mulberry32：给定种子返回 [0,1) 的确定性伪随机数生成器
+// mulberry32: given a seed, returns a deterministic pseudo-random generator in [0,1)
 export function mulberry32(seed: number): () => number {
   let a = seed >>> 0;
   return function next(): number {

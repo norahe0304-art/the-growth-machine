@@ -5,21 +5,21 @@
     {
       "variantId": "v1",
       "format": "still",
-      "name": "WEB_CONV_TOF_HOT_STIL_THEW_THEWOR_THEW_V02",
+      "name": "WEB_CONV_TOF_HOT_STIL_GRAF_THEWOR_ANAU_V02",
       "trafficSplitPct": 33.33,
       "budgetIllustrative": 500
     },
     {
       "variantId": "v2",
       "format": "still",
-      "name": "WEB_ENGT_MOF_EVG_STIL_THEW_THEWOR_THEW_V02",
+      "name": "WEB_CONV_MOF_EVG_STIL_GRAF_THEWOR_ANAU_V02",
       "trafficSplitPct": 33.33,
       "budgetIllustrative": 250
     },
     {
       "variantId": "v3",
       "format": "still",
-      "name": "WEB_CONV_BOF_LOOP_STIL_THEW_THEWOR_THEW_V02",
+      "name": "WEB_ENGT_BOF_LOOP_STIL_GRAF_THEWOR_ANAU_V02",
       "trafficSplitPct": 33.33,
       "budgetIllustrative": 350
     }
@@ -41,10 +41,27 @@
       "fatigueSlope": -0.002
     }
   },
+  "engagementThresholds": {
+    "moment": {
+      "scaleAt": 0.08,
+      "killAt": 0.02,
+      "fatigueSlope": -0.01
+    },
+    "evergreen": {
+      "scaleAt": 0.06,
+      "killAt": 0.015,
+      "fatigueSlope": -0.004
+    },
+    "ugc-loop": {
+      "scaleAt": 0.1,
+      "killAt": 0.025,
+      "fatigueSlope": -0.006
+    }
+  },
   "dates": {
     "start": "2026-07-12",
     "end": "2026-08-02",
     "days": 21
   },
-  "rationale": "第 2 波围绕「the world cup final」等量分流三个变体，21 天观察窗覆盖疲劳曲线的完整拐点"
+  "rationale": "Wave 2 splits traffic evenly across three variants for \"the world cup final\"; the 21-day observation window covers the full fatigue-curve inflection point"
 }

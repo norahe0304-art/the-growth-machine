@@ -1,8 +1,8 @@
 /**
- * [INPUT]: 依赖 lib/hash 的 hashString/mulberry32，依赖 types.ts 的 SimulatedCurve/AngleType/NamedAsset
- * [OUTPUT]: 对外提供 runSimulate(namedAsset, angleType, days, waveNumber) -> SimulatedCurve
- * [POS]: 六站流水线第 7 站，诚实边界所在 —— market response is simulated, 三种响应模型对应三种 angleType
- * [PROTOCOL]: 变更时更新此头部，然后检查 CLAUDE.md
+ * [INPUT]: depends on lib/hash's hashString/mulberry32, on types.ts's SimulatedCurve/AngleType/NamedAsset
+ * [OUTPUT]: exports runSimulate(namedAsset, angleType, days, waveNumber) -> SimulatedCurve
+ * [POS]: station 7 of the nine-station pipeline, where the honest boundary lives — market response is simulated, three response models map to three angleTypes
+ * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */
 import { hashString, mulberry32 } from "../lib/hash.js";
 import type { AngleType, NamedAsset, SimulatedCurve } from "../types.js";
@@ -13,7 +13,7 @@ function clamp01(v: number): number {
   return Math.max(0, Math.min(1, v));
 }
 
-// moment 型: 峰值后指数疲劳。前 peakDay 天线性爬升，此后指数衰减
+// moment type: peaks then decays exponentially. Ramps linearly for peakDay days, then exponential decay.
 function momentCurve(days: number, rng: () => number): number[] {
   const peakCTR = 0.06;
   const peakDay = 3;
@@ -27,7 +27,7 @@ function momentCurve(days: number, rng: () => number): number[] {
   return out;
 }
 
-// evergreen 型: 对数稳爬，不依赖话题热度，越久越稳
+// evergreen type: a steady logarithmic climb, independent of topical heat, more stable the longer it runs
 function evergreenCurve(days: number, rng: () => number): number[] {
   const baseCTR = 0.018;
   const growth = 0.02;
@@ -39,10 +39,10 @@ function evergreenCurve(days: number, rng: () => number): number[] {
   return out;
 }
 
-// ugc-loop 型: 逐波复利，wave 序号越大加成越强(越滚越大)
+// ugc-loop type: compounds wave over wave, the higher the wave number the stronger the boost (built to snowball)
 function ugcLoopCurve(days: number, rng: () => number, waveNumber: number): number[] {
   const baseCTR = 0.022;
-  const weeklyCompound = 1 + 0.05 * waveNumber; // wave 序号加成
+  const weeklyCompound = 1 + 0.05 * waveNumber; // boost scales with wave number
   const out: number[] = [];
   for (let d = 1; d <= days; d++) {
     const week = Math.floor((d - 1) / 7);

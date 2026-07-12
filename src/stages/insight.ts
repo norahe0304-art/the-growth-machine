@@ -1,39 +1,40 @@
 /**
- * [INPUT]: 依赖 lib/openai-client 的 chatComplete/isMockMode，依赖 types.ts 的 Variant/InsightResult
- * [OUTPUT]: 对外提供 runInsight(moment, waveNumber, injectedLearnings) -> InsightResult(3 个变体)
- * [POS]: 六站流水线第 1 站，是全流程的入口 —— moment 文本在此被拆解成 3 个 asset x newElement 变体
- * [PROTOCOL]: 变更时更新此头部，然后检查 CLAUDE.md
+ * [INPUT]: depends on lib/openai-client's chatComplete/isMockMode, on types.ts's AngleType/AssetKind/Variant/InsightResult
+ * [OUTPUT]: exports runInsight(moment, waveNumber, injectedLearnings) -> InsightResult (3 variants)
+ * [POS]: station 1 of the nine-station pipeline, the entry point of the whole flow — a moment gets cracked into 3 asset x newElement variants here
+ * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */
 import { chatComplete, isMockMode, DEFAULT_MODEL } from "../lib/openai-client.js";
 import type { AngleType, AssetKind, InsightResult, Variant } from "../types.js";
 
 // ============================================================
-// 公式定义 —— 写死在 prompt 里，不允许 LLM 自由发挥
+// The formula is fixed in the prompt, not left to the LLM's discretion:
 // existing asset x one new element
-//   asset 有且只有两种形态：
-//   1. things people own   —— 人已经拥有、认得出的物件(一把椅子/一双鞋/一个杯子)
-//   2. interactions people know —— 人已经会做、认得出的互动动作(握手/碰杯/排队)
-//   newElement 是唯一被替换/嫁接的新变量，其余部分必须保持"眼熟"
+//   asset has exactly two allowed shapes:
+//   1. things people own     — a concrete object the audience already owns and recognizes (a chair / a pair of shoes / a mug)
+//   2. interactions people know — a concrete interaction the audience already knows how to do (a handshake / a toast / standing in line)
+//   newElement is the one variable that gets swapped/grafted in; everything
+//   else must stay recognizable.
 // ============================================================
-const FORMULA_SYSTEM_PROMPT = `你是 The Growth Machine 的 insight 站引擎，只做一件事：
-把一个 moment(时事/话题/节点)拆解成 3 个符合"existing asset x one new element"公式的创意变体。
+const FORMULA_SYSTEM_PROMPT = `You are the insight-station engine of The Growth Machine. You do exactly one thing:
+crack a moment (a news event, a topic, a cultural beat) into 3 creative variants that fit the "existing asset x one new element" formula.
 
-公式铁律：
-1. asset 必须是受众"已经拥有或已经认得"的东西，只能是以下两种形态之一：
-   - "thing"：things people own —— 一个具体的、人已拥有的物件
-   - "interaction"：interactions people know —— 一个具体的、人已会做的互动动作
-2. newElement 是唯一的新变量 —— 把 moment 的核心张力嫁接到 asset 上的那一个新东西
-3. 除 newElement 外，asset 本身必须保持完全眼熟，不能连 asset 一起改造
-4. angle 是一句话描述这个变体的钩子逻辑
-5. angleType 必须是三选一，决定这个变体的传播曲线族：
-   - "moment"：话题型，蹭热点，注意力会快速衰减
-   - "evergreen"：长青型，不依赖话题热度，稳定沉淀
-   - "ugc-loop"：UGC 循环型，每一波会被复用/二创，越滚越大
-6. workingTitle 是 5 个字以内的工作代号
+Formula rules:
+1. asset must be something the audience already owns or already recognizes. It can only be one of two shapes:
+   - "thing": things people own — a concrete object the audience already owns
+   - "interaction": interactions people know — a concrete interaction the audience already knows how to do
+2. newElement is the single new variable — the one thing that grafts the moment's core tension onto the asset
+3. Nothing about the asset itself may be redesigned except for the newElement graft — it must stay fully recognizable
+4. angle is a one-sentence description of this variant's hook logic
+5. angleType must be exactly one of three values, and it decides which distribution-curve family this variant gets:
+   - "moment": trend-riding, attention decays fast
+   - "evergreen": doesn't depend on topical heat, settles into steady, durable reach
+   - "ugc-loop": a UGC loop — gets reused/remixed wave after wave, compounding
+6. workingTitle is a working codename of 5 words or fewer
 
-输出严格 JSON，格式：
-{"variants":[{"asset":"...","assetKind":"thing|interaction","newElement":"...","angle":"...","angleType":"moment|evergreen|ugc-loop","workingTitle":"..."}, ...3个]}
-不要输出任何 JSON 之外的文字。`;
+Output must be strict JSON, in English, in this shape:
+{"variants":[{"asset":"...","assetKind":"thing|interaction","newElement":"...","angle":"...","angleType":"moment|evergreen|ugc-loop","workingTitle":"..."}, ...3 total]}
+Output nothing outside the JSON.`;
 
 interface RawVariant {
   asset: string;
@@ -70,32 +71,79 @@ function parseJSONResponse(text: string): RawVariant[] {
   const jsonText = match ? match[0] : text;
   const parsed = JSON.parse(jsonText) as { variants: RawVariant[] };
   if (!Array.isArray(parsed.variants) || parsed.variants.length < 1) {
-    throw new Error("insight: LLM 返回的 variants 为空");
+    throw new Error("insight: LLM returned an empty variants array");
   }
   return parsed.variants;
 }
 
 // ============================================================
-// mock 分支：确定性生成 3 个变体，若有 injectedLearnings 则把上波赢家特征
-// 显式拼进 angle，方便端到端自证(grep 可见 wave-02 continue 了 wave-01 的赢家特征)
+// mock branch: deterministic variant generation, keyword-routed by moment.
+// A known moment (e.g. "world cup") gets a curated, plausible template pool
+// that already reads like real asset x newElement combos. Anything else
+// falls back to a generic English template pool. Either way, selection is
+// indexed by waveNumber, so the same input always produces the same output
+// (the seed IS the determinism, not a metaphor for it).
+// If injectedLearnings is present, it's appended to the angle text so a
+// diff between wave-01 and wave-02 output visibly shows the carry-forward.
 // ============================================================
-const MOCK_THING_POOL = ["一个保温杯", "一副耳机", "一张购物小票", "一双拖鞋"];
-const MOCK_INTERACTION_POOL = ["排队等咖啡", "开会前的寒暄", "刷到广告时的划走", "结账时的扫码"];
+interface MockTemplate {
+  asset: string;
+  assetKind: AssetKind;
+  newElement: string;
+  workingTitle: string;
+}
+
+const SLOT_ANGLE_TYPES: AngleType[] = ["moment", "evergreen", "ugc-loop"];
+
+const GENERAL_POOL: Record<AngleType, MockTemplate[]> = {
+  moment: [
+    { asset: "a water bottle", assetKind: "thing", newElement: "the moment's core tension", workingTitle: "Bottle Beat" },
+    { asset: "a shopping receipt", assetKind: "thing", newElement: "the moment's core tension", workingTitle: "Receipt Drop" },
+  ],
+  evergreen: [
+    { asset: "small talk before a meeting", assetKind: "interaction", newElement: "the moment's core tension", workingTitle: "Meeting Beat" },
+    { asset: "waiting in line for coffee", assetKind: "interaction", newElement: "the moment's core tension", workingTitle: "Line Beat" },
+  ],
+  "ugc-loop": [
+    { asset: "a pair of slippers", assetKind: "thing", newElement: "the moment's core tension", workingTitle: "Slipper Loop" },
+    { asset: "scrolling past an ad", assetKind: "interaction", newElement: "the moment's core tension", workingTitle: "Scroll Loop" },
+  ],
+};
+
+const WORLD_CUP_POOL: Record<AngleType, MockTemplate[]> = {
+  moment: [
+    { asset: "your selfie", assetKind: "thing", newElement: "final night stands", workingTitle: "Selfie Final" },
+    { asset: "your watch-party outfit", assetKind: "thing", newElement: "final night stands", workingTitle: "Outfit Final" },
+  ],
+  evergreen: [
+    { asset: "friend group photo", assetKind: "thing", newElement: "team poster style", workingTitle: "Team Poster" },
+    { asset: "your profile picture", assetKind: "thing", newElement: "team poster style", workingTitle: "Profile Poster" },
+  ],
+  "ugc-loop": [
+    { asset: "your chat highlights", assetKind: "interaction", newElement: "match commentary", workingTitle: "Chat Commentary" },
+    { asset: "your group chat reactions", assetKind: "interaction", newElement: "match commentary", workingTitle: "Reaction Commentary" },
+  ],
+};
+
+function keywordPoolFor(moment: string): Record<AngleType, MockTemplate[]> {
+  const lower = moment.toLowerCase();
+  if (lower.includes("world cup")) return WORLD_CUP_POOL;
+  return GENERAL_POOL;
+}
 
 function mockVariants(moment: string, waveNumber: number, injectedLearnings: string | null): RawVariant[] {
-  const traitSuffix = injectedLearnings ? ` + 延续上波赢家特征[${injectedLearnings}]` : "";
-  const kinds: AssetKind[] = ["thing", "interaction", "thing"];
-  const angleTypes: AngleType[] = ["moment", "evergreen", "ugc-loop"];
-  return kinds.map((kind, i) => {
-    const pool = kind === "thing" ? MOCK_THING_POOL : MOCK_INTERACTION_POOL;
-    const asset = pool[(waveNumber - 1 + i) % pool.length];
+  const pool = keywordPoolFor(moment);
+  const traitSuffix = injectedLearnings ? `, carrying forward last wave's winning traits [${injectedLearnings}]` : "";
+  return SLOT_ANGLE_TYPES.map((angleType) => {
+    const options = pool[angleType];
+    const tmpl = options[(waveNumber - 1) % options.length];
     return {
-      asset,
-      assetKind: kind,
-      newElement: `${moment} 的核心张力`,
-      angle: `把「${moment}」嫁接到「${asset}」上${traitSuffix}`,
-      angleType: angleTypes[i],
-      workingTitle: `W${waveNumber}变体${i + 1}`,
+      asset: tmpl.asset,
+      assetKind: tmpl.assetKind,
+      newElement: tmpl.newElement,
+      angle: `graft "${moment}" onto "${tmpl.asset}"${traitSuffix}`,
+      angleType,
+      workingTitle: tmpl.workingTitle,
     };
   });
 }
@@ -110,9 +158,9 @@ export async function runInsight(
   }
 
   const learningsBlock = injectedLearnings
-    ? `\n\n上一波的赢家特征(请在保持公式铁律的前提下延续这些特征，实现真进化)：\n${injectedLearnings}`
+    ? `\n\nWinning traits from the previous wave (extend these while keeping the formula rules intact — this is where real evolution happens):\n${injectedLearnings}`
     : "";
-  const userPrompt = `moment: "${moment}"\n第 ${waveNumber} 波。${learningsBlock}\n请产出 3 个变体。`;
+  const userPrompt = `moment: "${moment}"\nwave ${waveNumber}.${learningsBlock}\nProduce 3 variants.`;
 
   const raw = await chatComplete({
     system: FORMULA_SYSTEM_PROMPT,

@@ -1,24 +1,24 @@
 /**
- * [INPUT]: 依赖 lib/openai-client 的 chatComplete/isMockMode，依赖 lib/hash 的 hashString/mulberry32，依赖 stages/produce.ts 的 runProduce
- * [OUTPUT]: 对外提供 runJudge(...) -> { produced, judgeResult }，三分制自检 + 失败自动重生成一次
- * [POS]: 六站流水线第 6 站，是 produce 与 simulate 之间的质检闸门 —— 任一维度 fail(=1) 触发最多一次重生成
- * [PROTOCOL]: 变更时更新此头部，然后检查 CLAUDE.md
+ * [INPUT]: depends on lib/openai-client's chatComplete/isMockMode, on lib/hash's hashString/mulberry32, on stages/produce.ts's runProduce
+ * [OUTPUT]: exports runJudge(...) -> { produced, judgeResult }, three-point self-check with one automatic regeneration on failure
+ * [POS]: station 6 of the nine-station pipeline, the quality gate between produce and simulate — any dimension scoring fail(=1) triggers up to one regeneration
+ * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */
 import { chatComplete, isMockMode, DEFAULT_MODEL } from "../lib/openai-client.js";
 import { hashString, mulberry32 } from "../lib/hash.js";
 import { runProduce } from "./produce.js";
 import type { Brief, JudgeResult, JudgeScore, NamedAsset, ProducedAsset } from "../types.js";
 
-const JUDGE_SYSTEM_PROMPT = `你是 The Growth Machine 的 judge 站引擎，一个严格的资产裁判。
-根据 brief 与实际产出的文案/生图 prompt/分镜，对资产打三分制分：
-1 = 不合格(fail) 2 = 合格 3 = 优秀
-三个维度：
-- onBrief: 是否忠实执行了 brief 的 assetXElement 与 insight
-- legible: 受众能否在1秒内看懂在说什么
-- shareable: 受众是否有转发/二创的冲动
+const JUDGE_SYSTEM_PROMPT = `You are the judge-station engine of The Growth Machine, a strict asset referee.
+Given the brief and the actual produced copy / image prompt / storyboard, score the asset on a 3-point scale:
+1 = fail   2 = pass   3 = excellent
+Three dimensions:
+- onBrief: did it faithfully execute the brief's assetXElement and insight
+- legible: can the audience understand what's happening within one second
+- shareable: does the audience feel an urge to share/remix it
 
-输出严格 JSON：{"onBrief":1|2|3,"legible":1|2|3,"shareable":1|2|3,"notes":"..."}
-不要输出任何 JSON 之外的文字。`;
+Output must be strict JSON, in English: {"onBrief":1|2|3,"legible":1|2|3,"shareable":1|2|3,"notes":"..."}
+Output nothing outside the JSON.`;
 
 function isFail(score: JudgeScore): boolean {
   return score.onBrief === 1 || score.legible === 1 || score.shareable === 1;
@@ -62,7 +62,7 @@ export async function runJudge(
   let { score, notes } = await scoreAsset(produced, brief, attempt);
 
   if (isFail(score) && attempt === 1) {
-    // 最多重生成一次
+    // at most one regeneration
     produced = await runProduce(assetsDir, namedAsset, brief);
     produced.regeneratedCount = 1;
     attempt = 2;

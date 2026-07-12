@@ -1,17 +1,17 @@
 {
   "variantId": "v2",
-  "workingTitle": "W2变体2",
-  "audience": "关注「the world cup final」的年轻受众",
-  "insight": "受众对「刷到广告时的划走」眼熟到会自动忽略，但「the world cup final 的核心张力」能让他们停下来多看一眼",
-  "assetXElement": "刷到广告时的划走 x the world cup final 的核心张力",
+  "workingTitle": "Profile Poster",
+  "audience": "an audience following \"the world cup final\"",
+  "insight": "the audience is so used to seeing \"your profile picture\" that they scroll past it, but \"team poster style\" is enough to make them stop for a second look",
+  "assetXElement": "your profile picture x team poster style",
   "formats": [
     "still",
     "motion"
   ],
-  "successMetric": "7日留存曝光",
+  "successMetric": "7-day retained exposure",
   "generationPrompts": {
-    "image": "画面主体是刷到广告时的划走，在其上嫁接the world cup final 的核心张力的视觉细节，风格：编辑级摄影，浅景深，构图居中留白，光线自然，16:9",
-    "motion": "[for ChatCut] 三镜头脚本：镜头1建立刷到广告时的划走的日常语境；镜头2引入the world cup final 的核心张力制造反差；镜头3给出钩子文案落版，时长6秒",
-    "copy": "写一句不超过20字的钩子文案，围绕\"把「the world cup final」嫁接到「刷到广告时的划走」上 + 延续上波赢家特征[上一波(wave 1)的赢家特征: interaction型资产「开会前的寒暄」+ angleType=evergreen + HOOK=THEW。优先在新变体中复用这些 asset 形态与 angleType 组合。]\"，语气克制不喧哗，禁用感叹号"
+    "image": "Subject is your profile picture, with visual details grafting in team poster style. Style: editorial photography, shallow depth of field, centered composition with negative space, natural light, 16:9",
+    "motion": "[for ChatCut] three-shot script: shot 1 establishes your profile picture in its everyday context; shot 2 introduces team poster style to create contrast; shot 3 lands the hook copy, 6 seconds total",
+    "copy": "Write one hook line, 20 words or fewer, built around \"graft \"the world cup final\" onto \"your profile picture\", carrying forward last wave's winning traits [Winning traits from wave 1: thing asset \"friend group photo\" + angleType=evergreen + HOOK=GRAF. Prioritize reusing these asset shapes and angleType combinations in new variants.]\", restrained tone, no exclamation marks"
   }
 }

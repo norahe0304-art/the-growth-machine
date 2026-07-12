@@ -1,8 +1,8 @@
 /**
- * [INPUT]: 依赖 openai 官方 SDK，依赖 process.env 的 OPENAI_API_KEY / MODEL / IMAGE_MODEL
- * [OUTPUT]: 对外提供 getClient() / isMockMode() / chatComplete() / generateImage()
- * [POS]: lib/ 的唯一 OpenAI 网关，所有 stages/*.ts 通过此文件访问模型，不直接 import openai
- * [PROTOCOL]: 变更时更新此头部，然后检查 CLAUDE.md
+ * [INPUT]: depends on the official openai SDK, on process.env's OPENAI_API_KEY / MODEL / IMAGE_MODEL
+ * [OUTPUT]: exports getClient() / isMockMode() / chatComplete() / generateImage()
+ * [POS]: the sole OpenAI gateway in lib/; every stages/*.ts file reaches the model through this file, never imports openai directly
+ * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */
 import OpenAI from "openai";
 
@@ -14,9 +14,9 @@ let client: OpenAI | null = null;
 let forcedMock = false;
 
 /**
- * mock 模式的两个触发条件：
- * 1. OPENAI_API_KEY 缺失 → 强制 mock(无论 --mock 是否传入)
- * 2. CLI 显式传入 --mock → 强制 mock
+ * Two triggers put the machine into mock mode:
+ * 1. OPENAI_API_KEY is missing -> forced mock (regardless of --mock)
+ * 2. the CLI passes --mock explicitly -> forced mock
  */
 export function setForcedMock(v: boolean): void {
   forcedMock = v;
@@ -28,7 +28,7 @@ export function isMockMode(): boolean {
 
 export function getClient(): OpenAI {
   if (isMockMode()) {
-    throw new Error("getClient() 在 mock 模式下不应被调用 — 请先检查 isMockMode()");
+    throw new Error("getClient() must not be called in mock mode — check isMockMode() first");
   }
   if (!client) {
     client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -37,8 +37,8 @@ export function getClient(): OpenAI {
 }
 
 /**
- * 文本生成：包一层 chat.completions，mock 模式下由调用方自行走 mock 分支，
- * 此函数只服务真实路径。
+ * Text generation: a thin wrapper over chat.completions. In mock mode the
+ * caller takes its own mock branch; this function only serves the real path.
  */
 export async function chatComplete(params: {
   system: string;
@@ -58,8 +58,8 @@ export async function chatComplete(params: {
 }
 
 /**
- * 图片生成：优先 IMAGE_MODEL，遇 404/未知模型错误自动回退 gpt-image-1 并打日志。
- * 返回 base64 图片数据。
+ * Image generation: tries IMAGE_MODEL first, falls back to gpt-image-1 on a
+ * 404/unknown-model error and logs the fallback. Returns base64 image data.
  */
 export async function generateImage(params: {
   prompt: string;
@@ -74,16 +74,16 @@ export async function generateImage(params: {
       size,
     });
     const b64 = res.data?.[0]?.b64_json;
-    if (!b64) throw new Error("images.generate 未返回 b64_json");
+    if (!b64) throw new Error("images.generate did not return b64_json");
     return { b64, modelUsed: DEFAULT_IMAGE_MODEL };
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     const isUnknownModel =
       message.includes("404") ||
-      /model/i.test(message) && /(not found|unknown|does not exist|invalid)/i.test(message);
+      (/model/i.test(message) && /(not found|unknown|does not exist|invalid)/i.test(message));
     if (!isUnknownModel) throw err;
     console.warn(
-      `[openai-client] IMAGE_MODEL="${DEFAULT_IMAGE_MODEL}" 请求失败(${message})，回退到 "${FALLBACK_IMAGE_MODEL}"`
+      `[openai-client] IMAGE_MODEL="${DEFAULT_IMAGE_MODEL}" request failed (${message}), falling back to "${FALLBACK_IMAGE_MODEL}"`
     );
     const res = await openai.images.generate({
       model: FALLBACK_IMAGE_MODEL,
@@ -91,7 +91,7 @@ export async function generateImage(params: {
       size,
     });
     const b64 = res.data?.[0]?.b64_json;
-    if (!b64) throw new Error("images.generate 回退后仍未返回 b64_json");
+    if (!b64) throw new Error("images.generate still returned no b64_json after fallback");
     return { b64, modelUsed: FALLBACK_IMAGE_MODEL };
   }
 }

@@ -1,8 +1,8 @@
 /**
- * [INPUT]: 依赖 node:test/node:assert，依赖 src/stages/naming.ts 的 runNaming
- * [OUTPUT]: 对外提供 naming 站的确定性单测
- * [POS]: test/ 的一员，覆盖"同输入永远同输出"这一条铁律
- * [PROTOCOL]: 变更时更新此头部，然后检查 CLAUDE.md
+ * [INPUT]: depends on node:test/node:assert, on src/stages/naming.ts's runNaming
+ * [OUTPUT]: unit tests for the naming station's determinism
+ * [POS]: part of test/, covers the "same input, always the same output" rule
+ * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */
 import test from "node:test";
 import assert from "node:assert/strict";
@@ -19,25 +19,25 @@ const variant: Variant = {
   workingTitle: "cup roar",
 };
 
-test("naming: 同输入产出同名字(确定性)", () => {
+test("naming: same input produces the same name (deterministic)", () => {
   const a = runNaming({ variant, format: "still", moment: "world cup final", audience: "football fans", version: 1 });
   const b = runNaming({ variant, format: "still", moment: "world cup final", audience: "football fans", version: 1 });
   assert.equal(a.name, b.name);
 });
 
-test("naming: 九段结构完整，段数正确", () => {
+test("naming: nine-segment structure has the right number of segments", () => {
   const named = runNaming({ variant, format: "still", moment: "world cup final", audience: "football fans", version: 1 });
   const segs = named.name.split("_");
-  assert.equal(segs.length, 9, `期望 9 段，实际 ${segs.length} 段: ${named.name}`);
+  assert.equal(segs.length, 9, `expected 9 segments, got ${segs.length}: ${named.name}`);
 });
 
-test("naming: format 不同产出不同名字", () => {
+test("naming: different format produces a different name", () => {
   const still = runNaming({ variant, format: "still", moment: "world cup final", audience: "football fans", version: 1 });
   const motion = runNaming({ variant, format: "motion", moment: "world cup final", audience: "football fans", version: 1 });
   assert.notEqual(still.name, motion.name);
 });
 
-test("naming: version 段正确补零", () => {
+test("naming: version segment is zero-padded correctly", () => {
   const v1 = runNaming({ variant, format: "still", moment: "world cup final", audience: "football fans", version: 1 });
   const v12 = runNaming({ variant, format: "still", moment: "world cup final", audience: "football fans", version: 12 });
   assert.ok(v1.name.endsWith("_V01"));

@@ -1,8 +1,8 @@
 /**
- * [INPUT]: 依赖 src/taxonomy.ts 的九段字典与 slug 工具，依赖 types.ts 的 NamingInput/NamedAsset
- * [OUTPUT]: 对外提供 runNaming(input) -> NamedAsset，确定性九段命名，无 LLM 参与
- * [POS]: 六站流水线第 3 站，唯一不调用模型的站 —— 同输入永远同输出
- * [PROTOCOL]: 变更时更新此头部，然后检查 CLAUDE.md
+ * [INPUT]: depends on src/taxonomy.ts's nine-segment dictionaries and slug utilities, on types.ts's NamingInput/NamedAsset
+ * [OUTPUT]: exports runNaming(input) -> NamedAsset, a deterministic nine-segment name, no LLM involved
+ * [POS]: station 3 of the nine-station pipeline, the only station that never calls a model — same input, always the same output
+ * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */
 import {
   CHANNEL,
