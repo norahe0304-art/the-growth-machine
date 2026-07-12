@@ -39,7 +39,8 @@ persist per asset, including retry counts. Thresholds are preregistered before a
 exists, and every verdict cites them. Every number carries a simulated or measured source
 flag. `library.jsonl` records what each wave taught the machine. Humans stay in the loop:
 real data enters by hand and nothing publishes itself. This is autonomy with an audit
-trail.
+trail. The brand pack and reference libraries the wave consulted are themselves versioned
+files in the repo.
 
 ## Quickstart
 
@@ -144,6 +145,14 @@ moment
   |
   +-- loops back into [1] insight.ts for wave N+1
 ```
+
+The brand pack and the reference libraries feed specific stations in that chain. Station 1
+reads `brand/<pack>/brand.md` and `history.md` for voice and proven patterns. Station 2
+reads the target channel's file in `references/` for real creative winners. Station 5 and
+station 8b's produce step read `brand/<pack>/design.md` for the visual register, plus
+`references/meta.md` or `references/tiktok.md` for format-specific syntax. Station 6 reads
+`brand.md` again for the `brandFit` judge dimension. Station 8b reads
+`brand/<pack>/channels.md` for channel precedent before it drafts a rollout.
 
 Stations 1, 2, and 6 (insight, brief, judge) are LLM stations. In skill mode the agent
 running `skill/SKILL.md` or `skill/CODEX.md` performs them directly. In CLI mode

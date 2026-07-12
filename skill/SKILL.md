@@ -67,6 +67,13 @@ CLI does. Confirm with `ls scripts/machine.mjs` first. Do not set `OPENAI_API_KE
 it unset keeps `plan`'s one rationale sentence on its deterministic mock path, which is the
 correct behavior in skill mode (rules decide the plan, not a model call).
 
+Check `brand/<pack>/` for a brand pack, default pack is `openai`. When the directory
+exists, Read all four files, `brand.md`, `design.md`, `channels.md`, `history.md`, and
+hold them in memory for the whole wave, several stations below need them. Check
+`references/` for the channel winners libraries too, and pull the file that matches the
+target channel, or `cross-channel.md` when no channel is set yet, at whichever station
+below calls for it.
+
 Ask the user for **the moment** (a news event, topic, or cultural beat) and **the wave
 number** (1 for a fresh moment, or call `learn last`, see below, to continue one already
 in progress) before starting station 1.
@@ -92,6 +99,14 @@ Every variant this machine produces must satisfy: **existing asset x one new ele
 Before generating, call `node scripts/machine.mjs learn get` (no stdin) to fetch
 `injectedLearnings`, the previous wave's winning traits, if any. If it is non-null, extend
 those traits while keeping the formula rules intact; that is where real evolution happens.
+
+Also before generating, read `brand/<pack>/brand.md` for voice and stance and
+`brand/<pack>/history.md` for the track record and its four laws, when the pack exists.
+Every variant this station produces must clear all three on-brand checks in `brand.md`'s
+closing section, restraint, register, rights, before it moves to station 2. A concept that
+would need a named real person's likeness or a named copyrighted property to work fails the
+rights check right here. Rewrite that concept around a generalized stand-in that keeps the
+underlying moment's tension instead of dropping the variant outright.
 
 Follow this instruction, in full, to produce exactly 3 variants:
 
@@ -139,12 +154,21 @@ most important deliverable, it must be ready to run as-is, not a summary:
 >   the shot logic.
 > - `copy`: a complete copy-generation prompt, specifying tone/length/key points.
 >
-> Output shape: `{"audience":"...","insight":"...","assetXElement":"...","formats":["still","motion"],"successMetric":"...","generationPrompts":{"image":"...","motion":"...","copy":"..."}}`
+> Before writing the prompt, open `references/<channel>.md` for the target channel, or
+> `references/cross-channel.md` when no channel is set yet at brief time. Pull one live
+> source card entry when a live pull is available, otherwise fall back to that file's
+> starter rules section. `referenceSet` names what got pulled, each entry tagged with its
+> source and its verification status, `live` or `starter-unverified`.
+>
+> Output shape: `{"audience":"...","insight":"...","assetXElement":"...","formats":["still","motion"],"successMetric":"...","referenceSet":[{"source":"...","entry":"...","status":"live|starter-unverified"}],"generationPrompts":{"image":"...","motion":"...","copy":"..."}}`
 
 Write one `brief-v{N}.json` per variant to `waves/wave-{NN}/brief-v{N}.json` (zero-padded
 wave number, matching `waveDirName`, e.g. `waves/wave-01/brief-v1.json`). Use the `Brief`
-shape: `{variantId, workingTitle, audience, insight, assetXElement, formats, successMetric,
-generationPrompts}`.
+shape plus `referenceSet`: `{variantId, workingTitle, audience, insight, assetXElement,
+formats, successMetric, referenceSet, generationPrompts}`. `referenceSet` is a
+skill-mode and Codex-CLI-mode addition written directly into the JSON file, the compiled
+`Brief` type in `src/types.ts` still carries only the original fields, this lane does not
+touch `src/`.
 
 ## Station 3, naming (scripted, deterministic, no LLM)
 
@@ -184,8 +208,16 @@ For each of the 6 named assets:
 shot 2 introduces the new element as contrast, shot 3 lands the hook copy. `assetPath` stays
 `null` for motion; `motionScript` holds the 3-line array.
 
-**Still assets**: this is the one real generation call in the whole pipeline. If `codex` is
-installed and authenticated, run it against `brief.generationPrompts.image`:
+**Still assets**: this is the one real generation call in the whole pipeline. Before calling
+`codex`, when a brand pack exists, fold the matching register's prompt fragment from
+`brand/<pack>/design.md`'s "Prompt fragments" section into `brief.generationPrompts.image`,
+picking dark gradient, diagram accent, paper-white, or UGC by what the brief's register
+already calls for. When a later channel cut (station 8b) carries `nativeFormat: ugc-still`,
+also splice in the UGC syntax from `references/meta.md`'s starter rules before generating
+that channel's image. When a later channel cut is a `tiktok` `video` script, self-check the
+three-shot script against `references/tiktok.md`'s starter rules before it ships. If `codex`
+is installed and authenticated, run it against the (possibly fragment-augmented)
+`brief.generationPrompts.image`:
 
 ```bash
 codex exec --skip-git-repo-check - <<PROMPT
@@ -212,18 +244,26 @@ For each produced asset, score it yourself against this instruction:
 
 > You are a strict asset referee. Given the brief and the actual produced copy / image
 > prompt / storyboard, score the asset on a 3-point scale: 1 = fail, 2 = pass, 3 =
-> excellent. Three dimensions:
+> excellent. Four dimensions:
 > - `onBrief`: did it faithfully execute the brief's `assetXElement` and `insight`.
 > - `legible`: can the audience understand what's happening within one second.
 > - `shareable`: does the audience feel an urge to share/remix it.
+> - `brandFit`: when a brand pack exists, read `brand/<pack>/brand.md`'s three on-brand
+>   checks, restraint, register, rights, and score how well the asset clears all three.
+>   When no brand pack exists, score this dimension `2` by default.
 >
-> Output shape: `{"onBrief":1|2|3,"legible":1|2|3,"shareable":1|2|3,"notes":"..."}`
+> Output shape: `{"onBrief":1|2|3,"legible":1|2|3,"shareable":1|2|3,"brandFit":1|2|3,"notes":"..."}`
 
-Any dimension scoring `1` counts as a fail. On a fail, regenerate that one asset once
-(rerun the produce step for it, new copy, or a retried `codex exec` for stills), then score
-the regenerated version and stop regardless of the second result, at most one retry, same
-rule `runJudge` enforces. Build a `JudgeResult` per asset: `{variantId, format, score,
-passed, regenerated, notes}`.
+Any dimension scoring `1` counts as a fail, `brandFit` included. On a fail, regenerate that
+one asset once (rerun the produce step for it, new copy, or a retried `codex exec` for
+stills), then score the regenerated version and stop regardless of the second result, at
+most one retry, same rule `runJudge` enforces. Build a `JudgeResult` per asset: `{variantId,
+format, score, passed, regenerated, notes}`, where `score` carries all four dimensions
+above including `brandFit`. `brandFit` is a skill-mode and Codex-CLI-mode addition written
+directly into the JSON the agent produces. The compiled `JudgeScore` type in `src/types.ts`
+still carries only the original three dimensions, this lane does not touch `src/`, so the
+skill and CLI headless modes carry different score shapes until a later lane wires
+`brandFit` into the compiled type.
 
 ## Station 7, simulate (scripted, seeded, deterministic)
 
@@ -255,6 +295,14 @@ Runs only for a `SCALE` verdict. `KILL` and `ITERATE` assets skip this station e
 there is nothing to roll out. A channel cut is an expansion arm off a concept that already
 won the wave, not a new idea: every channel still earns its own SCALE or KILL verdict
 against its own kpi below, separate from the concept-level test the `WEB` name already ran.
+
+Before picking channels, when a brand pack exists, read `brand/<pack>/channels.md` for the
+actual channel precedent, what fits and what does not fit, per channel. Pick from the
+channels the file shows fit for this concept, or state the deviation plainly inside
+`assetSpec` when a channel outside precedent is genuinely warranted. Write `channelCopy` in
+that channel's native voice per the prompt contract below, and keep its tone aligned with
+`brand.md`'s register check, dry and specific to the moment, never generic internet slang.
+
 For each `SCALE` decision, write a `RolloutDraft`: a channel by channel playbook for how the
 winner actually goes out, following this prompt contract verbatim:
 
@@ -325,8 +373,12 @@ draft and revalidate until it passes.
 call, the same posture station 5 takes for the concept-level still, but the deliverable
 follows `nativeFormat`: a `video` channel's image is its cover frame (the script is the main
 deliverable), a `ugc-still` channel gets a candid creator-aesthetic restyle, a `still`
-channel gets a native editorial still, a `surface` channel gets a mask-safe crop. If `codex`
-is installed and authenticated:
+channel gets a native editorial still, a `surface` channel gets a mask-safe crop. Apply the
+same brand-pack and reference rules station 5 sets: fold `design.md`'s matching prompt
+fragment into the adapted image prompt, splice in `references/meta.md`'s UGC syntax for a
+`ugc-still` channel, and self-check a `tiktok` channel's `channelScript` against
+`references/tiktok.md`'s starter rules before it ships. If `codex` is installed and
+authenticated:
 
 ```bash
 codex exec --skip-git-repo-check - <<PROMPT
