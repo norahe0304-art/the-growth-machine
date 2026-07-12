@@ -1,4 +1,4 @@
-# The Growth Machine — Codex CLI mode
+# The Growth Machine, Codex CLI mode
 
 <!--
 [INPUT]: codex exec (insight/brief/judge/produce stations) + scripts/machine.mjs
@@ -6,7 +6,7 @@
   bin/growth-machine measure (measure station, unchanged, post-hoc)
 [OUTPUT]: waves/wave-NN/{brief-v1.json, brief-v2.json, brief-v3.json, plan.json,
   assets/*.png, readout.json, report.html} + one appended library.jsonl line per wave
-[POS]: the Codex-CLI twin of skill/SKILL.md — same six stations, same JSON contracts,
+[POS]: the Codex-CLI twin of skill/SKILL.md, same six stations, same JSON contracts,
   same scripted stages. Where SKILL.md has Claude Code reason directly inside one
   conversation, this file drives every LLM station through a separate `codex exec` call,
   because Codex CLI's exec mode is one-shot and headless rather than a persistent
@@ -17,22 +17,22 @@
 
 Same machine, same six stations, same nine files in `src/`. The only thing that changes
 from `SKILL.md` is how the LLM stations get called: instead of one agent reasoning through
-the whole wave in a single conversation, each LLM station is its own `codex exec` call —
+the whole wave in a single conversation, each LLM station is its own `codex exec` call , 
 prompt in via stdin heredoc, JSON out via stdout, captured to a file, fed into the next
 station. Deterministic stations (`naming`/`plan`/`simulate`/`decide`/`report`/`learn`) are
-identical to `SKILL.md` — call `scripts/machine.mjs`, do not reimplement.
+identical to `SKILL.md`, call `scripts/machine.mjs`, do not reimplement.
 
 ## Before you start
 
 cwd must be the repo root. Confirm with `ls scripts/machine.mjs`. Do not set
-`OPENAI_API_KEY` — `plan`'s one rationale sentence should stay on its deterministic mock
+`OPENAI_API_KEY`, `plan`'s one rationale sentence should stay on its deterministic mock
 path in skill mode.
 
-Prompts always go through stdin, never through a shell argument — a detached/background
+Prompts always go through stdin, never through a shell argument, a detached/background
 `codex exec` reads an empty stdin if the prompt is passed as an argument instead
 (the same judgment call `30x-covers`' command skeleton already made).
 
-## Station 1 — insight
+## Station 1, insight
 
 ```bash
 codex exec --skip-git-repo-check - <<'PROMPT' > /tmp/insight.json
@@ -66,7 +66,7 @@ PROMPT
 
 Parse `/tmp/insight.json` into the 3 `Variant` objects. Every later station consumes them.
 
-## Station 2 — brief
+## Station 2, brief
 
 Run once per variant (3 calls):
 
@@ -93,7 +93,7 @@ Copy each result to `waves/wave-{NN}/brief-v{N}.json` using the `Brief` shape (a
 `variantId` and `workingTitle` from the source variant, they are not part of the model's
 output).
 
-## Station 3 — naming (scripted)
+## Station 3, naming (scripted)
 
 Identical to `SKILL.md`:
 
@@ -105,7 +105,7 @@ EOF
 
 Returns 6 `NamedAsset` objects (still + motion per variant).
 
-## Station 4 — plan (scripted)
+## Station 4, plan (scripted)
 
 ```bash
 node scripts/machine.mjs plan <<'EOF'
@@ -115,7 +115,7 @@ EOF
 
 Writes `plan.json`, returns the `Plan` object.
 
-## Station 5 — produce (codex exec for image; copy/motion are also codex exec calls here)
+## Station 5, produce (codex exec for image; copy/motion are also codex exec calls here)
 
 **Copy**, once per asset:
 
@@ -128,10 +128,10 @@ PROMPT
 ```
 
 **Motion assets**: write the 3-shot storyboard directly from `brief.generationPrompts.motion`
-(shot 1 establish, shot 2 contrast, shot 3 land the hook) — this never needs a model call,
+(shot 1 establish, shot 2 contrast, shot 3 land the hook), this never needs a model call,
 it is a fixed template shape. `assetPath` stays `null`.
 
-**Still assets** — the one real generation call in the pipeline:
+**Still assets**, the one real generation call in the pipeline:
 
 ```bash
 codex exec --skip-git-repo-check - <<PROMPT
@@ -149,7 +149,7 @@ installed or not authenticated, skip the image call, set `assetPath` to `null`, 
 Build a `ProducedAsset` per named asset: `{variantId, format, name, assetPath, copy,
 motionScript, imageModelUsed, regeneratedCount}`.
 
-## Station 6 — judge
+## Station 6, judge
 
 Run once per produced asset:
 
@@ -171,11 +171,11 @@ PROMPT
 ```
 
 Any dimension scoring `1` is a fail. On a fail, regenerate that one asset once (rerun its
-produce step), score the regenerated version, and stop regardless of the second result —
+produce step), score the regenerated version, and stop regardless of the second result , 
 at most one retry. Build a `JudgeResult`: `{variantId, format, score, passed, regenerated,
 notes}`.
 
-## Station 7 — simulate (scripted)
+## Station 7, simulate (scripted)
 
 ```bash
 node scripts/machine.mjs simulate <<'EOF'
@@ -185,7 +185,7 @@ EOF
 
 Returns 3 `SimulatedCurve` objects (still assets only).
 
-## Station 8 — decide (scripted)
+## Station 8, decide (scripted)
 
 ```bash
 node scripts/machine.mjs decide <<'EOF'
@@ -195,7 +195,7 @@ EOF
 
 Returns 3 `Decision` objects (SCALE / KILL / ITERATE).
 
-## Report — assemble and render (scripted)
+## Report, assemble and render (scripted)
 
 Assemble the `WaveReadout` (same shape as `SKILL.md`'s Report section) and run:
 
@@ -207,7 +207,7 @@ EOF
 
 Writes `readout.json` and `report.html`, returns both paths.
 
-## Station 9 — learn (scripted)
+## Station 9, learn (scripted)
 
 ```bash
 node scripts/machine.mjs learn commit <<'EOF'
@@ -230,7 +230,7 @@ number, the same moment string, and run stations 1 through 9 again.
 
 ## Measure (unchanged, post-hoc)
 
-Not part of the loop above — call the standalone CLI directly:
+Not part of the loop above, call the standalone CLI directly:
 
 ```bash
 ./bin/growth-machine measure --wave <N> --file metrics.json
