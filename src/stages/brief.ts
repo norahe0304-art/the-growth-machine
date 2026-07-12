@@ -1,7 +1,7 @@
 /**
  * [INPUT]: depends on lib/openai-client's chatComplete/isMockMode, on types.ts's Variant/Brief
  * [OUTPUT]: exports runBrief(variant, moment) -> Brief, whose generationPrompts is the first-class deliverable
- * [POS]: station 2 of the nine-station pipeline, compresses insight's variant into a one-page brief that feeds produce directly
+ * [POS]: station 2 of the ten-station pipeline, compresses insight's variant into a one-page brief that feeds produce directly
  * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */
 import { chatComplete, isMockMode, DEFAULT_MODEL } from "../lib/openai-client.js";

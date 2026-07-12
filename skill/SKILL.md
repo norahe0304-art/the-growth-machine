@@ -16,16 +16,18 @@ description: >
 ---
 
 <!--
-[INPUT]: the agent's own reasoning (insight/brief/judge stations, stdin-free, the agent
-  writes the JSON itself) + scripts/machine.mjs (naming/plan/simulate/decide/report/learn,
-  stdin-JSON-in/stdout-JSON-out) + codex exec GPT-Image (produce's image call, optional) +
-  bin/growth-machine measure (measure station, unchanged, post-hoc)
+[INPUT]: the agent's own reasoning (insight/brief/judge/rollout-authoring stations,
+  stdin-free, the agent writes the JSON itself) + scripts/machine.mjs (naming/plan/simulate/
+  decide/rollout-validate/report/learn, stdin-JSON-in/stdout-JSON-out) + codex exec GPT-Image
+  (produce's image call, optional) + bin/growth-machine measure (measure station, unchanged,
+  post-hoc)
 [OUTPUT]: waves/wave-NN/{brief-v1.json, brief-v2.json, brief-v3.json, plan.json,
   assets/*.png, readout.json, report.html} + one appended library.jsonl line per wave
-[POS]: the skill-layer twin of bin/growth-machine, same nine files in src/, same six
-  conceptual stations, same taxonomy, same thresholds. The only thing that changes between
-  CLI mode and skill mode is who calls the LLM stations: a paid OpenAI API key in CLI mode,
-  the agent's own weights in skill mode. See CODEX.md for the Codex CLI equivalent of this
+[POS]: the skill-layer twin of bin/growth-machine, same ten files in src/, same six
+  conceptual stations plus rollout's conditional station 8b, same taxonomy, same thresholds.
+  The only thing that changes between CLI mode and skill mode is who calls the LLM stations:
+  a paid OpenAI API key in CLI mode, the agent's own weights in skill mode. See CODEX.md for
+  the Codex CLI equivalent of this
   file, same stations, same contracts, `codex exec` idiom instead of native reasoning.
 [PROTOCOL]: update this header on change, then check CLAUDE.md
 -->
@@ -247,6 +249,48 @@ EOF
 Returns a `Decision[]`, SCALE / KILL / ITERATE per still asset, checked against the plan's
 preregistered thresholds. Motion assets never get decided (no curve to decide against).
 
+## Station 8b, rollout (you are the model)
+
+Runs only for a `SCALE` verdict. `KILL` and `ITERATE` assets skip this station entirely,
+there is nothing to roll out. For each `SCALE` decision, write a `RolloutDraft`: a channel
+by channel playbook for how the winner actually goes out, following this prompt contract
+verbatim:
+
+> You are the rollout station of The Growth Machine. You run only for a variant that
+> already earned a SCALE verdict.
+> Write a channel by channel playbook for the winning asset. Pick 3 to 4 relevant channels,
+> for example tiktok, instagram, x, or an in-app profile surface.
+> Every field is a plain declarative sentence. Do not use an em dash or an en dash anywhere
+> in the output.
+> `role` must be exactly one of: discovery, amplification, retention, conversion.
+> `executionSteps` must have 3 to 4 entries, each one action sentence.
+> `kpi` is one concrete number tied to an outcome. `kpiThresholdNote` is one sentence
+> linking that number back to the plan's preregistered threshold system.
+>
+> Output shape: `{"variantId":"...","name":"...","channels":[{"channel":"...",
+> "role":"discovery|amplification|retention|conversion","assetSpec":"...",
+> "executionSteps":["...","...","..."],"kpi":"...","kpiThresholdNote":"..."}]}`
+
+Feed yourself the winning `Variant`, its `Brief`, the `Decision` that scaled it, the still
+asset's `NamedAsset.name`, and `plan.preRegisteredThresholds[variant.angleType]`, the same
+inputs `runRollout` takes in CLI mode. `assetSpec` is one sentence: format, ratio, and how
+the hook changes for that channel. `kpi` should read against the thresholds you were just
+handed, always a real number pulled from that table.
+
+Write down what you drafted before you touch anything else, then pipe that exact JSON
+through the validator before it goes anywhere near `readout.json`:
+
+```bash
+node scripts/machine.mjs rollout-validate <<'EOF'
+{"variantId":"...", "name":"...", "channels":[ ... ]}
+EOF
+```
+
+Returns `{"ok":true}` on a clean draft, or `{"ok":false,"errors":["..."]}` naming the exact
+field that failed, wrong channel count, an invalid `role`, a missing field, an em or en
+dash. Fix the draft and revalidate until it passes. Build one `RolloutDraft` per `SCALE`
+verdict this wave (zero if nothing scaled) and collect them into `readout.rollouts`.
+
 ## Report, assemble and render
 
 Assemble the full `WaveReadout`:
@@ -257,7 +301,8 @@ Assemble the full `WaveReadout`:
   "variants": [<3>], "briefs": [<3>], "namedAssets": [<6>], "plan": <Plan>,
   "produced": [<6 ProducedAsset>], "judged": [<6 JudgeResult>],
   "simulated": [<3 SimulatedCurve>], "decided": [<3 Decision>],
-  "measured": [], "injectedLearnings": "<from learn get, or null>"
+  "measured": [], "rollouts": [<one RolloutDraft per SCALE verdict, from station 8b>],
+  "injectedLearnings": "<from learn get, or null>"
 }
 ```
 
@@ -282,8 +327,8 @@ Appends one line to `library.jsonl`: which assets got a SCALE verdict, what trai
 shared, and a learnings string. That string is what station 1's `learn get` will inject into
 wave N+1's insight prompt, not a metaphor, an actual string carried forward.
 
-Report to the user: variant count, assets produced, SCALE/KILL/ITERATE counts, and the path
-to `report.html`.
+Report to the user: variant count, assets produced, SCALE/KILL/ITERATE counts, rollout
+draft count, and the path to `report.html`.
 
 ## Continuing a moment (`learn last`)
 

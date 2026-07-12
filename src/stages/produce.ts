@@ -1,7 +1,7 @@
 /**
  * [INPUT]: depends on lib/openai-client's chatComplete/generateImage/isMockMode, on lib/fs-utils's ensureDir, on node:fs
  * [OUTPUT]: exports runProduce(...) -> ProducedAsset, real still-image + copy generation; motion only ever delivers a prompt, never rendered
- * [POS]: station 5 of the nine-station pipeline, the only station that makes a real Images API call: degrades to a placeholder SVG in mock mode
+ * [POS]: station 5 of the ten-station pipeline, the only station that makes a real Images API call: degrades to a placeholder SVG in mock mode
  * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */
 import { writeFile } from "node:fs/promises";

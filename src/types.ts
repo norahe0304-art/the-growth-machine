@@ -1,6 +1,6 @@
 /**
  * [INPUT]: no dependencies, pure type definitions
- * [OUTPUT]: exports the shared types that run through the nine-station pipeline —— Variant / Brief / NamedAsset / Plan / ProducedAsset / JudgeResult / SimulatedCurve / Decision / LearningEntry / measure-module types
+ * [OUTPUT]: exports the shared types that run through the ten-station pipeline —— Variant / Brief / NamedAsset / Plan / ProducedAsset / JudgeResult / SimulatedCurve / Decision / RolloutDraft / LearningEntry / measure-module types
  * [POS]: the type root of src/ — every stages/*.ts and lib/*.ts file imports from here; this is the contract between stations
  * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */
@@ -157,6 +157,29 @@ export interface Decision {
 }
 
 // ============================================================
+// Rollout: station 8b, runs only for SCALE verdicts. Turns a judgment call
+// into a channel-by-channel playbook: which channels, what role each one
+// plays, what the asset spec changes per channel, what to actually do, and
+// which KPI ties that channel back to the plan's preregistered thresholds.
+// ============================================================
+export type RolloutRole = "discovery" | "amplification" | "retention" | "conversion";
+
+export interface RolloutChannelPlan {
+  channel: string; // e.g. tiktok, instagram, x, in-app profile surface
+  role: RolloutRole;
+  assetSpec: string; // one sentence: format, ratio, how the hook adapts for this channel
+  executionSteps: string[]; // 3 to 4 action sentences
+  kpi: string; // one concrete number tied to an outcome
+  kpiThresholdNote: string; // one sentence linking kpi back to the plan's preregistered threshold system
+}
+
+export interface RolloutDraft {
+  variantId: string;
+  name: string; // the still NamedAsset.name this rollout targets
+  channels: RolloutChannelPlan[]; // 3 to 4 entries
+}
+
+// ============================================================
 // Learn: cross-wave evolution
 // ============================================================
 export interface LearningEntry {
@@ -230,5 +253,6 @@ export interface WaveReadout {
   simulated: SimulatedCurve[];
   decided: Decision[];
   measured: MeasuredAssetSummary[]; // empty until `measure` has been run against this wave
+  rollouts: RolloutDraft[]; // one per SCALE verdict; empty when no still asset has scaled yet
   injectedLearnings: string | null; // learnings injected from the previous wave, if any
 }

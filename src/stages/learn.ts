@@ -1,7 +1,7 @@
 /**
  * [INPUT]: depends on lib/fs-utils's appendJSONL/readJSONL/writeJSONL/LIBRARY_PATH, on types.ts's LearningEntry/Decision/Variant/NamedAsset
  * [OUTPUT]: exports runLearn(...) -> LearningEntry (appended to library.jsonl), updateLibraryEntry(...) (rewrites one wave's entry, used by measure), getInjectedLearnings() -> string|null
- * [POS]: station 9 of the nine-station pipeline, where "real evolution" happens: this wave's winning traits get committed and injected into the next wave's insight/brief prompts
+ * [POS]: station 9 of the ten-station pipeline, where "real evolution" happens: this wave's winning traits get committed and injected into the next wave's insight/brief prompts
  * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */
 import { appendJSONL, readJSONL, writeJSONL, LIBRARY_PATH } from "../lib/fs-utils.js";

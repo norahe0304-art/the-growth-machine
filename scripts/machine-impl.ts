@@ -1,13 +1,16 @@
 /**
  * [INPUT]: depends on src/stages/naming.js, src/stages/plan.js, src/stages/simulate.js,
- *   src/stages/decide.js, src/stages/learn.js, src/lib/fs-utils.js, src/lib/report.js, src/types.js
- * [OUTPUT]: exports pure stage functions (nameStage/simulateStage/decideStage) and fs-effecting
- *   stage functions (planStage/reportStage/learnCommit/learnGet/learnLast) for tests to import
- *   directly; running this file (via tsx) also dispatches a stdin-JSON-in / stdout-JSON-out CLI
+ *   src/stages/decide.js, src/stages/rollout.js, src/stages/learn.js, src/lib/fs-utils.js,
+ *   src/lib/report.js, src/types.js
+ * [OUTPUT]: exports pure stage functions (nameStage/simulateStage/decideStage/
+ *   rolloutValidateStage) and fs-effecting stage functions (planStage/reportStage/
+ *   learnCommit/learnGet/learnLast) for tests to import directly; running this file (via tsx)
+ *   also dispatches a stdin-JSON-in / stdout-JSON-out CLI
  * [POS]: the real logic behind scripts/machine.mjs — the skill layer's deterministic half. An
- *   agent (Claude Code / Codex) running the growth-machine skill calls the six scripted stations
- *   (naming/plan/simulate/decide/report/learn) through this file; insight/brief/judge/produce stay
- *   LLM-native and live in the skill's prompt instructions, not here
+ *   agent (Claude Code / Codex) running the growth-machine skill calls the scripted stations
+ *   (naming/plan/simulate/decide/rollout-validate/report/learn) through this file; insight/
+ *   brief/judge/produce/rollout-authoring stay LLM-native and live in the skill's prompt
+ *   instructions, not here — this file only carries rollout's pure validator
  * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */
 import path from "node:path";
@@ -17,6 +20,7 @@ import { runNaming } from "../src/stages/naming.js";
 import { runPlan } from "../src/stages/plan.js";
 import { runSimulate } from "../src/stages/simulate.js";
 import { runDecide } from "../src/stages/decide.js";
+import { validateRolloutDraft } from "../src/stages/rollout.js";
 import { runLearn, getInjectedLearnings, getLastRunState } from "../src/stages/learn.js";
 import { waveDir, writeJSON, readJSONL, LIBRARY_PATH } from "../src/lib/fs-utils.js";
 import { renderReport } from "../src/lib/report.js";
@@ -105,6 +109,16 @@ export function decideStage(input: DecideInput): Decision[] {
 }
 
 // ============================================================
+// station 8b — rollout-validate (pure schema gate, no I/O, no model call).
+// The skill-mode agent writes a RolloutDraft by hand, following the prompt
+// contract skill/SKILL.md documents, then pipes it through this exact
+// stage before it ever touches readout.json.
+// ============================================================
+export function rolloutValidateStage(input: unknown): { ok: true } | { ok: false; errors: string[] } {
+  return validateRolloutDraft(input);
+}
+
+// ============================================================
 // terminal station — report. Persists readout.json + renders report.html,
 // exactly what orchestrator.ts does at the tail of a normal run. Returns the
 // two paths written so the caller (agent) can point the user at them.
@@ -180,6 +194,7 @@ function printUsage(): void {
   plan              stdin PlanInput          -> Plan (writes waves/wave-NN/plan.json)
   simulate          stdin SimulateInput      -> SimulatedCurve[]
   decide            stdin DecideInput        -> Decision[]
+  rollout-validate  stdin RolloutDraft       -> {ok:true} | {ok:false, errors:string[]}
   report            stdin ReportInput        -> {readoutPath, reportPath} (writes both files)
   learn commit      stdin LearnCommitInput   -> LearningEntry (appends library.jsonl)
   learn get         (no stdin)               -> {injectedLearnings}
@@ -201,6 +216,9 @@ async function main(): Promise<void> {
       break;
     case "decide":
       printJSON(decideStage(await readStdinJSON<DecideInput>()));
+      break;
+    case "rollout-validate":
+      printJSON(rolloutValidateStage(await readStdinJSON<unknown>()));
       break;
     case "report":
       printJSON(await reportStage(await readStdinJSON<ReportInput>()));

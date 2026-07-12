@@ -1,7 +1,7 @@
 /**
  * [INPUT]: depends on types.ts's SimulatedCurve/Plan/Decision/Verdict/MeasuredAssetSummary/PreRegisteredThresholds, no LLM involved
  * [OUTPUT]: exports runDecide(curve, plan) -> Decision (simulated path), runDecideMeasured(measured, thresholds) -> Decision (measured path), and the shared tailSlope/finalValue helpers
- * [POS]: station 8 of the nine-station pipeline, the pure-rules conversion from a curve to a machine verdict: thresholds come from the preregistered constant tables in plan.ts
+ * [POS]: station 8 of the ten-station pipeline, the pure-rules conversion from a curve to a machine verdict: thresholds come from the preregistered constant tables in plan.ts
  * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */
 import type { Decision, MeasuredAssetSummary, Plan, PreRegisteredThresholds, SimulatedCurve } from "../types.js";

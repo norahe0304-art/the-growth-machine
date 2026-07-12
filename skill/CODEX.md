@@ -1,25 +1,28 @@
 # The Growth Machine, Codex CLI mode
 
 <!--
-[INPUT]: codex exec (insight/brief/judge/produce stations) + scripts/machine.mjs
-  (naming/plan/simulate/decide/report/learn, stdin-JSON-in/stdout-JSON-out) +
-  bin/growth-machine measure (measure station, unchanged, post-hoc)
+[INPUT]: codex exec (insight/brief/judge/produce/rollout-authoring stations) +
+  scripts/machine.mjs (naming/plan/simulate/decide/rollout-validate/report/learn,
+  stdin-JSON-in/stdout-JSON-out) + bin/growth-machine measure (measure station, unchanged,
+  post-hoc)
 [OUTPUT]: waves/wave-NN/{brief-v1.json, brief-v2.json, brief-v3.json, plan.json,
   assets/*.png, readout.json, report.html} + one appended library.jsonl line per wave
-[POS]: the Codex-CLI twin of skill/SKILL.md, same six stations, same JSON contracts,
-  same scripted stages. Where SKILL.md has Claude Code reason directly inside one
-  conversation, this file drives every LLM station through a separate `codex exec` call,
-  because Codex CLI's exec mode is one-shot and headless rather than a persistent
-  reasoning loop. Whoever runs this (a shell, a script, a human, another agent) is the
-  orchestrator; codex exec is the LLM engine for insight/brief/judge/produce.
+[POS]: the Codex-CLI twin of skill/SKILL.md, same six stations plus rollout's conditional
+  station 8b, same JSON contracts, same scripted stages. Where SKILL.md has Claude Code
+  reason directly inside one conversation, this file drives every LLM station through a
+  separate `codex exec` call, because Codex CLI's exec mode is one-shot and headless rather
+  than a persistent reasoning loop. Whoever runs this (a shell, a script, a human, another
+  agent) is the orchestrator; codex exec is the LLM engine for
+  insight/brief/judge/produce/rollout.
 [PROTOCOL]: update this header on change, then check CLAUDE.md
 -->
 
-Same machine, same six stations, same nine files in `src/`. The only thing that changes
-from `SKILL.md` is how the LLM stations get called: instead of one agent reasoning through
-the whole wave in a single conversation, each LLM station is its own `codex exec` call , 
-prompt in via stdin heredoc, JSON out via stdout, captured to a file, fed into the next
-station. Deterministic stations (`naming`/`plan`/`simulate`/`decide`/`report`/`learn`) are
+Same machine, same six stations plus rollout's conditional station 8b, same ten files in
+`src/`. The only thing that changes from `SKILL.md` is how the LLM stations get called:
+instead of one agent reasoning through the whole wave in a single conversation, each LLM
+station is its own `codex exec` call, prompt in via stdin heredoc, JSON out via stdout,
+captured to a file, fed into the next station. Deterministic stations
+(`naming`/`plan`/`simulate`/`decide`/`rollout-validate`/`report`/`learn`) are
 identical to `SKILL.md`, call `scripts/machine.mjs`, do not reimplement.
 
 ## Before you start
@@ -194,6 +197,49 @@ EOF
 ```
 
 Returns 3 `Decision` objects (SCALE / KILL / ITERATE).
+
+## Station 8b, rollout (codex exec, only for SCALE verdicts)
+
+Skip this station entirely for any `KILL` or `ITERATE` decision, there is nothing to roll
+out. For each `SCALE` decision, run one `codex exec` call:
+
+```bash
+codex exec --skip-git-repo-check - <<PROMPT > /tmp/rollout-{name}.json
+You are the rollout station of The Growth Machine. You run only for a variant that
+already earned a SCALE verdict.
+Write a channel by channel playbook for the winning asset. Pick 3 to 4 relevant channels,
+for example tiktok, instagram, x, or an in-app profile surface.
+Every field is a plain declarative sentence. Do not use an em dash or an en dash anywhere
+in the output.
+role must be exactly one of: discovery, amplification, retention, conversion.
+executionSteps must have 3 to 4 entries, each one action sentence.
+kpi is one concrete number tied to an outcome. kpiThresholdNote is one sentence linking
+that number back to the plan's preregistered threshold system.
+
+variant: <winning Variant JSON>
+brief: <Brief JSON>
+decision: <Decision JSON>
+named asset: <NamedAsset.name of the still that scaled>
+thresholds: <plan.preRegisteredThresholds[variant.angleType]>
+
+Output strict JSON, nothing outside it:
+{"variantId":"...","name":"...","channels":[{"channel":"...",
+"role":"discovery|amplification|retention|conversion","assetSpec":"...",
+"executionSteps":["...","...","..."],"kpi":"...","kpiThresholdNote":"..."}]}
+PROMPT
+```
+
+Pipe the captured output straight through the validator before it goes anywhere near
+`readout.json`:
+
+```bash
+node scripts/machine.mjs rollout-validate < /tmp/rollout-{name}.json
+```
+
+Returns `{"ok":true}` or `{"ok":false,"errors":["..."]}`. On a failure, re-run the `codex
+exec` call with the error list appended to the prompt, revalidate, at most one retry, same
+ceiling the judge station enforces. Collect one `RolloutDraft` per `SCALE` verdict into
+`readout.rollouts`.
 
 ## Report, assemble and render (scripted)
 

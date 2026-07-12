@@ -1,7 +1,7 @@
 /**
  * [INPUT]: depends on lib/openai-client's chatComplete/isMockMode, on types.ts's AngleType/AssetKind/Variant/InsightResult
  * [OUTPUT]: exports runInsight(moment, waveNumber, injectedLearnings) -> InsightResult (3 variants)
- * [POS]: station 1 of the nine-station pipeline, the entry point of the whole flow: a moment gets cracked into 3 asset x newElement variants here
+ * [POS]: station 1 of the ten-station pipeline, the entry point of the whole flow: a moment gets cracked into 3 asset x newElement variants here
  * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */
 import { chatComplete, isMockMode, DEFAULT_MODEL } from "../lib/openai-client.js";

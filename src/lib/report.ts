@@ -1,7 +1,7 @@
 /**
  * [INPUT]: depends on node:fs/promises to read image assets, on types.ts's WaveReadout and all its sub-types, plus optional LearningEntry[] for the library summary block
  * [OUTPUT]: exports renderReport(readout, libraryEntries?) -> Promise<string>, a self-contained report.html string
- * [POS]: the terminal presentation layer of the nine-station pipeline, outside stages/ (it doesn't participate in decisions): paints a WaveReadout into an editorial layout, with a predicted-vs-measured overlay once measure.ts has run
+ * [POS]: the terminal presentation layer of the ten-station pipeline, outside stages/ (it doesn't participate in decisions): paints a WaveReadout into an editorial layout, with a predicted-vs-measured overlay once measure.ts has run and a channel playbook once rollout.ts has run
  * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */
 import { readFile } from "node:fs/promises";
@@ -14,6 +14,7 @@ import type {
   MeasuredAssetSummary,
   NamedAsset,
   ProducedAsset,
+  RolloutDraft,
   SimulatedCurve,
   Variant,
   WaveReadout,
@@ -228,6 +229,48 @@ function librarySection(libraryEntries: LearningEntry[] | undefined): string {
   </div>`;
 }
 
+// One borderless row per channel: channel name in ink, role as a small
+// badge-style label, assetSpec and kpi as body copy, executionSteps as an
+// ordered short list. Renders one block per RolloutDraft, so a wave with
+// multiple SCALE verdicts gets one rollout block per winner.
+function rolloutSection(readout: WaveReadout): string {
+  const rollouts = readout.rollouts ?? [];
+  if (rollouts.length === 0) return "";
+
+  const drafts = rollouts
+    .map((draft: RolloutDraft) => {
+      const variant = readout.variants.find((v) => v.id === draft.variantId);
+      const rows = draft.channels
+        .map(
+          (ch) => `<div class="rollout-row">
+        <div class="rollout-channel">${escapeHTML(ch.channel)}<span class="rollout-role">${escapeHTML(ch.role)}</span></div>
+        <div class="rollout-body">
+          <p class="rollout-spec">${escapeHTML(ch.assetSpec)}</p>
+          <ol class="rollout-steps">
+            ${ch.executionSteps.map((s) => `<li>${escapeHTML(s)}</li>`).join("")}
+          </ol>
+          <p class="rollout-kpi"><span class="rollout-kpi-label">kpi</span> ${escapeHTML(ch.kpi)}. ${escapeHTML(ch.kpiThresholdNote)}</p>
+        </div>
+      </div>`
+        )
+        .join("");
+
+      return `<div class="rollout-draft">
+        <div class="rollout-draft-head">
+          <span class="mono">${escapeHTML(draft.name)}</span>
+          ${variant ? `<span class="rollout-draft-title">${escapeHTML(variant.workingTitle)}</span>` : ""}
+        </div>
+        ${rows}
+      </div>`;
+    })
+    .join("");
+
+  return `<div class="rollout-section">
+    <h2 class="rollout-title">The winner's rollout</h2>
+    ${drafts}
+  </div>`;
+}
+
 export async function renderReport(readout: WaveReadout, libraryEntries?: LearningEntry[]): Promise<string> {
   const cards = await Promise.all(
     readout.variants.map((variant) => {
@@ -328,11 +371,26 @@ export async function renderReport(readout: WaveReadout, libraryEntries?: Learni
   .legend-dashed { border-top: 2px dashed #1a1a1a; }
   .legend-solid { height: 3px; background: #c2410c; }
   .decision-reason { grid-column: 1 / -1; font-size: 13px; border-left: 3px solid #1a1a1a; padding-left: 12px; margin-top: 4px; }
+  .rollout-section { margin-top: 44px; padding-top: 32px; border-top: 2px solid #1a1a1a; }
+  .rollout-title { font-family: Georgia, "Times New Roman", serif; font-size: 24px; margin: 0 0 20px; }
+  .rollout-draft { margin-bottom: 28px; }
+  .rollout-draft-head { display: flex; align-items: baseline; gap: 12px; padding-bottom: 8px; margin-bottom: 8px; border-bottom: 1px solid #d8d5cd; }
+  .rollout-draft-title { font-size: 13px; color: #6b6b63; }
+  .rollout-row { display: grid; grid-template-columns: 160px 1fr; gap: 16px; padding: 14px 0; border-top: 1px solid #f0eee7; }
+  .rollout-row:first-of-type { border-top: none; }
+  .rollout-channel { font-weight: 600; }
+  .rollout-role { display: block; margin-top: 4px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: #8a8779; }
+  .rollout-spec { margin: 0 0 8px; font-size: 13px; }
+  .rollout-steps { margin: 0 0 8px; padding-left: 18px; font-size: 13px; }
+  .rollout-steps li { margin-bottom: 2px; }
+  .rollout-kpi { margin: 0; font-size: 12px; color: #6b6b63; }
+  .rollout-kpi-label { text-transform: uppercase; letter-spacing: 0.05em; font-size: 10px; color: #8a8779; }
   footer.colophon { margin-top: 60px; padding-top: 20px; border-top: 1px solid #d8d5cd; font-size: 11px; color: #8a8779; }
   @media (max-width: 640px) {
     .variant-body { grid-template-columns: 1fr; }
     .prompts { grid-template-columns: 1fr; }
     .curves { grid-template-columns: 1fr; }
+    .rollout-row { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -347,6 +405,8 @@ export async function renderReport(readout: WaveReadout, libraryEntries?: Learni
     ${librarySection(libraryEntries)}
 
     ${cards.join("\n")}
+
+    ${rolloutSection(readout)}
 
     <footer class="colophon">
       generation is real (OpenAI API). market response is simulated (three response models) unless a "measured" badge marks real channel data recorded via <span class="mono">growth-machine measure</span>.

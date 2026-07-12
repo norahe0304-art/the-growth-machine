@@ -1,7 +1,7 @@
 /**
- * [INPUT]: depends on all nine stages/*.ts files, on lib/fs-utils, on lib/report, on lib/openai-client's isMockMode
+ * [INPUT]: depends on all ten stages/*.ts files, on lib/fs-utils, on lib/report, on lib/openai-client's isMockMode
  * [OUTPUT]: exports runWave(moment, waveNumber) -> WaveReadout, runs one full wave and writes every artifact to disk
- * [POS]: the assembly line of src/ — cli.ts only parses arguments, the real nine-station chaining logic lives entirely here
+ * [POS]: the assembly line of src/ — cli.ts only parses arguments, the real ten-station chaining logic lives entirely here
  * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */
 import path from "node:path";
@@ -14,6 +14,7 @@ import { runProduce } from "./stages/produce.js";
 import { runJudge } from "./stages/judge.js";
 import { runSimulate } from "./stages/simulate.js";
 import { runDecide } from "./stages/decide.js";
+import { runRollout } from "./stages/rollout.js";
 import { runLearn, getInjectedLearnings } from "./stages/learn.js";
 import { waveDir, writeJSON, readJSONL, LIBRARY_PATH } from "./lib/fs-utils.js";
 import { renderReport } from "./lib/report.js";
@@ -24,6 +25,7 @@ import type {
   LearningEntry,
   NamedAsset,
   ProducedAsset,
+  RolloutDraft,
   SimulatedCurve,
   WaveReadout,
 } from "./types.js";
@@ -80,6 +82,23 @@ export async function runWave(moment: string, waveNumber: number): Promise<WaveR
   // ---- station 8: decide ----
   const decided: Decision[] = simulated.map((curve) => runDecide(curve, plan));
 
+  // ---- station 8b: rollout (SCALE verdicts only, a channel-by-channel playbook for each winner) ----
+  const rollouts: RolloutDraft[] = [];
+  for (const decision of decided.filter((d) => d.verdict === "SCALE")) {
+    const namedAsset = namedAssets.find((n) => n.variantId === decision.variantId && n.format === decision.format)!;
+    const variant = insight.variants.find((v) => v.id === decision.variantId)!;
+    const brief = briefs.find((b) => b.variantId === decision.variantId)!;
+    rollouts.push(
+      await runRollout({
+        variant,
+        brief,
+        decision,
+        namedAssetName: namedAsset.name,
+        thresholds: plan.preRegisteredThresholds[variant.angleType],
+      })
+    );
+  }
+
   // ---- station 9: learn (commit winning traits, ready to inject into the next wave) ----
   await runLearn(waveNumber, moment, insight.variants, namedAssets, decided);
 
@@ -95,6 +114,7 @@ export async function runWave(moment: string, waveNumber: number): Promise<WaveR
     simulated,
     decided,
     measured: [],
+    rollouts,
     injectedLearnings,
   };
 

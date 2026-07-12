@@ -1,7 +1,7 @@
 /**
  * [INPUT]: depends on lib/openai-client's chatComplete/isMockMode, on types.ts's AngleType/NamedAsset/Plan/PlanArm/PreRegisteredThresholds/Variant
  * [OUTPUT]: exports runPlan(...) -> Plan, PRE_REGISTERED_THRESHOLDS (simulated-CTR decide path) and ENGAGEMENT_THRESHOLDS (measured-engagementRate decide path) constant tables
- * [POS]: station 4 of the nine-station pipeline; rules decide thresholds and traffic split, the LLM only contributes one rationale sentence
+ * [POS]: station 4 of the ten-station pipeline; rules decide thresholds and traffic split, the LLM only contributes one rationale sentence
  * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */
 import { chatComplete, isMockMode, DEFAULT_MODEL } from "../lib/openai-client.js";
