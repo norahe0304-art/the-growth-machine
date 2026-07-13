@@ -80,6 +80,9 @@ the prompt's brand block below, so the one-shot `codex exec` call carries the ga
 
 ```bash
 codex exec --skip-git-repo-check - <<'PROMPT' > /tmp/insight.json
+The seed does not have to be a news moment. A raw idea, a product, or an insight works
+the same way: extract its core tension first, then split.
+
 You crack a moment into 3 creative variants that fit the "existing asset x one new
 element" formula.
 
@@ -446,8 +449,8 @@ Not an eleventh station, produces nothing the loop above consumes. Once a wave h
 station-by-station activity log; right, THE EVIDENCE, real artifact cards (variants, the
 nine-segment name, thresholds, stills, judge scores, the curve race, the rollout) lighting
 up alongside the log line that produced them, "every frame is evidence." Nothing is
-invented, every card traces to a `WaveReadout` field. Timeline respects real causality: the
-winning still only crossfades into rendered rollout video after station 8b's approval gate.
+invented, every card traces to a `WaveReadout` field. A material tile plays its own rollout
+footage in place when clicked, never before.
 No `codex exec` call needed, same scripted stage as naming/plan/simulate/decide:
 
 ```bash

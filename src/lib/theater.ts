@@ -312,7 +312,7 @@ async function buildHero(waveDirRel: string, readout: WaveReadout): Promise<Thea
   const variant = readout.variants.find((v) => v.id === scaleDecision.variantId);
   const stillProduced = readout.produced.find((p) => p.variantId === scaleDecision.variantId && p.format === "still");
   const imgURI = await assetDataURI(stillProduced?.assetPath ?? null);
-  const draft = readout.rollouts.find((d) => d.variantId === scaleDecision.variantId);
+  const draft = (readout.rollouts ?? []).find((d) => d.variantId === scaleDecision.variantId);
   const videoChannel = draft?.channels.find((ch) => ch.nativeFormat === "video" && ch.assetPath);
   const videoRelSrc = videoChannel?.assetPath ? path.relative(waveDirRel, videoChannel.assetPath) : null;
   const productionNote = videoChannel ? readString(videoChannel, "productionNote") : null;
@@ -330,7 +330,7 @@ export async function renderTheater(readout: WaveReadout, libraryEntries?: Learn
   const waveDirRel = path.join("waves", `wave-${String(readout.waveNumber).padStart(2, "0")}`);
 
   const variants = await Promise.all(readout.variants.map((v) => buildVariantPayload(readout, v)));
-  const rollouts = await Promise.all(readout.rollouts.map((d) => buildRolloutPayload(waveDirRel, readout, d)));
+  const rollouts = await Promise.all((readout.rollouts ?? []).map((d) => buildRolloutPayload(waveDirRel, readout, d)));
   const hero = await buildHero(waveDirRel, readout);
 
   const namedAssets = readout.namedAssets.map((n) => ({ name: n.name, format: n.format, segments: n.segments }));

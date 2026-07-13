@@ -1,7 +1,7 @@
 ---
 name: growth-machine
 description: >
-  Runs any moment (a news event, topic, or cultural beat) through The Growth Machine's
+  Runs any seed, a moment, a raw idea, a product, or an insight, through The Growth Machine's
   ten-station pipeline: insight, brief, naming, plan, produce, judge, simulate, decide,
   rollout, learn. The agent itself acts as the insight/brief/judge model, no API key, no
   per-token bill beyond the subscription already running this conversation. Naming, plan,
@@ -87,9 +87,10 @@ hold them in memory for the whole wave, several stations below need them. Check
 target channel, or `cross-channel.md` when no channel is set yet, at whichever station
 below calls for it.
 
-Ask the user for **the moment** (a news event, topic, or cultural beat) and **the wave
-number** (1 for a fresh moment, or call `learn last`, see below, to continue one already
-in progress) before starting station 1.
+Ask the user for **the seed**: a moment, a raw creative idea, a product, or an insight,
+anything carrying a tension worth grafting (stored as the wave's `moment` string
+throughout) and **the wave number** (1 for a fresh seed, or call `learn last`, see below,
+to continue one already in progress) before starting station 1.
 
 ## Gotchas
 
@@ -139,6 +140,9 @@ Every variant this machine produces must satisfy: **existing asset x one new ele
   checks against.
 
 ## Station 1, insight (you are the model)
+
+The seed does not have to be a news moment. A raw idea, a product, or an insight works
+the same way: extract its core tension first, then split.
 
 Before generating, call `node scripts/machine.mjs learn get` (no stdin) to fetch
 `injectedLearnings`, the previous wave's winning traits, if any. If it is non-null, extend
@@ -559,14 +563,16 @@ wave stays exactly as the simulated pass left it.
 ## Theater, the showing (post-hoc, not a pipeline station)
 
 Not an eleventh station, produces nothing the pipeline consumes. It is the showing layer:
-once a wave has shipped `readout.json`, theater replays that real data as a split screen.
+once a wave has shipped `readout.json`, theater renders an app level workspace, not a video.
 Left, THE WORK, a station-by-station activity log proving the agent actually worked the
-wave. Right, THE EVIDENCE, real artifact cards (variants, the nine-segment name, thresholds,
-stills, judge scores, the three-curve race, the rollout) lighting up alongside the log line
-that produced them, "every frame is evidence." Nothing is invented, every card traces to a
-`WaveReadout` field. Timeline respects real causality: the winning still only crossfades
-into rendered rollout video after station 8b's approval gate, exactly how `theater.ts`
-renders it.
+wave, organized under five act headers, one declarative sentence each. Right, THE EVIDENCE,
+real artifact cards (variants, the nine-segment name, thresholds, stills, judge scores, the
+three-curve race, the rollout) tiered by data importance, verdict-level cards full width,
+process-level cards racked, lineage-level cards footnoted, lighting up alongside the log
+line that produced them, "every frame is evidence." A material tile plays its own rollout
+footage in place when clicked, never before, exactly how `theater.ts` renders it. The
+replay closes on a bill card totting up what the wave actually produced. Nothing is
+invented, every card traces to a `WaveReadout` field.
 
 ```bash
 node scripts/machine.mjs theater <<'EOF'
