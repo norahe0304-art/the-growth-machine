@@ -222,6 +222,17 @@ formats, successMetric, referenceSet, generationPrompts}`. `referenceSet` is a f
 optional field on the compiled `Brief` type in `src/types.ts` (`ReferenceEntry[]`), the same
 shape in skill mode, Codex CLI mode, and headless CLI mode.
 
+## The operator gate (between station 2 and station 3, mandatory)
+
+The two human gates practiced since wave 4 are contract, not courtesy, and the operator
+is the human user, never an intermediary agent (operator ruling, 2026-07-13, wave 7
+casebook). Before station 3 runs, show the operator all three variants with one-line
+brief summaries and wait. Approval moves the wave forward. A rejection goes back to
+station 1 with the operator's feedback injected into a fresh split, and the rejection
+is recorded in the wave's record. The second gate, real spend on video generation,
+works the same way. An agent running this skill on the operator's behalf relays these
+gates verbatim and waits; it does not approve them itself.
+
 ## Station 3, naming (scripted, deterministic, no LLM)
 
 ```bash
@@ -301,7 +312,11 @@ For each produced asset, score it yourself against this instruction:
 > - `onBrief`: did it faithfully execute the brief's `assetXElement` and `insight`.
 > - `legible`: can the audience understand what's happening within one second.
 > - `shareable`: does the audience feel an urge to share/remix it.
-> - `brandFit`: when a brand pack exists, read `brand/<pack>/brand.md`'s three on-brand
+> - `brandFit`: score it strictly, a 3 must be earned. For any image asset, first ask
+>   `design.md`'s register question: would this brand's own design team publish this
+>   exact frame? A frame that trips the pack's negative register (for the openai pack:
+>   neon, glowing UI, fluorescent accents, sci-fi glow) caps at 2 regardless of brief
+>   compliance. Then, when a brand pack exists, read `brand/<pack>/brand.md`'s three on-brand
 >   checks, restraint, register, rights, and score how well the asset clears all three.
 >   When no brand pack exists, score this dimension `2` by default.
 >

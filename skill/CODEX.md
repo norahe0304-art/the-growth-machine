@@ -255,7 +255,11 @@ excellent. Four dimensions:
 - onBrief: did it faithfully execute the brief's assetXElement and insight.
 - legible: can the audience understand what's happening within one second.
 - shareable: does the audience feel an urge to share/remix it.
-- brandFit: score how well the asset clears the three on-brand checks below. Score this
+- brandFit: score it strictly, a 3 must be earned. For an image asset first ask the
+  register question: would this brand's own design team publish this exact frame? A
+  frame tripping the pack's negative register (for the openai pack: neon, glowing UI,
+  fluorescent accents, sci-fi glow) caps at 2 regardless of brief compliance. Then score
+  how well the asset clears the three on-brand checks below. Score this
   dimension 2 by default when the brand block reads "none".
 
 brand block (on-brand checks, or "none" when no brand pack exists):

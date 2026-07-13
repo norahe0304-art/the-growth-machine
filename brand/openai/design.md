@@ -60,6 +60,19 @@ appears inside the generated image itself. Brand presence comes from the surroun
 page, caption, or channel, never a watermark baked into the asset. Any produce output
 carrying a visible logo or watermark fails this check before it reaches judge.
 
+## No neon, ever (operator ruling, 2026-07-13, wave 7 casebook)
+
+OpenAI would never ship glowing neon waveforms, fluorescent color accents, sci-fi UI
+glow, or holographic floating panels. That register is the generic AI-tech cliche and
+it is the single fastest way for a generated frame to fall off brand while still
+technically matching its brief. The palette stays muted and photographic: paper white,
+ink, warm lamp light, natural daylight, the occasional deep gradient with real depth.
+Judge scores brandFit against this question before anything else: would OpenAI's own
+design team publish this exact frame on openai.com or the official Instagram? A frame
+that needs the word "futuristic" to describe it fails. Every produce image prompt for
+this pack must carry the negative clause: "no neon, no glowing UI, no fluorescent
+accents, no holographic elements, no sci-fi glow."
+
 ## The UGC exception
 
 One register breaks every rule above on purpose: the phone-shot realism of actual
