@@ -391,8 +391,8 @@ winner actually goes out, following this prompt contract verbatim:
 
 > You are the rollout station of The Growth Machine. You run only for a variant that
 > already earned a SCALE verdict.
-> Write a channel by channel playbook for the winning asset. Pick 3 to 4 relevant channels,
-> for example tiktok, instagram, x, or an in-app profile surface.
+> Write a channel by channel playbook for the winning asset. Pick 2 to 4 relevant channels,
+> weighted toward the channels the brand pack shows are proven.
 > Every field is a plain declarative sentence. Do not use an em dash or an en dash anywhere
 > in the output.
 > Each channel is an expansion arm off a concept that already won, not a new idea: it will

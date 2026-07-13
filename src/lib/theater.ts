@@ -10,14 +10,14 @@
  *   is the static record of a wave; theater.ts is a ~150 second split-screen replay of the exact
  *   same record: THE WORK (left, a live typewriter activity log, station by station, every line a
  *   real fact pulled from WaveReadout -- this column is untouched by the evidence redesign) drives
- *   THE EVIDENCE (right, a tiered, borderless stack, evidence flowing one direction only -- down,
- *   never scrolled back up to an older card to watch it change). The right column is organised by
+ *   THE EVIDENCE (right, a tiered, borderless stack, evidence flowing from cause to effect; rollout
+ *   tiles may be refocused in place, but no video exists or plays before its approval log). The right column is organised by
  *   three tiers (公理一): Tier 1 verdicts (the input, the proposals triptych, the race, the winner,
- *   the channels-ready rack, the closing bill), Tier 2 process shelves (the produce still shelf, the
+ *   the closing bill), Tier 2 process shelves (the produce still shelf, the
  *   per-draft channel-cut shelves), Tier 3 footnotes (the nine-segment name, the threshold table,
  *   the library rows). No card borders; hierarchy is size, whitespace and alignment, hairline only
- *   inside tables and the money-shot stage. The narrative is spoken by in-flow chapter headers --
- *   oversized serif lines with big air, scrolling past as part of the stream (NOT full-screen
+ *   inside tables and rollout media stages. The narrative is spoken by in-flow chapter headers --
+ *   oversized sans lines with big air, scrolling past as part of the stream (NOT full-screen
  *   white-out overlays: the earlier approval-gate takeover language was retired on taste grounds).
  *   Both human approvals (station 1 concepts, station 8b video spend) now live only as THE WORK log
  *   lines; causality is preserved by timeline order alone -- nothing produced or rendered is queued
@@ -26,16 +26,15 @@
  *   preregistered thresholds as dashed rules on the chart and presses each verdict stamp down at its
  *   curve's terminal point; the SCALE finalCTR counts up as a restrained workspace figure. The winning still
  *   is the cut, held static forever (no video tag ever added to it). Rollout channel cuts stand in
- *   per-draft shelves as static covers only, even for video-native channels. A single channels-ready
- *   rack appears only after station 8b's approval log line has cleared real video-generation spend.
- *   That rack groups all rollout drafts by channel name in readout order, exposes real click
- *   toggles, and is the only replay surface that ever plays rendered videos. A closing Tier-1 bill card tallies the wave's whole output
+ *   per-draft shelves as clickable static covers before approval. Only after station 8b's approval
+ *   log line clears real video generation spend are video elements attached to their own tiles.
+ *   One shared tile toggle serves both manual replay and the ordered automated pass. A closing Tier-1 bill card tallies the wave's whole output
  *   (moment / bets / named assets / stills / videos / winner / seconds of video) in counted-up
- *   figures, every one derivable from readout, before the install hook. Each rack video holds for
- *   its own real ffprobe'd duration (durationSec), with a real closed gap between channels and a real
- *   no-play gap between multiple videos in the same channel. Still-to-video timing mirrors the real
+ *   figures, every one derivable from readout, before the library and install hooks. Each tile video
+ *   holds for its own real ffprobe'd duration (durationSec), with a real closed gap between videos,
+ *   followed by a shorter gap and a still-image pass. Still-to-video timing mirrors the real
  *   pipeline's causality on purpose: skill/SKILL.md gates video behind that second approval, so the
- *   replay never shows rendered motion before the log line that approves it. Every media-stage box (hero, channel rack, channel chips, produced
+ *   replay never creates rendered motion before the log line that approves it. Every media-stage box (hero, channel chips, produced
  *   stills) caps at 60vh so a 9:16 render or portrait still never runs a card off the bottom of the
  *   recording viewport (scripts/record-theater.mjs's fixed 1280x800). Nothing on either side is
  *   invented. Ships alongside scripts/record-theater.mjs, which drives a real Chromium tab through
@@ -43,7 +42,7 @@
  *   still in progress instead of a finished readout (theater-live.ts imports THEATER_CSS from here,
  *   so the 60vh media caps apply to live.html too; its own addCard() already only ever appends to
  *   the bottom, no scroll-jump bug to fix there).
- * [PROTOCOL]: update this header on change, then check CLAUDE.md
+ * [PROTOCOL]: 变更时更新此头部，然后检查 AGENTS.md
  */
 import { readFile } from "node:fs/promises";
 import { execFile } from "node:child_process";
@@ -432,12 +431,6 @@ ${THEATER_JS}
 </html>`;
 }
 
-// ============================================================
-// CSS: the portfolio design system's tokens (design.md), transplanted.
-// Paper white, ink, muted, hairline. Playfair Display for the two display
-// moments (wordmark, hero card title), Helvetica Neue for everything else,
-// weight 300 base. Zero radius, zero shadow, 1px hairline only.
-// ============================================================
 export const THEATER_CSS = `
 :root {
   color-scheme: light;
@@ -445,7 +438,6 @@ export const THEATER_CSS = `
   --ink: #1a1a1a;
   --muted: #66686a;
   --hairline: #ececec;
-  --font-display: "Playfair Display", Georgia, "Times New Roman", serif;
   --font-sans: "Helvetica Neue", Helvetica, Inter, arial, ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
 }
@@ -509,7 +501,7 @@ body { font-family: var(--font-sans); font-weight: 300; line-height: 1.5; overfl
 .tier3 { padding: 12px; }
 .tier3 .evidence-eyebrow { margin-bottom: 4px; }
 
-.evidence-title { font-family: var(--font-display); font-weight: 400; font-size: 16px; margin: 0 0 7px; line-height: 1.18; }
+.evidence-title { font-family: var(--font-sans); font-weight: 400; font-size: 16px; margin: 0 0 7px; line-height: 1.18; }
 .tier1 .evidence-title { font-size: 18px; }
 .mission-card .evidence-title { font-size: 31px; line-height: 1.08; max-width: 14em; }
 .evidence-eyebrow { display: flex; align-items: center; gap: 10px; font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); margin-bottom: 10px; white-space: nowrap; }
@@ -519,13 +511,13 @@ body { font-family: var(--font-sans); font-weight: 300; line-height: 1.5; overfl
 
 /* ------------------------------------------------------------------
    Chapter header, in the flow (公理二, revised): the narrative spoken as
-   an oversized serif line with big air above and below, scrolling past
+   an oversized sans line with big air above and below, scrolling past
    as part of the evidence stream -- no full-screen takeover, no white-out
    pause. This is how a zero-context marketer follows the story: moment in
    -> three bets -> machine grades itself -> race -> it kills its own ->
    winner ships -> library smarter. */
 .chapter { padding: 18px 12px; background: var(--paper); }
-.chapter-line { font-family: var(--font-display); font-weight: 400; font-size: 18px; line-height: 1.32; color: var(--ink); max-width: 31em; margin: 0; }
+.chapter-line { font-family: var(--font-sans); font-weight: 400; font-size: 18px; line-height: 1.32; color: var(--ink); max-width: 31em; margin: 0; }
 .chapter-index { display: flex; align-items: center; gap: 10px; font-family: var(--font-sans); font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); margin-bottom: 10px; }
 .chapter-index::after { content: ""; flex: 1 1 auto; border-top: 1px solid var(--hairline); }
 
@@ -545,7 +537,7 @@ body { font-family: var(--font-sans); font-weight: 300; line-height: 1.5; overfl
 .triptych-cell:first-child { padding-left: 2px; }
 .triptych-cell:last-child { padding-right: 2px; }
 .triptych-num { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
-.triptych-title { font-family: var(--font-display); font-size: 16px; line-height: 1.18; margin: 0 0 8px; }
+.triptych-title { font-family: var(--font-sans); font-size: 16px; line-height: 1.18; margin: 0 0 8px; }
 .triptych-formula { font-size: 12px; line-height: 1.45; margin-bottom: 4px; }
 .triptych-formula b { font-weight: 400; }
 .triptych-formula .x { color: var(--muted); padding: 0 3px; }
@@ -573,7 +565,7 @@ body { font-family: var(--font-sans); font-weight: 300; line-height: 1.5; overfl
 .produce-media { display: flex; align-items: center; justify-content: center; max-height: 60vh; overflow: hidden; background: #f4f3f0; }
 .produce-media img { max-width: 100%; max-height: 60vh; width: auto; height: auto; object-fit: contain; display: block; filter: blur(14px); opacity: 0.35; transition: filter 1.1s ease, opacity 1.1s ease; }
 .produce-media img.clear { filter: blur(0); opacity: 1; }
-.produce-copy { font-size: 13px; font-style: italic; margin-top: 10px; min-height: 1.6em; }
+.produce-copy { font-size: 13px; color: var(--muted); margin-top: 10px; min-height: 1.6em; }
 
 .produce-shelf { display: flex; gap: 12px; align-items: flex-start; }
 .produce-thumb { flex: 1 1 0; opacity: 0; transform: translateY(-14px); transition: opacity 0.5s ease, transform 0.55s cubic-bezier(0.2, 1.15, 0.32, 1); }
@@ -581,7 +573,7 @@ body { font-family: var(--font-sans); font-weight: 300; line-height: 1.5; overfl
 .produce-frame { position: relative; height: 24vh; background: #f4f3f0; overflow: hidden; display: flex; align-items: center; justify-content: center; }
 .produce-frame img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; filter: blur(12px); opacity: 0.4; transition: filter 1s ease, opacity 1s ease; }
 .produce-frame img.clear { filter: blur(0); opacity: 1; }
-.produce-thumb-copy { font-size: 11px; font-style: italic; color: var(--muted); margin-top: 7px; line-height: 1.4; }
+.produce-thumb-copy { font-size: 11px; color: var(--muted); margin-top: 7px; line-height: 1.4; }
 
 /* the customs stamp: the judge verdict pressed into the still's corner,
    a small deliberate rotation, slamming down to rest (北极星2). */
@@ -625,7 +617,7 @@ body { font-family: var(--font-sans); font-weight: 300; line-height: 1.5; overfl
 
 /* the winning number, counted up on the SCALE verdict (公理四: 数字主角). */
 .race-verdict { margin-top: 16px; display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
-.race-bignum { font-family: var(--font-display); font-size: 26px; line-height: 1; color: #2f6b3f; }
+.race-bignum { font-family: var(--font-sans); font-size: 26px; line-height: 1; color: #2f6b3f; }
 .race-bignum-note { font-size: 12px; color: var(--muted); line-height: 1.5; max-width: 20em; }
 .race-bignum-note b { color: var(--ink); font-weight: 500; }
 
@@ -650,7 +642,7 @@ body { font-family: var(--font-sans); font-weight: 300; line-height: 1.5; overfl
    video is often a vertical 9:16 mobile cut, a real aspect mismatch, not a
    styling choice. object-fit:contain letterboxes both inside the same
    fixed stage. */
-.hero-media img, .hero-media video, .rollout-chip-media img, .rollout-chip-media video, .channel-media img, .channel-media video {
+.hero-media img, .hero-media video, .rollout-chip-media img, .rollout-chip-media video {
   position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;
 }
 .hero-media img, .rollout-chip-media img { opacity: 1; transition: opacity 1.4s ease, transform 6s ease; }
@@ -664,43 +656,18 @@ body { font-family: var(--font-sans); font-weight: 300; line-height: 1.5; overfl
 .rollout-meta { padding-top: 8px; }
 .rollout-channel { font-size: 13px; font-weight: 400; text-transform: capitalize; }
 .rollout-role { font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
-.rollout-copy { font-size: 12px; font-style: italic; margin-top: 4px; }
+.rollout-copy { font-size: 12px; color: var(--muted); margin-top: 4px; }
 .rollout-kpi { font-size: 11px; color: var(--muted); margin-top: 6px; }
 
 .rollout-shelf { display: flex; gap: 12px; align-items: flex-start; flex-wrap: wrap; }
-.rollout-cell { flex: 1 1 30%; min-width: 150px; opacity: 0; transform: translateY(-14px); transition: opacity 0.5s ease, transform 0.55s cubic-bezier(0.2, 1.15, 0.32, 1); }
+.rollout-cell { flex: 1 1 30%; min-width: 150px; opacity: 0; transform: translateY(-14px); transition: opacity 0.5s ease, transform 0.55s cubic-bezier(0.2, 1.15, 0.32, 1); cursor: pointer; }
 .rollout-cell.in { opacity: 1; transform: translateY(0); }
 .rollout-cell .rollout-chip-media { height: 22vh; background: #f4f3f0; }
+.rollout-cell.is-open { flex: 1 1 100%; }
+.rollout-cell.is-open .rollout-chip-media { height: 60vh; }
 .rollout-cell .rollout-meta { padding-top: 7px; }
 .rollout-cell .rollout-copy { font-size: 11px; line-height: 1.35; }
 .rollout-cell .rollout-kpi { font-size: 10px; }
-
-.channels-ready-card { background: #fdfcf9; }
-.channel-rack { display: flex; flex-direction: column; gap: 8px; }
-.channel-entry { border-top: 1px solid var(--hairline); }
-.channel-toggle {
-  appearance: none; width: 100%; border: 0; background: transparent; color: var(--ink);
-  display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center;
-  padding: 10px 0; text-align: left; font-family: var(--font-sans); cursor: pointer;
-}
-.channel-title { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
-.channel-name { font-family: var(--font-display); font-size: 17px; line-height: 1.12; text-transform: capitalize; }
-.channel-role { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
-.channel-ready { font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; border: 1px solid var(--hairline); padding: 2px 7px; color: var(--muted); }
-.channel-body { display: none; padding: 2px 0 14px; opacity: 0; }
-.channel-entry.is-open .channel-body { display: block; opacity: 1; }
-.channel-items { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
-.channel-item { min-width: 0; }
-.channel-media { position: relative; height: min(42vh, 360px); max-height: 60vh; background: #f4f3f0; overflow: hidden; }
-.channel-media video { opacity: 1; background: #f4f3f0; }
-.channel-item.is-playing .channel-media { outline: 1px solid var(--ink); outline-offset: -1px; }
-.channel-gap-note {
-  display: none; margin: 8px 0 0; font-size: 10px; text-transform: uppercase;
-  letter-spacing: 0.06em; color: var(--muted);
-}
-.channel-body.is-gap .channel-gap-note { display: block; }
-.channel-copy { font-size: 11px; line-height: 1.35; color: var(--ink); margin: 7px 0 0; }
-.channel-kpi { font-size: 10px; line-height: 1.35; color: var(--muted); margin: 5px 0 0; }
 
 .cta-tag { display: inline-block; margin-top: 6px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; border: 1px solid var(--muted); padding: 2px 7px; color: var(--muted); }
 .cta-tag.cta-full { border-color: var(--ink); color: var(--ink); }
@@ -708,18 +675,18 @@ body { font-family: var(--font-sans); font-weight: 300; line-height: 1.5; overfl
 
 /* the bill (北极星2b, Tier 1): the whole wave's output, counted in real
    numbers, in the flow. This is the payoff beat -- all this work, done for
-   you. Big Playfair figures counted up, wide air, no chrome. Every figure
+   you. Big sans figures counted up, wide air, no chrome. Every figure
    is countable from readout; nothing here is authored. */
 .bill-card { padding: 16px 12px 18px; }
 .bill-lead { font-family: var(--font-sans); font-size: 14px; line-height: 1.35; margin: 0 0 16px; }
 .bill-grid { display: flex; flex-wrap: wrap; gap: 20px 32px; }
 .bill-item { min-width: 84px; }
-.bill-num { font-family: var(--font-display); font-size: 48px; line-height: 0.9; color: var(--ink); }
+.bill-num { font-family: var(--font-sans); font-size: 48px; line-height: 0.9; color: var(--ink); }
 .bill-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); margin-top: 7px; max-width: 10em; }
 
 /* closing */
 .closing-card .install-line { font-family: var(--font-mono); font-size: 13px; background: #f7f6f3; border: 1px solid var(--hairline); padding: 8px 10px; margin: 8px 0; }
-.closing-line { font-family: var(--font-display); font-size: 15px; margin-top: 8px; }
+.closing-line { font-family: var(--font-sans); font-size: 15px; margin-top: 8px; }
 
 .bottombar { flex: 0 0 auto; position: relative; border-top: 1px solid var(--hairline); padding: 9px 20px 10px; }
 .bottombar-fill { position: absolute; top: -1px; left: 0; height: 1px; background: var(--ink); width: 0%; transition: width 0.4s ease; }
@@ -746,7 +713,7 @@ body { font-family: var(--font-sans); font-weight: 300; line-height: 1.5; overfl
 }
 .approval-gate.show { display: flex; opacity: 1; }
 .approval-gate-text {
-  font-family: var(--font-display); font-size: 18px; letter-spacing: 0.02em; color: var(--ink);
+  font-family: var(--font-sans); font-size: 18px; letter-spacing: 0.02em; color: var(--ink);
   animation: breathe-gate 1.6s ease-in-out infinite;
 }
 @keyframes breathe-gate { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
@@ -795,7 +762,7 @@ const THEATER_JS = `
       document.querySelectorAll("video").forEach(function (v) { if (!v.paused) { videosPausedByUser.push(v); v.pause(); } });
     } else {
       pausedTotal += performance.now() - pauseStart;
-      videosPausedByUser.forEach(function (v) { playRackVideo(v); });
+      videosPausedByUser.forEach(function (v) { v.play().catch(function () {}); });
       videosPausedByUser = [];
     }
   }
@@ -876,7 +843,7 @@ const THEATER_JS = `
   }
 
   // ---- in-flow chapter header: the narrative spoken as one oversized
-  // serif line, big air above and below, scrolling past as part of the
+  // sans line, big air above and below, scrolling past as part of the
   // stream (公理二 revised: no full-screen white-out). Queued on the
   // timeline so it lands between stations, then held briefly so the eye
   // reads it before the next card sinks in. ----
@@ -923,212 +890,122 @@ const THEATER_JS = `
     });
   }
 
-  function buildChannelGroups() {
-    var groups = [];
-    var byName = {};
-    DATA.rollouts.forEach(function (draft) {
-      draft.channels.forEach(function (ch) {
-        var key = ch.channel;
-        if (!byName[key]) {
-          byName[key] = { channel: ch.channel, role: ch.role, items: [] };
-          groups.push(byName[key]);
-        }
-        byName[key].items.push({
-          variantId: draft.variantId,
-          workingTitle: draft.workingTitle,
-          role: ch.role,
-          nativeFormat: ch.nativeFormat,
-          coverURI: ch.coverURI,
-          videoRelSrc: ch.videoRelSrc,
-          durationSec: ch.durationSec,
-          channelCopy: ch.channelCopy,
-          kpi: ch.kpi,
-          productionNote: ch.productionNote
-        });
-      });
-    });
-    return groups;
-  }
-
-  var channelGroups = buildChannelGroups();
-  var channelRackCard = null;
-  var channelRackEntries = [];
-  var channelAutoToken = 0;
+  var rolloutCells = [];
+  var activeRolloutCellId = null;
+  var rolloutAutoToken = 0;
+  var rolloutAutoEvents = [];
   var VIDEO_GAP_MS = 1700;
-  var CHANNEL_GAP_MS = 1100;
-  var CHANNEL_SETTLE_MS = 700;
-  var STILL_CHANNEL_HOLD_MS = 2400;
-  var VIDEO_SETTLE_MS = 900;
+  var TILE_GAP_MS = 1100;
+  var TILE_HOLD_MS = 2400;
 
   function videoItemDurationMs(item) {
     var sec = Number(item.durationSec);
     return Number.isFinite(sec) && sec > 0 ? sec * 1000 : 8000;
   }
 
-  function channelGroupHoldMs(group) {
-    var videos = group.items.filter(function (item) { return item.nativeFormat === "video" && item.videoRelSrc; });
-    if (videos.length === 0) return STILL_CHANNEL_HOLD_MS;
-    return videos.reduce(function (sum, item) { return sum + videoItemDurationMs(item); }, 0) +
-      Math.max(0, videos.length - 1) * VIDEO_GAP_MS +
-      VIDEO_SETTLE_MS;
+  function rolloutTileSequenceMs(items) {
+    var videos = items.filter(function (item) { return item.nativeFormat === "video" && item.videoRelSrc; });
+    var stills = items.filter(function (item) { return !(item.nativeFormat === "video" && item.videoRelSrc) && item.coverURI; });
+    var videoMs = videos.reduce(function (sum, item) { return sum + videoItemDurationMs(item); }, 0) +
+      Math.max(0, videos.length - 1) * VIDEO_GAP_MS;
+    var phaseGapMs = videos.length > 0 && stills.length > 0 ? TILE_GAP_MS : 0;
+    var stillMs = stills.length * TILE_HOLD_MS + Math.max(0, stills.length - 1) * TILE_GAP_MS;
+    return videoMs + phaseGapMs + stillMs;
   }
 
-  function channelRackSequenceMs() {
-    if (channelGroups.length === 0) return 0;
-    return CHANNEL_SETTLE_MS + channelGroups.reduce(function (sum, group, i) {
-      return sum + channelGroupHoldMs(group) + (i < channelGroups.length - 1 ? CHANNEL_GAP_MS : 0);
-    }, 0);
-  }
-
-  function playRackVideo(video) {
-    video.play().catch(function () {});
-  }
-
-  function pauseRackVideo(video, reset) {
-    video.pause();
-    if (reset) {
+  function closeTile(cellId) {
+    var item = rolloutCells.find(function (entry) { return entry.id === cellId; });
+    if (!item) return;
+    item.cell.classList.remove("is-open");
+    var video = item.media ? item.media.querySelector("video") : null;
+    if (video) {
+      video.pause();
+      videosPausedByUser = videosPausedByUser.filter(function (entry) { return entry !== video; });
       try { video.currentTime = 0; } catch (e) {}
+    }
+    if (activeRolloutCellId === cellId) activeRolloutCellId = null;
+  }
+
+  function openTile(cellId) {
+    if (activeRolloutCellId && activeRolloutCellId !== cellId) closeTile(activeRolloutCellId);
+    var item = rolloutCells.find(function (entry) { return entry.id === cellId; });
+    if (!item) return;
+    item.cell.classList.add("is-open");
+    activeRolloutCellId = cellId;
+    item.cell.scrollIntoView({ block: "nearest" });
+    var video = item.media ? item.media.querySelector("video") : null;
+    if (video) {
+      try { video.currentTime = 0; } catch (e) {}
+      video.playbackRate = SPEED;
+      if (PAUSED) videosPausedByUser.push(video);
+      else video.play().catch(function () {});
     }
   }
 
-  function clearChannelEntry(entry, reset) {
-    entry.timers.forEach(function (timer) { clearTimeout(timer); });
-    entry.timers = [];
-    entry.token++;
-    entry.body.classList.remove("is-gap");
-    entry.videos.forEach(function (video) {
-      pauseRackVideo(video, reset);
-      var item = video.closest(".channel-item");
-      if (item) item.classList.remove("is-playing");
+  function stopRolloutTileSequence() {
+    rolloutAutoToken++;
+    rolloutAutoEvents = [];
+  }
+
+  function upgradeVideoTiles() {
+    rolloutCells.forEach(function (item) {
+      if (item.nativeFormat !== "video" || !item.videoRelSrc || !item.media || item.media.querySelector("video")) return;
+      var video = document.createElement("video");
+      video.muted = true;
+      video.playsInline = true;
+      video.preload = "metadata";
+      video.setAttribute("muted", "");
+      video.setAttribute("playsinline", "");
+      video.setAttribute("preload", "metadata");
+      if (item.coverURI) video.poster = item.coverURI;
+      video.src = item.videoRelSrc;
+      video.setAttribute("data-duration-sec", String(item.durationSec || ""));
+      item.media.appendChild(video);
     });
   }
 
-  function playChannelEntrySequence(entry) {
-    clearChannelEntry(entry, true);
-    var videos = entry.videos;
-    if (videos.length === 0) return;
-    var token = entry.token;
-    function playAt(index) {
-      if (entry.token !== token || !entry.node.classList.contains("is-open")) return;
-      entry.body.classList.remove("is-gap");
-      if (index >= videos.length) return;
-      var video = videos[index];
-      var item = video.closest(".channel-item");
-      if (item) item.classList.add("is-playing");
-      try { video.currentTime = 0; } catch (e) {}
-      playRackVideo(video);
-      var timer = setTimeout(function () {
-        pauseRackVideo(video, false);
-        if (item) item.classList.remove("is-playing");
-        if (index + 1 >= videos.length) return;
-        entry.body.classList.add("is-gap");
-        var gapTimer = setTimeout(function () { playAt(index + 1); }, VIDEO_GAP_MS);
-        entry.timers.push(gapTimer);
-      }, videoItemDurationMs({
-        durationSec: video.getAttribute("data-duration-sec"),
-        nativeFormat: "video",
-        videoRelSrc: video.getAttribute("src")
-      }));
-      entry.timers.push(timer);
+  function startRolloutTileSequence() {
+    stopRolloutTileSequence();
+    var token = rolloutAutoToken;
+    var videos = rolloutCells.filter(function (item) { return item.nativeFormat === "video" && item.videoRelSrc; });
+    var stills = rolloutCells.filter(function (item) { return !(item.nativeFormat === "video" && item.videoRelSrc) && item.coverURI; });
+
+    function later(fn, delay) {
+      rolloutAutoEvents.push({ at: elapsed() + delay, token: token, fn: fn });
     }
-    playAt(0);
-  }
 
-  function closeChannelEntry(index) {
-    var entry = channelRackEntries[index];
-    if (!entry) return;
-    entry.node.classList.remove("is-open");
-    entry.button.setAttribute("aria-expanded", "false");
-    clearChannelEntry(entry, true);
-  }
-
-  function openChannelEntry(index) {
-    channelRackEntries.forEach(function (_entry, i) {
-      if (i !== index) closeChannelEntry(i);
-    });
-    var entry = channelRackEntries[index];
-    if (!entry) return;
-    entry.node.classList.add("is-open");
-    entry.button.setAttribute("aria-expanded", "true");
-    entry.node.scrollIntoView({ block: "nearest" });
-    playChannelEntrySequence(entry);
-  }
-
-  function renderChannelItem(item, groupIndex, itemIndex) {
-    var media = "";
-    if (item.nativeFormat === "video" && item.videoRelSrc) {
-      media = '<div class="channel-media">' +
-        '<video muted playsinline preload="metadata" data-duration-sec="' + esc(item.durationSec || "") + '" src="' + esc(item.videoRelSrc) + '"' +
-        (item.coverURI ? ' poster="' + item.coverURI + '"' : "") + "></video>" +
-        "</div>";
-    } else if (item.coverURI) {
-      media = '<div class="channel-media"><img src="' + item.coverURI + '" alt="' + esc(item.workingTitle) + '" /></div>';
-    } else {
-      media = '<div class="channel-media"><span class="evidence-caption">No produced asset was recorded for this channel.</span></div>';
+    function runPhase(items, index, holdFor, gapMs, done) {
+      if (token !== rolloutAutoToken) return;
+      if (index >= items.length) {
+        done();
+        return;
+      }
+      var item = items[index];
+      openTile(item.id);
+      later(function () {
+        closeTile(item.id);
+        if (index + 1 < items.length) later(function () { runPhase(items, index + 1, holdFor, gapMs, done); }, gapMs);
+        else done();
+      }, holdFor(item));
     }
-    return '<div class="channel-item" data-channel-group="' + groupIndex + '" data-channel-item="' + itemIndex + '">' +
-      media +
-      '<div class="rollout-role">' + esc(item.variantId) + " / " + esc(item.workingTitle) + "</div>" +
-      '<p class="channel-copy">' + esc(item.channelCopy) + "</p>" +
-      '<p class="channel-kpi">' + esc(item.kpi) + "</p>" +
-      "</div>";
-  }
 
-  function renderChannelsReadyRack() {
-    if (channelRackCard) return channelRackCard;
-    var c = el("article", "evidence-card tier1 channels-ready-card");
-    var rows = channelGroups.map(function (group, groupIndex) {
-      return '<section class="channel-entry" data-channel-index="' + groupIndex + '">' +
-        '<button class="channel-toggle" type="button" aria-expanded="false" aria-controls="channelBody' + groupIndex + '">' +
-        '<span class="channel-title"><span class="channel-name">' + esc(group.channel) + '</span><span class="channel-role">' + esc(group.role) + '</span></span>' +
-        '<span class="channel-ready">ready</span>' +
-        "</button>" +
-        '<div class="channel-body" id="channelBody' + groupIndex + '">' +
-        '<div class="channel-items">' + group.items.map(function (item, itemIndex) { return renderChannelItem(item, groupIndex, itemIndex); }).join("") + "</div>" +
-        '<div class="channel-gap-note">No video is playing between cuts.</div>' +
-        "</div>" +
-        "</section>";
-    }).join("");
-    c.innerHTML = '<div class="evidence-eyebrow">channels ready</div><div class="channel-rack">' + rows + "</div>";
-    addCard(c, "readout.rollouts grouped by channel name in first-seen order, including every shipped channel item");
-    channelRackCard = c;
-    channelRackEntries = Array.prototype.slice.call(c.querySelectorAll(".channel-entry")).map(function (node) {
-      return {
-        node: node,
-        button: node.querySelector(".channel-toggle"),
-        body: node.querySelector(".channel-body"),
-        videos: Array.prototype.slice.call(node.querySelectorAll("video")),
-        timers: [],
-        token: 0
+    runPhase(videos, 0, videoItemDurationMs, VIDEO_GAP_MS, function () {
+      var runStills = function () {
+        runPhase(stills, 0, function () { return TILE_HOLD_MS; }, TILE_GAP_MS, function () {});
       };
+      if (videos.length > 0 && stills.length > 0) later(runStills, TILE_GAP_MS);
+      else runStills();
     });
-    channelRackEntries.forEach(function (entry, index) {
-      entry.button.addEventListener("click", function (event) {
-        event.stopPropagation();
-        channelAutoToken++;
-        if (entry.node.classList.contains("is-open")) closeChannelEntry(index);
-        else openChannelEntry(index);
-      });
-    });
-    return c;
   }
 
-  function startChannelRackSequence() {
-    if (channelGroups.length === 0) return;
-    renderChannelsReadyRack();
-    var token = ++channelAutoToken;
-    function run(index) {
-      if (token !== channelAutoToken || index >= channelRackEntries.length) return;
-      openChannelEntry(index);
-      var hold = channelGroupHoldMs(channelGroups[index]);
-      setTimeout(function () {
-        if (token !== channelAutoToken) return;
-        closeChannelEntry(index);
-        if (index + 1 >= channelRackEntries.length) return;
-        setTimeout(function () { run(index + 1); }, CHANNEL_GAP_MS);
-      }, hold);
-    }
-    setTimeout(function () { run(0); }, CHANNEL_SETTLE_MS);
+  function runRolloutAutoEvents(now) {
+    var due = rolloutAutoEvents.filter(function (event) { return event.at <= now; });
+    if (due.length === 0) return;
+    rolloutAutoEvents = rolloutAutoEvents.filter(function (event) { return event.at > now; });
+    due.sort(function (a, b) { return a.at - b.at; });
+    due.forEach(function (event) {
+      if (event.token === rolloutAutoToken) event.fn();
+    });
   }
 
   // ================= OPEN =================
@@ -1172,7 +1049,7 @@ const THEATER_JS = `
   queueChapter("Act I", "The machine drafts " + DATA.variants.length + " creative bets from one cultural moment.");
   // The three proposals land side by side (公理三: 并列关系用并列版式), one
   // column sinking in as its own log line finishes typing, all sharing one
-  // row -- workingTitle in serif, the asset x element formula, the angle
+  // row -- workingTitle in sans, the asset x element formula, the angle
   // badge. Not three stacked bordered cards.
   var proposalRow = null;
   DATA.variants.forEach(function (v, i) {
@@ -1297,7 +1174,7 @@ const THEATER_JS = `
     });
     queueAction("copy: " + v.copy, function () {
       var target = document.getElementById("copy-" + v.id);
-      if (target) typewriter(target, v.copy, 1200);
+      if (target) typewriter(target, '"' + v.copy + '"', 1200);
     });
   });
 
@@ -1462,7 +1339,7 @@ const THEATER_JS = `
   });
   var videoChannels = allChannels.filter(function (ch) { return ch.nativeFormat === "video"; });
   var draftShelves = {};
-  function renderChannelCell(draft, di, ch) {
+  function renderChannelCell(draft, di, ch, channelIndex) {
     var holder = draftShelves[di];
     if (!holder) {
       var card = el("article", "evidence-card");
@@ -1472,24 +1349,44 @@ const THEATER_JS = `
       holder = { card: card, shelf: card.querySelector(".rollout-shelf") };
       draftShelves[di] = holder;
     }
+    var cellId = "rolloutCell-" + di + "-" + channelIndex;
     var cell = el("div", "rollout-cell");
+    cell.id = cellId;
+    cell.setAttribute("data-draft-index", String(di));
     var mediaHTML = "";
-    if (ch.coverURI) {
-      mediaHTML = '<div class="rollout-chip-media"><img src="' + ch.coverURI + '" alt="' + esc(ch.channel) + '" /></div>';
+    if (ch.coverURI || ch.videoRelSrc) {
+      mediaHTML = '<div class="rollout-chip-media">' +
+        (ch.coverURI ? '<img src="' + ch.coverURI + '" alt="' + esc(ch.channel) + '" />' : "") +
+        "</div>";
     }
     var ctaTag = ch.ctaPolicy ? '<span class="cta-tag cta-' + esc(ch.ctaPolicy.level) + '">CTA ' + esc(ch.ctaPolicy.level) + '</span>' : "";
     cell.innerHTML = mediaHTML + '<div class="rollout-meta"><div class="rollout-channel">' + esc(ch.channel) +
-      '</div><div class="rollout-role">' + esc(ch.role) + '</div><p class="rollout-copy">' + esc(ch.channelCopy) + "</p>" + ctaTag + "</div>";
+      '</div><div class="rollout-role">' + esc(ch.role) + '</div><p class="rollout-copy">&quot;' + esc(ch.channelCopy) + '&quot;</p>' + ctaTag + "</div>";
     cell.setAttribute("data-evidence", "1");
     cell.dataset.evidenceNote = ch.ctaPolicy ? ch.kpiThresholdNote + " / cta: " + ch.ctaPolicy.reason : ch.kpiThresholdNote;
     holder.shelf.appendChild(cell);
+    rolloutCells.push({
+      id: cellId,
+      cell: cell,
+      media: cell.querySelector(".rollout-chip-media"),
+      nativeFormat: ch.nativeFormat,
+      coverURI: ch.coverURI,
+      videoRelSrc: ch.videoRelSrc,
+      durationSec: ch.durationSec
+    });
+    cell.addEventListener("click", function (event) {
+      event.stopPropagation();
+      stopRolloutTileSequence();
+      if (cell.classList.contains("is-open")) closeTile(cellId);
+      else openTile(cellId);
+    });
     requestAnimationFrame(function () { cell.classList.add("in"); });
     holder.card.scrollIntoView({ block: "start" });
   }
 
   DATA.rollouts.forEach(function (draft, di) {
-    draft.channels.forEach(function (ch) {
-      queueAction("shipping " + ch.channel + " cut: " + ch.kpi, function () { renderChannelCell(draft, di, ch); });
+    draft.channels.forEach(function (ch, channelIndex) {
+      queueAction("shipping " + ch.channel + " cut: " + ch.kpi, function () { renderChannelCell(draft, di, ch, channelIndex); });
     });
   });
 
@@ -1504,28 +1401,11 @@ const THEATER_JS = `
     );
     cursor += spendHold;
     queueAction("operator approved video spend", function () {
-      startChannelRackSequence();
+      upgradeVideoTiles();
+      startRolloutTileSequence();
     });
-    cursor += channelRackSequenceMs();
+    cursor += rolloutTileSequenceMs(allChannels);
   }
-
-  queueHeader("rollout", "station 9 / learn");
-  queueChapter("Act V", "The library keeps what won and hands it to the next wave.");
-  queueAction("library.jsonl += wave " + String(DATA.libraryNewLine.wave).padStart(2, "0") + ": winners [" + (DATA.libraryNewLine.winners.join(", ") || "none") + "]", function () {
-    var c = el("article", "evidence-card tier3");
-    var rows = DATA.libraryBefore.map(function (e) {
-      return '<div class="rollout-role">wave ' + e.wave + ": " + (e.winners.length ? esc(e.winners.join(", ")) : "no SCALE verdicts") + "</div>";
-    }).join("");
-    // injectedLearnings returns here as a footnote (作战包修订二): the trait
-    // this wave carried forward, shown at the beat that WRITES the next one,
-    // not at the open.
-    var carried = DATA.injectedLearnings
-      ? '<p class="evidence-caption" style="margin-top:8px">carried into this wave: ' + esc(DATA.injectedLearnings) + "</p>"
-      : "";
-    c.innerHTML = '<div class="evidence-eyebrow">library &middot; cross-wave winners</div>' + rows +
-      '<div class="rollout-copy">wave ' + DATA.libraryNewLine.wave + ": " + (DATA.libraryNewLine.winners.join(", ") || "no SCALE verdicts") + " (just recorded)</div>" + carried;
-    addCard(c, "library.jsonl, appended by station 9, injected into wave " + (DATA.waveNumber + 1) + "'s insight prompt");
-  });
 
   // ============= THE BILL: the whole wave's output, counted (北极星2b) =============
   // A Tier-1 in-flow tally, the payoff beat -- all this work, done for you.
@@ -1565,6 +1445,24 @@ const THEATER_JS = `
   });
   cursor += 3800 * PACE;
 
+  queueHeader("rollout", "station 9 / learn");
+  queueChapter("Act V", "The library keeps what won and hands it to the next wave.");
+  queueAction("library.jsonl += wave " + String(DATA.libraryNewLine.wave).padStart(2, "0") + ": winners [" + (DATA.libraryNewLine.winners.join(", ") || "none") + "]", function () {
+    var c = el("article", "evidence-card tier3");
+    var rows = DATA.libraryBefore.map(function (e) {
+      return '<div class="rollout-role">wave ' + e.wave + ": " + (e.winners.length ? esc(e.winners.join(", ")) : "no SCALE verdicts") + "</div>";
+    }).join("");
+    // injectedLearnings returns here as a footnote (作战包修订二): the trait
+    // this wave carried forward, shown at the beat that WRITES the next one,
+    // not at the open.
+    var carried = DATA.injectedLearnings
+      ? '<p class="evidence-caption" style="margin-top:8px">carried into this wave: ' + esc(DATA.injectedLearnings) + "</p>"
+      : "";
+    c.innerHTML = '<div class="evidence-eyebrow">library &middot; cross-wave winners</div>' + rows +
+      '<div class="rollout-copy">wave ' + DATA.libraryNewLine.wave + ": " + (DATA.libraryNewLine.winners.join(", ") || "no SCALE verdicts") + " (just recorded)</div>" + carried;
+    addCard(c, "library.jsonl, appended by station 9, injected into wave " + (DATA.waveNumber + 1) + "'s insight prompt");
+  });
+
   queueAction("$ " + DATA.installCmd, function () {
     var c = el("article", "evidence-card closing-card");
     c.innerHTML = '<div class="evidence-eyebrow">install your own</div>' +
@@ -1585,6 +1483,7 @@ const THEATER_JS = `
   function loop() {
     var e = elapsed();
     while (fired < TIMELINE.length && TIMELINE[fired][0] <= e) { TIMELINE[fired][1](); fired++; }
+    runRolloutAutoEvents(e);
     if (fired < TIMELINE.length || true) requestAnimationFrame(loop);
   }
   requestAnimationFrame(loop);

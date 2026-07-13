@@ -684,70 +684,6 @@
             "altText": "A pair of hands holding a restored wedding photograph glowing with color next to its faded original underneath.",
             "postingNote": "Post inside the first 48 hours of the observation window, reply pin the strongest family comment."
           }
-        },
-        {
-          "channel": "x",
-          "role": "conversion",
-          "nativeFormat": "still",
-          "assetName": "XTW_CONV_MOF_EVG_STIL_THEC_THEWED_ANYO_V04",
-          "assetPath": "waves/wave-04/assets/rollout/XTW_CONV_MOF_EVG_STIL_THEC_THEWED_ANYO_V04.png",
-          "coverPath": null,
-          "videoDurationSec": null,
-          "illustrativeLabel": null,
-          "assetSpec": "16:9 quote card on black: the hook line set in large serif type fills the upper left, a small cropped tile of the couple's clasped hands against wedding lace anchors the bottom right corner, text-forward and screenshot-native rather than a full scene photo.",
-          "channelScript": null,
-          "channelCopy": "They danced to this once. Watch it again.",
-          "executionSteps": [
-            "Post the still natively inside the first 48 hours.",
-            "Reply with the tiktok render once it clears judge and self check.",
-            "Pin one clear next step link.",
-            "Track engagement against thresholds daily."
-          ],
-          "kpi": "3.5% engagement rate inside the 21 day window",
-          "kpiThresholdNote": "Matches the preregistered scaleAt of 0.035 for the evergreen angle.",
-          "postKit": {
-            "file": "XTW_CONV_MOF_EVG_STIL_THEC_THEWED_ANYO_V04.png",
-            "caption": "They danced to this once. Watch it again. Thirty years in a shoebox, restored in one afternoon.",
-            "hashtags": [
-              "#weddingseason",
-              "#familyarchive",
-              "#throwback"
-            ],
-            "altText": "A restored wedding photograph glowing with color against its faded original.",
-            "postingNote": "Post inside the first 48 hours of the observation window, pin as the top post."
-          }
-        },
-        {
-          "channel": "in-app profile surface",
-          "role": "retention",
-          "nativeFormat": "surface",
-          "assetName": "APP_CONV_MOF_EVG_STIL_THEC_THEWED_ANYO_V04",
-          "assetPath": "waves/wave-04/assets/rollout/APP_CONV_MOF_EVG_STIL_THEC_THEWED_ANYO_V04.png",
-          "coverPath": null,
-          "videoDurationSec": null,
-          "illustrativeLabel": null,
-          "assetSpec": "1:1 tile tuned for the circular mask, a restore an old photo prompt with the album as the doorway.",
-          "channelScript": null,
-          "channelCopy": "One tap and the album dances again.",
-          "executionSteps": [
-            "Surface the restore tile to users who upload photos.",
-            "Keep the flow to one tap plus one upload.",
-            "Track weekly restores per active user.",
-            "Report adoption against thresholds daily."
-          ],
-          "kpi": "12.0% tile to restore conversion within 7 days",
-          "kpiThresholdNote": "Read against the evergreen scaleAt of 0.035, scaled up because a restore is a stronger action than a click.",
-          "postKit": {
-            "file": "APP_CONV_MOF_EVG_STIL_THEC_THEWED_ANYO_V04.png",
-            "caption": "One tap and the album dances again. Restore an old photo and watch thirty years come back in ten seconds.",
-            "hashtags": [
-              "#restore-old-photo",
-              "#profile-surface",
-              "#one-tap-upgrade"
-            ],
-            "altText": "A circular tile prompting the user to restore an old wedding photo, the album icon as the entry point.",
-            "postingNote": "Surface to users who have already uploaded at least one photo, no cold placement for new accounts."
-          }
         }
       ],
       "productionNote": "The tiktok channel's real mp4 render (image to video generation via the libtv-skill plus ffmpeg drawtext/crop assembly) is BLOCKED pending LIBTV_ACCESS_KEY authorization; assetPath stays null, coverPath holds the no-text cover regenerated for this contract. See scratchpad/lane32-STATE.md."
@@ -839,38 +775,6 @@
             ],
             "altText": "A silhouette wedding pose beside an ordinary couple recreating the same pose in their kitchen, credit tag visible. Template preview, illustrative, not a real submitted recreation.",
             "postingNote": "This still is an AI-generated template preview, not real user content. Post it only as the seed post explaining the mechanic, replace with real recreations as they come in."
-          }
-        },
-        {
-          "channel": "x",
-          "role": "conversion",
-          "nativeFormat": "still",
-          "assetName": "XTW_ENGT_BOF_LOOP_STIL_COUP_THEWED_COUP_V04",
-          "assetPath": "waves/wave-04/assets/rollout/XTW_ENGT_BOF_LOOP_STIL_COUP_THEWED_COUP_V04.png",
-          "coverPath": null,
-          "videoDurationSec": null,
-          "illustrativeLabel": null,
-          "assetSpec": "16:9 quote card in the paper-white editorial register, the hook line set large in black serif type as the primary element, with one small corner photo tile cropping the couple's kitchen recreation embrace, no full scene photo and no text baked into the photo tile.",
-          "channelScript": null,
-          "channelCopy": "The pose everyone is talking about. Your kitchen works fine.",
-          "executionSteps": [
-            "Post the still natively inside the first 48 hours.",
-            "Quote the strongest recreation each day.",
-            "Keep the template link pinned.",
-            "Track engagement against thresholds daily."
-          ],
-          "kpi": "5.0% engagement rate inside the 21 day window",
-          "kpiThresholdNote": "Matches the preregistered scaleAt of 0.05 for the ugc loop angle.",
-          "postKit": {
-            "file": "XTW_ENGT_BOF_LOOP_STIL_COUP_THEWED_COUP_V04.png",
-            "caption": "The pose everyone is talking about. Your kitchen works fine. Recreate it, tag the couple before you.",
-            "hashtags": [
-              "#weddingseason",
-              "#recreatethepose",
-              "#couplegoals"
-            ],
-            "altText": "A silhouette wedding pose beside an ordinary couple recreating the same pose in their kitchen, credit tag visible.",
-            "postingNote": "Post inside the first 48 hours, quote the strongest recreation of each day and keep the template link pinned."
           }
         }
       ],

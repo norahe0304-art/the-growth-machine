@@ -5,6 +5,10 @@ precedent, drawn from documented cases, plus a fit rule for the machine's rollou
 station. Use this file when a wave reaches SCALE and rollout has to pick where the
 winning creative actually runs.
 
+## Default rollout roster
+
+TikTok and Instagram are the two home channels for this brand concept family. Every other channel is used only when a concept has a clear and specific channel fit reason. Favor restraint over channel sprawl.
+
 ## TikTok: demo is the content
 
 OpenAI's own TikTok account runs at roughly 840K followers and 5.1M likes by simply

@@ -3,7 +3,7 @@
  *   src/stages/rollout.ts's validateRolloutDraft, on src/taxonomy.ts's channelToken/
  *   deriveChannelAssetName, on scripts/machine.mjs as a real subprocess
  * [OUTPUT]: unit tests proving validateRolloutDraft accepts a well-formed RolloutDraft and
- *   rejects the specific ways a hand-authored one can go wrong: bad channel count, bad role,
+ *   rejects the specific ways a hand-authored one can go wrong: channel count outside 2 to 4, bad role,
  *   an em or en dash slipped into a sentence field, a missing/malformed channelCopy, an
  *   assetName whose CHANNEL segment doesn't match its channel or that isn't nine segments, a
  *   nativeFormat that doesn't match the channel, a video channel without its three-shot
@@ -13,7 +13,7 @@
  * [POS]: part of test/, covers station 8b's schema gate and its channel-cut naming lineage,
  *   the same "skill layer is a thin wrapper over src/" contract test/machine.test.ts already
  *   covers for the scripted stations
- * [PROTOCOL]: update this header on change, then check CLAUDE.md
+ * [PROTOCOL]: 变更时更新此头部，然后检查 AGENTS.md
  */
 import test from "node:test";
 import assert from "node:assert/strict";
@@ -115,11 +115,11 @@ test("validateRolloutDraft: accepts a well formed draft with 3 channels", () => 
   assert.deepEqual(result, { ok: true });
 });
 
-test("validateRolloutDraft: rejects a channel count outside the 3 to 4 range", () => {
-  const tooFew: RolloutDraft = { ...validDraft, channels: validDraft.channels.slice(0, 2) };
+test("validateRolloutDraft: rejects a channel count outside the 2 to 4 range", () => {
+  const tooFew: RolloutDraft = { ...validDraft, channels: validDraft.channels.slice(0, 1) };
   const result = validateRolloutDraft(tooFew);
   assert.equal(result.ok, false);
-  if (!result.ok) assert.match(result.errors.join(";"), /channels: must have 3 to 4 entries/);
+  if (!result.ok) assert.match(result.errors.join(";"), /channels: must have 2 to 4 entries/);
 });
 
 test("validateRolloutDraft: rejects an invalid role value", () => {

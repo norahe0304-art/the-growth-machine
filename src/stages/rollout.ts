@@ -4,7 +4,7 @@
  *   channelToken/deriveChannelAssetName, on node:fs/promises + node:path, on types.ts's
  *   Variant/Brief/Decision/PreRegisteredThresholds/RolloutDraft/RolloutChannelPlan/RolloutRole
  * [OUTPUT]: exports runRollout(params) -> Promise<RolloutDraft>, the SCALE winner's
- *   channel-by-channel playbook, now with a produced channel cut (nativeFormat/assetName/
+ *   2 to 4 channel playbook, now with a produced channel cut (nativeFormat/assetName/
  *   assetPath/channelCopy/channelScript) per channel; and validateRolloutDraft(input) ->
  *   {ok:true} | {ok:false, errors:string[]}, the pure schema gate scripts/machine.mjs
  *   rollout-validate calls
@@ -17,7 +17,7 @@
  *   SCALE/KILL verdict against its own kpi below. Format follows the channel: video channels
  *   get a three-shot script plus a cover frame, ugc channels get a candid phone-shot still,
  *   editorial channels get a native still, surface channels get a mask-safe crop.
- * [PROTOCOL]: update this header on change, then check CLAUDE.md
+ * [PROTOCOL]: 变更时更新此头部，然后检查 AGENTS.md
  */
 import { writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -385,7 +385,7 @@ async function mockRolloutDraft(
 // "Station 8b, rollout" section documents for the agent-authored path.
 // ============================================================
 const ROLLOUT_SYSTEM_PROMPT = `You are the rollout station of The Growth Machine. You run only for a variant that already earned a SCALE verdict.
-Write a channel by channel playbook for the winning asset. Pick 3 to 4 relevant channels, for example tiktok, instagram, x, or an in-app profile surface.
+Write a channel by channel playbook for the winning asset. Pick 2 to 4 relevant channels, weighted toward the channels the brand pack shows are proven.
 Every field is a plain declarative sentence. Do not use an em dash or an en dash anywhere in the output.
 Each channel is an expansion arm off a concept that already won, not a new idea: it will earn its own SCALE or KILL verdict against the kpi you write below, separate from the concept-level test.
 role must be exactly one of: discovery, amplification, retention, conversion.
@@ -511,8 +511,8 @@ export function validateRolloutDraft(input: unknown): { ok: true } | { ok: false
     errors.push("channels: missing or not an array");
     return { ok: false, errors };
   }
-  if (draft.channels.length < 3 || draft.channels.length > 4) {
-    errors.push(`channels: must have 3 to 4 entries, got ${draft.channels.length}`);
+  if (draft.channels.length < 2 || draft.channels.length > 4) {
+    errors.push(`channels: must have 2 to 4 entries, got ${draft.channels.length}`);
   }
 
   draft.channels.forEach((entry, i) => {

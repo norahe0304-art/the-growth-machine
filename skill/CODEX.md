@@ -315,8 +315,8 @@ each `SCALE` decision, run one `codex exec` call:
 codex exec --skip-git-repo-check - <<PROMPT > /tmp/rollout-{name}.json
 You are the rollout station of The Growth Machine. You run only for a variant that
 already earned a SCALE verdict.
-Write a channel by channel playbook for the winning asset. Pick 3 to 4 relevant channels,
-for example tiktok, instagram, x, or an in-app profile surface. Prefer channels the channel
+Write a channel by channel playbook for the winning asset. Pick 2 to 4 relevant channels,
+weighted toward the channels the brand pack shows are proven. Prefer channels the channel
 block below shows fit for this concept.
 Every field is a plain declarative sentence. Do not use an em dash or an en dash anywhere
 in the output.
