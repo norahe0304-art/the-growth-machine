@@ -289,12 +289,33 @@ EOF
 Returns a `Decision[]`, SCALE / KILL / ITERATE per still asset, checked against the plan's
 preregistered thresholds. Motion assets never get decided (no curve to decide against).
 
-## Station 8b, rollout (you are the model, then codex exec produces the channel cuts)
+## Station 8b, rollout (you are the model, then real generation produces the channel cuts)
 
 Runs only for a `SCALE` verdict. `KILL` and `ITERATE` assets skip this station entirely,
 there is nothing to roll out. A channel cut is an expansion arm off a concept that already
 won the wave, not a new idea: every channel still earns its own SCALE or KILL verdict
 against its own kpi below, separate from the concept-level test the `WEB` name already ran.
+
+**The deliverable contract.** Three rules govern everything this station ships, ahead of
+the prompt contract and the schema below:
+
+1. **A video channel means a real rendered video, not a still with a script.** The motion
+   comes from real image-to-video generation off the winning concept still (the
+   `libtv-skill`, liblib.tv's image-to-video capability, see "Real video, step by step"
+   below), never from a pan-and-zoom (`zoompan`) fake-motion trick on a static image. ffmpeg
+   is the assembly worker only: vertical crop, text compositing, trim/concat. It never
+   originates the motion itself.
+2. **Every channel ships a `PostKit`, not just an asset.** `postKit: {file, caption,
+   hashtags, altText, postingNote}` is required on every `RolloutChannelPlan`, still or
+   video, and rendered into `report.html` alongside the asset. A channel cut without a post
+   kit is not a finished deliverable, it is a half-shipped asset with nowhere to post it.
+3. **A ugc-loop concept gets a `ParticipationKit`, never a faked UGC image standing in for
+   one.** When the winning `Variant.angleType` is `"ugc-loop"`, the `RolloutDraft` carries
+   `participationKit: {mechanic, creatorShotList, seedCaptions, creditRule}`, the real "how
+   real users participate" mechanism. An AI-generated `ugc-still` channel cut may still ship
+   as an illustration of the mechanic, but it must carry
+   `illustrativeLabel: "template preview, illustrative"` and must never be presented as if
+   it were real user-submitted content.
 
 Before picking channels, when a brand pack exists, read `brand/<pack>/channels.md` for the
 actual channel precedent, what fits and what does not fit, per channel. Pick from the
@@ -337,14 +358,14 @@ inputs `runRollout` takes in CLI mode. `assetSpec` is one sentence: format, rati
 the hook changes for that channel. `kpi` should read against the thresholds you were just
 handed, always a real number pulled from that table.
 
-Do not write `assetName` or `assetPath` yourself, `assetName` is a deterministic lineage
-swap, not a model decision. For each channel, take the winning still's `NamedAsset.name`
-(nine segments, `CHANNEL_OBJ_FUNNEL_TEMP_FORMAT_HOOK_MOMENT_PERSONA_VER`) and swap only the
-`CHANNEL` segment for this channel's token: `instagram` -> `IG`, `tiktok` -> `TT`, `x` ->
-`XTW`, `in-app profile surface` -> `APP` (an unlisted channel gets a slugged 3-char code,
-same shape `taxonomy.channelToken` falls back to). The other eight segments are inherited
-verbatim, same asset, new channel. Set `assetPath` to `null` for now, it gets filled in
-after the channel cut is actually produced below.
+Do not write `assetName`, `assetPath`, `coverPath`, or `videoDurationSec` yourself,
+`assetName` is a deterministic lineage swap, not a model decision, the rest are filled in
+after real generation runs below. For each channel, take the winning still's
+`NamedAsset.name` (nine segments, `CHANNEL_OBJ_FUNNEL_TEMP_FORMAT_HOOK_MOMENT_PERSONA_VER`)
+and swap only the `CHANNEL` segment for this channel's token: `instagram` -> `IG`, `tiktok`
+-> `TT`, `x` -> `XTW`, `in-app profile surface` -> `APP` (an unlisted channel gets a slugged
+3-char code, same shape `taxonomy.channelToken` falls back to). The other eight segments are
+inherited verbatim, same asset, new channel.
 
 **Format follows the channel.** `nativeFormat` is a property of the channel, not a model
 decision: `tiktok` -> `video`, `instagram` -> `ugc-still`, `x` -> `still`, `in-app profile
@@ -352,59 +373,130 @@ surface` -> `surface` (an unlisted channel defaults to `still`). Stamp it on eve
 entry. For a `video` channel also write `channelScript`: a ChatCut-ready three-shot script,
 shot 1 establishes the winning subject in its everyday context, shot 2 lands the new element
 as a visual break, shot 3 locks the `channelCopy` in as on-screen copy and holds the frame.
-Every other `nativeFormat` carries `channelScript: null`.
+Every other `nativeFormat` carries `channelScript: null`. Stamp `illustrativeLabel:
+"template preview, illustrative"` on a `ugc-still` channel when `variant.angleType` is
+`"ugc-loop"` (the image stands in for real user content that does not exist yet); `null` for
+every other channel.
+
+**Write the `PostKit` for every channel.** `postKit: {file, caption, hashtags, altText,
+postingNote}` is required on every channel regardless of `nativeFormat`: `file` is the path
+the asset lands at once produced (`.mp4` for a video channel, `.png` for every other
+format), `caption` is 2 to 3 sentences in that channel's native voice, `hashtags` is 3 to 6
+entries with no filler, `altText` describes what is on screen for accessibility,
+`postingNote` is one sentence covering when to post, who to tag, what to pin.
+
+**Write the `ParticipationKit` when this concept is `ugc-loop`.** If `variant.angleType ===
+"ugc-loop"`, also write `participationKit: {mechanic, creatorShotList, seedCaptions,
+creditRule}` at the `RolloutDraft` level (once per draft, not once per channel):
+`mechanic` is one sentence naming what a real user actually does to participate;
+`creatorShotList` is 3 to 4 real-phone shot instructions for a real creator, styled after
+`references/meta.md`'s Tier 1 corpus (Nora's own `30x-product-to-ugc` scoring pass, roughly
+1100 Meta Ad Library entries distilled into 38 house rules): cold open on the thing already
+in use, no setup shot, one clear beat held long enough to register rather than a fast
+montage, a casual verbal moment rather than a polished tag-on; `seedCaptions` is exactly 3
+ready-to-use captions handed to real users, written as a testimonial a real person would
+say, not ad copy; `creditRule` is one sentence on how credit passes from one participant to
+the next, this is what turns single posts into a loop. For every other `angleType`, set
+`participationKit: null`.
 
 Write down what you drafted before you touch anything else, then pipe that exact JSON
 through the validator before it goes anywhere near `readout.json`:
 
 ```bash
 node scripts/machine.mjs rollout-validate <<'EOF'
-{"variantId":"...", "name":"...", "channels":[ ... ]}
+{"variantId":"...", "name":"...", "channels":[ ... ], "participationKit": null}
 EOF
 ```
 
 Returns `{"ok":true}` on a clean draft, or `{"ok":false,"errors":["..."]}` naming the exact
-field that failed, wrong channel count, an invalid `role`, a missing field, an em or en
+field that failed: wrong channel count, an invalid `role`, a missing field, an em or en
 dash, an `assetName` whose `CHANNEL` segment doesn't match its `channel`, a `nativeFormat`
-that doesn't match its channel, a video channel missing its three-shot script. Fix the
-draft and revalidate until it passes.
+that doesn't match its channel, a video channel missing its three-shot script or its
+`coverPath`, a video channel carrying `videoDurationSec` without a rendered `assetPath`, a
+missing or malformed `postKit`, a malformed `participationKit`. Fix the draft and revalidate
+until it passes.
 
-**Produce the channel cut.** Once a draft validates, every channel gets one real generation
-call, the same posture station 5 takes for the concept-level still, but the deliverable
-follows `nativeFormat`: a `video` channel's image is its cover frame (the script is the main
-deliverable), a `ugc-still` channel gets a candid creator-aesthetic restyle, a `still`
-channel gets a native editorial still, a `surface` channel gets a mask-safe crop. Apply the
-same brand-pack and reference rules station 5 sets: fold `design.md`'s matching prompt
-fragment into the adapted image prompt, splice in `references/meta.md`'s UGC syntax for a
-`ugc-still` channel, and self-check a `tiktok` channel's `channelScript` against
-`references/tiktok.md`'s starter rules before it ships. If `codex` is installed and
-authenticated:
+**Produce the channel cut.** Once a draft validates, every channel gets its real
+deliverable, following `nativeFormat`:
 
-```bash
-codex exec --skip-git-repo-check - <<PROMPT
-Generate an image with your image generation tool and save it to
-waves/wave-{NN}/assets/rollout/{assetName}.png :
-{brief.generationPrompts.image} Adapt for the channel's native format: {assetSpec}.
-Use the winning concept image at waves/wave-{NN}/assets/{winning NamedAsset.name}.png as the
-visual anchor, same subject, same graft. Format treatment by nativeFormat: video, a 9:16
-cover frame with the hook restated as large on screen text at the top; ugc-still, a 1:1
-still that reads as shot on a phone, candid light, creator aesthetic, not retouched, not
-staged; still, a 16:9 editorial still with the hook line carried into frame; surface, a 1:1
-crop safe inside a circular mask.
-PROMPT
-```
+- `ugc-still`, `still`, `surface`: one real image generation call, the same posture station
+  5 takes for the concept-level still. Apply the same brand-pack and reference rules station
+  5 sets: fold `design.md`'s matching prompt fragment into the adapted image prompt, splice
+  in `references/meta.md`'s UGC syntax for a `ugc-still` channel. If `codex` is installed and
+  authenticated:
 
-Then `Read` the resulting PNG and self-check: same subject and graft as the winning concept
-image, correct ratio and format treatment for that channel, the hook legible at a glance, no
-garbled text, no watermark. If it fails, retry the prompt once; if it still fails, ship it
-anyway, set `assetPath` to `null`, and note the defect directly to the user, same one-retry
-ceiling every other generation call in this pipeline enforces. If `codex` is not installed
-or not authenticated, do not fail the rollout: leave `assetPath` as `null` and hand the
-rewritten prompt to the user so they can run it through whatever image tool they have.
+  ```bash
+  codex exec --skip-git-repo-check - <<PROMPT
+  Generate an image with your image generation tool and save it to
+  waves/wave-{NN}/assets/rollout/{assetName}.png :
+  {brief.generationPrompts.image} Adapt for the channel's native format: {assetSpec}.
+  Use the winning concept image at waves/wave-{NN}/assets/{winning NamedAsset.name}.png as
+  the visual anchor, same subject, same graft. No text of any kind baked into the image,
+  any hook line ships as a caption or a drawtext overlay, never rendered into the pixels.
+  Format treatment by nativeFormat: ugc-still, a 1:1 still that reads as shot on a phone,
+  candid light, creator aesthetic, not retouched, not staged; still, a 16:9 editorial still
+  with the graft visible, no hook text baked in; surface, a 1:1 crop safe inside a circular
+  mask.
+  PROMPT
+  ```
 
-Set each channel's `assetPath` to the PNG path once it exists, then build one `RolloutDraft`
-per `SCALE` verdict this wave (zero if nothing scaled) and collect them into
-`readout.rollouts`.
+  Then `Read` the resulting PNG and self-check: same subject and graft as the winning
+  concept image, correct ratio and format treatment for that channel, no garbled text, no
+  watermark, no baked-in text of any kind. If it fails, retry the prompt once; if it still
+  fails, ship it anyway, set `assetPath` to `null`, and note the defect directly to the
+  user, same one-retry ceiling every other generation call in this pipeline enforces. If
+  `codex` is not installed or not authenticated, leave `assetPath` as `null` and hand the
+  rewritten prompt to the user.
+
+- `video`: two real steps, never a single fake-motion shortcut.
+
+  **Step 1, real video, image to video generation.** Use the `libtv-skill`
+  (`~/.claude/skills/libtv-skill/SKILL.md`, liblib.tv's image-to-video capability) off the
+  winning concept still, `waves/wave-{NN}/assets/{winning NamedAsset.name}.png`:
+
+  ```bash
+  python3 {libtv-skill baseDir}/scripts/upload_file.py waves/wave-{NN}/assets/{winning NamedAsset.name}.png
+  # -> ossUrl
+  python3 {libtv-skill baseDir}/scripts/create_session.py "根据参考图生成一段自然的动作视频：{one-sentence description of the natural motion this asset should carry, in the moment's own language, no camera jargon}。参考图：{ossUrl}"
+  # -> sessionId, projectUuid
+  # poll every 8s: python3 {libtv-skill baseDir}/scripts/query_session.py SESSION_ID --after-seq N
+  # download once an assistant message carries a video URL:
+  python3 {libtv-skill baseDir}/scripts/download_results.py SESSION_ID --output-dir waves/wave-{NN}/assets/rollout --prefix {assetName}_raw
+  ```
+
+  Per the libtv-skill's own operating rule, pass the user's (or this station's) motion
+  description through untouched, do not author elaborate cinematography language on top of
+  it, the backend agent already handles shot design. If `LIBTV_ACCESS_KEY` is unset or the
+  service is unavailable, do not fabricate motion with `zoompan` or any other pan-and-zoom
+  trick on the still: leave `assetPath` and `videoDurationSec` as `null`, note the blocker
+  directly to the user, and stop this channel's video step there, the rest of the wave still
+  ships.
+
+  **Step 2, ffmpeg assembly, text and framing only.** ffmpeg's job here is strictly
+  mechanical: crop the raw i2v output to 9:16 if it was not already generated vertical, then
+  composite `channelCopy` (or the brief's hook line) as a `drawtext` overlay timed to the
+  shots, then trim to the target duration. ffmpeg never originates motion in this step, the
+  motion already exists in the file from step 1. Also render a **no-text cover frame**
+  (a single extracted frame from the raw i2v output, no drawtext applied) and save it to
+  `coverPath`, this is what `report.html` shows as the still preview next to the rendered
+  video. Self-check by extracting 2 to 3 frames from the assembled mp4 (`ffmpeg -ss ... -frames:v 1`)
+  and `Read`-ing them: text legible and not clipped, no garbled characters, motion reads as
+  natural (no limb warping, no ghosting artifacts) at the sampled timestamps. If the i2v
+  output itself shows broken anatomy or ghosting, retry the image-to-video generation once
+  with an adjusted motion description before falling back to a null `assetPath`.
+
+  Set `assetPath` to the assembled mp4's path and `videoDurationSec` to its real duration
+  once both steps succeed. If either step is unavailable or fails twice, leave `assetPath`
+  and `videoDurationSec` as `null`, keep `coverPath` pointing at whatever no-text cover
+  frame exists (extracted from a successful i2v raw output, or a codex-generated still if
+  i2v never ran), and note the gap to the user instead of failing the rollout.
+
+For every channel whose `nativeFormat` is not `video`, fill `postKit.file` with the produced
+image path once `assetPath` is set. For a `video` channel, `postKit.file` is the assembled
+mp4's path once it exists (or the planned filename while `assetPath` is still `null`).
+
+Once every channel is produced, build one `RolloutDraft` per `SCALE` verdict this wave (zero
+if nothing scaled) and collect them into `readout.rollouts`.
 
 ## Report, assemble and render
 

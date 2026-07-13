@@ -29,6 +29,8 @@ import type {
   AngleType,
   Brief,
   Decision,
+  ParticipationKit,
+  PostKit,
   PreRegisteredThresholds,
   RolloutChannelPlan,
   RolloutDraft,
@@ -199,18 +201,24 @@ async function produceChannelAsset(
   }
 }
 
-// Fills in assetPath for every channel in a draft, writing each cut into
-// waves/wave-{NN}/assets/rollout/. Runs after the draft has its full text
-// content (and, on the real path, after validation), same ordering the
-// skill layer's Station 8b instructions follow: write and validate the
-// playbook first, then produce the channel cut.
+// Fills in assetPath (or, for a video channel, coverPath) for every channel
+// in a draft, writing each cut into waves/wave-{NN}/assets/rollout/. Runs
+// after the draft has its full text content (and, on the real path, after
+// validation), same ordering the skill layer's Station 8b instructions
+// follow: write and validate the playbook first, then produce the channel
+// cut. A video channel's real deliverable is a rendered mp4 from real
+// image-to-video generation plus ffmpeg assembly, a lane this engine path
+// does not run; the image call here only ever produces that video's
+// no-text cover frame, so it lands in coverPath, never in assetPath.
 async function produceChannelAssets(draft: RolloutDraft, brief: Brief, assetsDir: string): Promise<RolloutDraft> {
   const rolloutAssetsDir = path.join(assetsDir, "rollout");
   const channels = await Promise.all(
-    draft.channels.map(async (ch) => ({
-      ...ch,
-      assetPath: await produceChannelAsset(rolloutAssetsDir, ch, brief.generationPrompts.image),
-    }))
+    draft.channels.map(async (ch) => {
+      const produced = await produceChannelAsset(rolloutAssetsDir, ch, brief.generationPrompts.image);
+      return ch.nativeFormat === "video"
+        ? { ...ch, coverPath: produced, assetPath: null, videoDurationSec: null }
+        : { ...ch, assetPath: produced };
+    })
   );
   return { ...draft, channels };
 }
@@ -236,6 +244,80 @@ function kpiFor(channel: string, thresholds: PreRegisteredThresholds): { kpi: st
   };
 }
 
+// ============================================================
+// PostKit: the actual publish-ready deliverable per channel. Deterministic
+// in mock mode (no LLM call, same posture every other mock path in this
+// file takes); the real path derives hashtags/altText/postingNote the same
+// way, since these are operating instructions, not creative judgment calls
+// the model needs to make.
+// ============================================================
+const HASHTAGS_BY_CHANNEL: Record<string, string[]> = {
+  tiktok: ["#fyp", "#storytime", "#familyarchive"],
+  instagram: ["#reels", "#throwback", "#familyfirst"],
+  x: ["#weddingseason"],
+  "in-app profile surface": [],
+};
+
+function postKitFor(params: {
+  channel: string;
+  nativeFormat: RolloutNativeFormat;
+  channelCopy: string;
+  file: string;
+  variant: Variant;
+}): PostKit {
+  const { channel, nativeFormat, channelCopy, file, variant } = params;
+  const baseTags = HASHTAGS_BY_CHANNEL[channel.trim().toLowerCase()] ?? [];
+  const hashtags = (baseTags.length > 0 ? baseTags : [`#${slugTagFrom(channel)}`]).slice(0, 6);
+  const caption =
+    nativeFormat === "video"
+      ? `${channelCopy} Watch to the end. ${variant.workingTitle}.`
+      : `${channelCopy} ${variant.workingTitle}, shared the way it actually happened.`;
+  const postingNote =
+    nativeFormat === "video"
+      ? `Post inside the first 48 hours of the observation window, pin as the top post on the profile.`
+      : `Post inside the first 48 hours of the observation window, reply-pin the strongest comment.`;
+  return {
+    file,
+    caption,
+    hashtags,
+    altText: `${variant.asset}, ${variant.newElement}: ${channelCopy}`,
+    postingNote,
+  };
+}
+
+function slugTagFrom(text: string): string {
+  return text
+    .normalize("NFKD")
+    .replace(/[^a-zA-Z0-9]/g, "")
+    .toLowerCase();
+}
+
+// ============================================================
+// ParticipationKit: the ugc-loop concept's real deliverable, in place of a
+// faked "UGC" image. creatorShotList follows the phone-shot, testimonial
+// voice discipline references/meta.md's Tier 1 corpus (Nora's own
+// 30x-product-to-ugc scoring pass) distills: cold open on the thing already
+// in use, honest before state, one clear beat held long enough to
+// register, a casual verbal CTA rather than a polished tag-on.
+// ============================================================
+function participationKitFor(variant: Variant): ParticipationKit {
+  return {
+    mechanic: `Recreate ${variant.asset} at home and post it with the credit tag pointed at whoever you copied.`,
+    creatorShotList: [
+      "Cold open already mid-pose, no setup shot, the recreation already in progress when the clip starts.",
+      "One clear beat held for a full second on the exact match to the reference, phone handheld, real room light, no studio lighting.",
+      "Whip the phone to whoever is laughing or reacting off camera, unscripted, audio left in.",
+      "Land on the credit tag or a spoken shoutout to the couple you recreated, casual and in your own words.",
+    ],
+    seedCaptions: [
+      "We tried the pose everyone is talking about. No regrets.",
+      "Recreating the wedding photo of the year in our actual kitchen.",
+      "Tagged the couple who did it before us. Your turn next.",
+    ],
+    creditRule: "Every recreation must tag the couple whose version it copied before it can seed the next one.",
+  };
+}
+
 async function mockRolloutDraft(
   variant: Variant,
   brief: Brief,
@@ -252,12 +334,25 @@ async function mockRolloutDraft(
     const { kpi, kpiThresholdNote } = kpiFor(channel, thresholds);
     const nativeFormat = nativeFormatForChannel(channel);
     const channelCopy = mockChannelCopy(channel, variant);
+    const assetName = deriveChannelAssetName(namedAssetName, channel);
+    // this engine path does not run real image-to-video generation or the
+    // ffmpeg assembly step, that lane lives in skill mode; a video channel
+    // here stays pending (assetPath/videoDurationSec null) until that real
+    // pipeline fills them in, it never fakes motion with a pan-and-zoom on
+    // a still.
+    const illustrativeLabel =
+      variant.angleType === "ugc-loop" && nativeFormat === "ugc-still"
+        ? "template preview, illustrative"
+        : null;
     return {
       channel,
       role,
       nativeFormat,
-      assetName: deriveChannelAssetName(namedAssetName, channel),
+      assetName,
       assetPath: null,
+      coverPath: null,
+      videoDurationSec: null,
+      illustrativeLabel,
       channelCopy,
       channelScript: channelScriptFor(nativeFormat, brief, channelCopy),
       assetSpec:
@@ -266,10 +361,22 @@ async function mockRolloutDraft(
       executionSteps: executionStepsFor(channel, role, brief),
       kpi,
       kpiThresholdNote,
+      postKit: postKitFor({
+        channel,
+        nativeFormat,
+        channelCopy,
+        file: `${assetName}.${nativeFormat === "video" ? "mp4" : "png"}`,
+        variant,
+      }),
     };
   });
 
-  const draft: RolloutDraft = { variantId: variant.id, name: namedAssetName, channels };
+  const draft: RolloutDraft = {
+    variantId: variant.id,
+    name: namedAssetName,
+    channels,
+    participationKit: variant.angleType === "ugc-loop" ? participationKitFor(variant) : null,
+  };
   return produceChannelAssets(draft, brief, assetsDir);
 }
 
@@ -316,24 +423,47 @@ export async function runRollout(params: {
     const parsedRaw = JSON.parse(match ? match[0] : raw) as {
       variantId: string;
       name: string;
-      channels: Array<Omit<RolloutChannelPlan, "assetName" | "assetPath" | "nativeFormat" | "channelScript">>;
+      channels: Array<
+        Omit<
+          RolloutChannelPlan,
+          "assetName" | "assetPath" | "coverPath" | "videoDurationSec" | "illustrativeLabel" | "nativeFormat" | "channelScript" | "postKit"
+        >
+      >;
     };
     // assetName is a deterministic lineage swap and nativeFormat is a
     // property of the channel, never model-authored: stamp both (plus a
-    // not-yet-produced assetPath and, for video channels, the three-shot
-    // script) onto every channel before the draft goes through the schema
-    // gate.
+    // not-yet-produced assetPath/coverPath, postKit, and, for video
+    // channels, the three-shot script) onto every channel before the draft
+    // goes through the schema gate. Real image-to-video generation plus
+    // ffmpeg assembly is a skill-mode-only lane this engine path does not
+    // run, so a video channel's assetPath/videoDurationSec stay null here.
     const channels: RolloutChannelPlan[] = (parsedRaw.channels ?? []).map((ch) => {
       const nativeFormat = nativeFormatForChannel(ch.channel);
+      const assetName = deriveChannelAssetName(namedAssetName, ch.channel);
       return {
         ...ch,
         nativeFormat,
-        assetName: deriveChannelAssetName(namedAssetName, ch.channel),
+        assetName,
         assetPath: null,
+        coverPath: null,
+        videoDurationSec: null,
+        illustrativeLabel: variant.angleType === "ugc-loop" && nativeFormat === "ugc-still" ? "template preview, illustrative" : null,
         channelScript: channelScriptFor(nativeFormat, brief, ch.channelCopy),
+        postKit: postKitFor({
+          channel: ch.channel,
+          nativeFormat,
+          channelCopy: ch.channelCopy,
+          file: `${assetName}.${nativeFormat === "video" ? "mp4" : "png"}`,
+          variant,
+        }),
       };
     });
-    const parsed: RolloutDraft = { variantId: parsedRaw.variantId, name: parsedRaw.name, channels };
+    const parsed: RolloutDraft = {
+      variantId: parsedRaw.variantId,
+      name: parsedRaw.name,
+      channels,
+      participationKit: variant.angleType === "ugc-loop" ? participationKitFor(variant) : null,
+    };
     const check = validateRolloutDraft(parsed);
     if (!check.ok) throw new Error(`model output failed rollout schema: ${check.errors.join("; ")}`);
     return await produceChannelAssets(parsed, brief, assetsDir);
@@ -444,6 +574,33 @@ export function validateRolloutDraft(input: unknown): { ok: true } | { ok: false
     } else if (channelPlan.channelScript !== null && channelPlan.channelScript !== undefined) {
       errors.push(`${fieldPath}.channelScript: must be null for a non-video channel`);
     }
+    // coverPath/videoDurationSec: video channels carry a no-text cover
+    // frame (drawtext happens only at ffmpeg-assembly time, never baked
+    // into the generated cover) and, once real image-to-video generation
+    // plus ffmpeg assembly has produced a real mp4, a positive duration.
+    // Every other nativeFormat carries neither.
+    if (channelPlan.nativeFormat === "video") {
+      if (typeof channelPlan.coverPath !== "string" || channelPlan.coverPath.length === 0) {
+        errors.push(`${fieldPath}.coverPath: a video channel must carry a no-text cover frame path`);
+      }
+      if (channelPlan.assetPath !== null && channelPlan.assetPath !== undefined) {
+        if (typeof channelPlan.videoDurationSec !== "number" || channelPlan.videoDurationSec <= 0) {
+          errors.push(`${fieldPath}.videoDurationSec: must be a positive number once assetPath holds a rendered mp4`);
+        }
+      } else if (channelPlan.videoDurationSec !== null && channelPlan.videoDurationSec !== undefined) {
+        errors.push(`${fieldPath}.videoDurationSec: must be null while assetPath is null (no rendered mp4 yet)`);
+      }
+    } else {
+      if (channelPlan.coverPath !== null && channelPlan.coverPath !== undefined) {
+        errors.push(`${fieldPath}.coverPath: must be null for a non-video channel`);
+      }
+      if (channelPlan.videoDurationSec !== null && channelPlan.videoDurationSec !== undefined) {
+        errors.push(`${fieldPath}.videoDurationSec: must be null for a non-video channel`);
+      }
+    }
+    if (channelPlan.illustrativeLabel !== null && channelPlan.illustrativeLabel !== undefined && typeof channelPlan.illustrativeLabel !== "string") {
+      errors.push(`${fieldPath}.illustrativeLabel: must be a string or null`);
+    }
     if (typeof channelPlan.channelCopy !== "string" || channelPlan.channelCopy.length === 0) {
       errors.push(`${fieldPath}.channelCopy: missing or not a string`);
     }
@@ -474,7 +631,73 @@ export function validateRolloutDraft(input: unknown): { ok: true } | { ok: false
     checkDash(channelPlan.assetSpec, `${fieldPath}.assetSpec`, errors);
     checkDash(channelPlan.kpi, `${fieldPath}.kpi`, errors);
     checkDash(channelPlan.kpiThresholdNote, `${fieldPath}.kpiThresholdNote`, errors);
+
+    // postKit: the actual publish-ready deliverable, required on every
+    // channel regardless of nativeFormat.
+    const postKitPath = `${fieldPath}.postKit`;
+    if (typeof channelPlan.postKit !== "object" || channelPlan.postKit === null) {
+      errors.push(`${postKitPath}: missing or not an object`);
+    } else {
+      const pk = channelPlan.postKit as Partial<PostKit>;
+      if (typeof pk.file !== "string" || pk.file.length === 0) {
+        errors.push(`${postKitPath}.file: missing or not a string`);
+      }
+      if (typeof pk.caption !== "string" || pk.caption.length === 0) {
+        errors.push(`${postKitPath}.caption: missing or not a string`);
+      }
+      checkDash(pk.caption, `${postKitPath}.caption`, errors);
+      if (!Array.isArray(pk.hashtags) || pk.hashtags.length < 3 || pk.hashtags.length > 6) {
+        errors.push(`${postKitPath}.hashtags: must have 3 to 6 entries, got ${Array.isArray(pk.hashtags) ? pk.hashtags.length : "none"}`);
+      } else {
+        pk.hashtags.forEach((tag, j) => {
+          if (typeof tag !== "string" || tag.length === 0) {
+            errors.push(`${postKitPath}.hashtags[${j}]: not a string`);
+          }
+        });
+      }
+      if (typeof pk.altText !== "string" || pk.altText.length === 0) {
+        errors.push(`${postKitPath}.altText: missing or not a string`);
+      }
+      if (typeof pk.postingNote !== "string" || pk.postingNote.length === 0) {
+        errors.push(`${postKitPath}.postingNote: missing or not a string`);
+      }
+      checkDash(pk.postingNote, `${postKitPath}.postingNote`, errors);
+    }
   });
+
+  // participationKit: the ugc-loop concept's real deliverable, replacing a
+  // faked "UGC" image. Not required on every draft (only ugc-loop concepts
+  // carry one), but when present its shape is checked in full.
+  if (draft.participationKit !== null && draft.participationKit !== undefined) {
+    const pkPath = "participationKit";
+    const kit = draft.participationKit as Partial<ParticipationKit>;
+    if (typeof kit.mechanic !== "string" || kit.mechanic.length === 0) {
+      errors.push(`${pkPath}.mechanic: missing or not a string`);
+    }
+    checkDash(kit.mechanic, `${pkPath}.mechanic`, errors);
+    if (!Array.isArray(kit.creatorShotList) || kit.creatorShotList.length < 3 || kit.creatorShotList.length > 4) {
+      errors.push(`${pkPath}.creatorShotList: must have 3 to 4 entries`);
+    } else {
+      kit.creatorShotList.forEach((shot, j) => {
+        if (typeof shot !== "string" || shot.length === 0) {
+          errors.push(`${pkPath}.creatorShotList[${j}]: not a string`);
+        }
+      });
+    }
+    if (!Array.isArray(kit.seedCaptions) || kit.seedCaptions.length !== 3) {
+      errors.push(`${pkPath}.seedCaptions: must have exactly 3 entries`);
+    } else {
+      kit.seedCaptions.forEach((caption, j) => {
+        if (typeof caption !== "string" || caption.length === 0) {
+          errors.push(`${pkPath}.seedCaptions[${j}]: not a string`);
+        }
+      });
+    }
+    if (typeof kit.creditRule !== "string" || kit.creditRule.length === 0) {
+      errors.push(`${pkPath}.creditRule: missing or not a string`);
+    }
+    checkDash(kit.creditRule, `${pkPath}.creditRule`, errors);
+  }
 
   return errors.length === 0 ? { ok: true } : { ok: false, errors };
 }

@@ -173,6 +173,37 @@ export type RolloutRole = "discovery" | "amplification" | "retention" | "convers
 //   surface    -> a crop tuned for an in-product surface (e.g. circular mask)
 export type RolloutNativeFormat = "video" | "ugc-still" | "still" | "surface";
 
+// ============================================================
+// PostKit: what actually ships on one channel. Every RolloutChannelPlan
+// carries one — the file that gets posted plus the caption / hashtags /
+// altText / posting instructions a human (or an automation) needs to
+// actually publish it, not just a rendered asset and a hope. Introduced
+// when "video channel" stopped meaning "a cover frame and a script" and
+// started meaning "a real video file that ships."
+// ============================================================
+export interface PostKit {
+  file: string; // the file that actually gets posted: mp4 path for a video channel, image path for every other nativeFormat
+  caption: string; // 2 to 3 sentences, written in the channel's native voice
+  hashtags: string[]; // 3 to 6 tags, no filler
+  altText: string; // accessibility description of what is on screen
+  postingNote: string; // when to post, who to tag, what to pin — the human operating note
+}
+
+// ============================================================
+// ParticipationKit: what a ugc-loop concept gets instead of a faked "UGC"
+// image. An AI-generated still can still illustrate the mechanic (labeled
+// illustrative, never presented as real user content), but the real
+// deliverable is the mechanic itself: what real users are asked to do,
+// shoot, caption, and credit. One kit per RolloutDraft whose variant's
+// angleType is "ugc-loop"; null for every other angleType.
+// ============================================================
+export interface ParticipationKit {
+  mechanic: string; // one sentence: what a real user actually does to participate
+  creatorShotList: string[]; // 3 to 4 entries, real-phone shot instructions for a real creator
+  seedCaptions: string[]; // 3 entries, ready-to-use captions handed to real users
+  creditRule: string; // one sentence: how credit passes from one participant to the next
+}
+
 export interface RolloutChannelPlan {
   channel: string; // e.g. tiktok, instagram, x, in-app profile surface
   role: RolloutRole;
@@ -182,19 +213,29 @@ export interface RolloutChannelPlan {
   // asset itself. Every channel cut earns its own SCALE/KILL verdict against
   // its own kpi below, the concept-level WEB name only ever proved the idea.
   assetName: string; // nine-segment name, CHANNEL segment swapped to this channel's token via taxonomy.deriveChannelAssetName, the other eight segments inherited from the winning still's NamedAsset.name
-  assetPath: string | null; // the rendered channel cut (for video: the cover frame): png when a real image call produced one, svg when mock mode placeholdered it, null when generation was unavailable or failed
+  // For a video channel: the rendered mp4 path once real image-to-video
+  // generation plus ffmpeg assembly has produced one, null while pending.
+  // For every other nativeFormat: the still image path (png when a real
+  // image call produced one, svg when mock mode placeholdered it), null
+  // when generation was unavailable or failed.
+  assetPath: string | null;
+  coverPath: string | null; // video channels only: the no-text cover frame still (drawtext happens in the ffmpeg assembly step, never baked into the generated cover); null for every other nativeFormat
+  videoDurationSec: number | null; // video channels only, set once assetPath holds a real rendered mp4; null otherwise
+  illustrativeLabel: string | null; // set when the still stands in for real user content that does not exist yet (e.g. a ugc-still channel cut on a ugc-loop concept), reading "template preview, illustrative"; null when the image is not standing in for real UGC
   channelCopy: string; // one line of finished, channel-voiced ad copy, ready to ship as-is
   channelScript: string[] | null; // video channels only: a ChatCut-ready three-shot script whose shot 3 lands the channelCopy; null for every other nativeFormat
   assetSpec: string; // one sentence: format, ratio, how the hook adapts for this channel
   executionSteps: string[]; // 3 to 4 action sentences
   kpi: string; // one concrete number tied to an outcome
   kpiThresholdNote: string; // one sentence linking kpi back to the plan's preregistered threshold system
+  postKit: PostKit; // the actual publish-ready deliverable for this channel
 }
 
 export interface RolloutDraft {
   variantId: string;
   name: string; // the still NamedAsset.name this rollout targets
   channels: RolloutChannelPlan[]; // 3 to 4 entries
+  participationKit: ParticipationKit | null; // set when this draft's concept angleType is ugc-loop; null otherwise
 }
 
 // ============================================================

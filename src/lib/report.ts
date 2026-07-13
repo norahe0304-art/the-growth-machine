@@ -14,6 +14,7 @@ import type {
   MeasuredAssetSummary,
   NamedAsset,
   ProducedAsset,
+  RolloutChannelPlan,
   RolloutDraft,
   SimulatedCurve,
   Variant,
@@ -234,6 +235,35 @@ function librarySection(libraryEntries: LearningEntry[] | undefined): string {
 // assetSpec and kpi as body copy, executionSteps as an ordered short list.
 // Renders one block per RolloutDraft, so a wave with multiple SCALE
 // verdicts gets one rollout block per winner.
+function postKitBlock(postKit: RolloutChannelPlan["postKit"]): string {
+  return `<div class="rollout-postkit">
+    <div class="rollout-postkit-label">post kit</div>
+    <p class="rollout-postkit-caption">${escapeHTML(postKit.caption)}</p>
+    <div class="rollout-postkit-tags">${postKit.hashtags.map((t) => `<span class="rollout-tag">${escapeHTML(t)}</span>`).join("")}</div>
+    <p class="rollout-postkit-alt"><span class="rollout-kpi-label">alt</span> ${escapeHTML(postKit.altText)}</p>
+    <p class="rollout-postkit-note"><span class="rollout-kpi-label">posting note</span> ${escapeHTML(postKit.postingNote)}</p>
+  </div>`;
+}
+
+function participationKitBlock(kit: RolloutDraft["participationKit"]): string {
+  if (!kit) return "";
+  return `<div class="participation-kit">
+    <div class="participation-kit-label">participation kit, the real ugc mechanism (not a faked UGC image)</div>
+    <p class="participation-kit-mechanic">${escapeHTML(kit.mechanic)}</p>
+    <div class="participation-kit-cols">
+      <div>
+        <div class="participation-kit-sublabel">creator shot list</div>
+        <ol class="participation-kit-list">${kit.creatorShotList.map((s) => `<li>${escapeHTML(s)}</li>`).join("")}</ol>
+      </div>
+      <div>
+        <div class="participation-kit-sublabel">seed captions</div>
+        <ol class="participation-kit-list">${kit.seedCaptions.map((s) => `<li>${escapeHTML(s)}</li>`).join("")}</ol>
+      </div>
+    </div>
+    <p class="participation-kit-credit"><span class="rollout-kpi-label">credit rule</span> ${escapeHTML(kit.creditRule)}</p>
+  </div>`;
+}
+
 async function rolloutSection(readout: WaveReadout): Promise<string> {
   const rollouts = readout.rollouts ?? [];
   if (rollouts.length === 0) return "";
@@ -243,9 +273,22 @@ async function rolloutSection(readout: WaveReadout): Promise<string> {
       const variant = readout.variants.find((v) => v.id === draft.variantId);
       const rows = await Promise.all(
         draft.channels.map(async (ch) => {
-          const imgURI = await assetDataURI(ch.assetPath);
-          const formatLabel = ch.nativeFormat === "video" ? "video, ChatCut ready" : ch.nativeFormat;
-          const mediaCaption = ch.nativeFormat === "video" ? `<div class="rollout-media-caption">cover frame</div>` : "";
+          const isVideo = ch.nativeFormat === "video";
+          const hasRenderedVideo = isVideo && Boolean(ch.assetPath);
+          const coverURI = isVideo ? await assetDataURI(ch.coverPath) : null;
+          const stillURI = !isVideo ? await assetDataURI(ch.assetPath) : null;
+          const imgURI = isVideo ? coverURI : stillURI;
+          const formatLabel = isVideo
+            ? hasRenderedVideo
+              ? `video, rendered mp4${ch.videoDurationSec ? ` (${ch.videoDurationSec}s)` : ""}`
+              : "video, pending render"
+            : ch.nativeFormat;
+          const mediaCaption = isVideo
+            ? `<div class="rollout-media-caption">${hasRenderedVideo ? "no-text cover frame, drawtext composited at render time" : "no-text cover frame, image to video generation plus ffmpeg assembly pending"}</div>`
+            : "";
+          const illustrativeNote = ch.illustrativeLabel
+            ? `<div class="rollout-illustrative-note">${escapeHTML(ch.illustrativeLabel)}</div>`
+            : "";
           const script =
             ch.channelScript && ch.channelScript.length > 0
               ? `<ol class="rollout-script">${ch.channelScript.map((s) => `<li>${escapeHTML(s)}</li>`).join("")}</ol>`
@@ -256,6 +299,7 @@ async function rolloutSection(readout: WaveReadout): Promise<string> {
           <div class="rollout-media">
             ${imgURI ? `<img src="${imgURI}" alt="${escapeHTML(ch.assetName)}" />` : `<div class="rollout-media-placeholder">no channel cut generated</div>`}
             ${mediaCaption}
+            ${illustrativeNote}
           </div>
           <p class="rollout-copy">${escapeHTML(ch.channelCopy)}</p>
           ${script}
@@ -264,6 +308,7 @@ async function rolloutSection(readout: WaveReadout): Promise<string> {
             ${ch.executionSteps.map((s) => `<li>${escapeHTML(s)}</li>`).join("")}
           </ol>
           <p class="rollout-kpi"><span class="rollout-kpi-label">kpi</span> ${escapeHTML(ch.kpi)}. ${escapeHTML(ch.kpiThresholdNote)}</p>
+          ${postKitBlock(ch.postKit)}
         </div>
       </div>`;
         })
@@ -275,6 +320,7 @@ async function rolloutSection(readout: WaveReadout): Promise<string> {
           ${variant ? `<span class="rollout-draft-title">${escapeHTML(variant.workingTitle)}</span>` : ""}
         </div>
         ${rows.join("")}
+        ${participationKitBlock(draft.participationKit)}
       </div>`;
     })
   );
@@ -409,14 +455,30 @@ export async function renderReport(readout: WaveReadout, libraryEntries?: Learni
   .rollout-spec { margin: 0 0 8px; font-size: 13px; }
   .rollout-steps { margin: 0 0 8px; padding-left: 18px; font-size: 13px; }
   .rollout-steps li { margin-bottom: 2px; }
-  .rollout-kpi { margin: 0; font-size: 12px; color: #6b6b63; }
+  .rollout-kpi { margin: 0 0 10px; font-size: 12px; color: #6b6b63; }
   .rollout-kpi-label { text-transform: uppercase; letter-spacing: 0.05em; font-size: 10px; color: #8a8779; }
+  .rollout-illustrative-note { font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; color: #c2410c; border: 1px solid #c2410c; display: inline-block; padding: 2px 6px; margin-top: 6px; }
+  .rollout-postkit { border-top: 1px dashed #d8d5cd; padding-top: 10px; margin-top: 4px; }
+  .rollout-postkit-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: #8a8779; margin-bottom: 4px; }
+  .rollout-postkit-caption { margin: 0 0 6px; font-size: 13px; font-style: italic; }
+  .rollout-postkit-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
+  .rollout-tag { font-size: 11px; color: #4a4a44; background: #f0eee7; padding: 2px 8px; }
+  .rollout-postkit-alt, .rollout-postkit-note { margin: 0 0 4px; font-size: 12px; color: #4a4a44; }
+  .participation-kit { border: 1px solid #d8d5cd; background: #f6f4ee; padding: 16px 18px; margin-top: 18px; }
+  .participation-kit-label { text-transform: uppercase; letter-spacing: 0.05em; font-size: 11px; color: #8a8779; margin-bottom: 8px; }
+  .participation-kit-mechanic { font-size: 14px; margin: 0 0 12px; }
+  .participation-kit-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .participation-kit-sublabel { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: #8a8779; margin-bottom: 4px; }
+  .participation-kit-list { margin: 0 0 8px; padding-left: 18px; font-size: 12px; }
+  .participation-kit-list li { margin-bottom: 4px; }
+  .participation-kit-credit { margin: 4px 0 0; font-size: 12px; color: #6b6b63; }
   footer.colophon { margin-top: 60px; padding-top: 20px; border-top: 1px solid #d8d5cd; font-size: 11px; color: #8a8779; }
   @media (max-width: 640px) {
     .variant-body { grid-template-columns: 1fr; }
     .prompts { grid-template-columns: 1fr; }
     .curves { grid-template-columns: 1fr; }
     .rollout-row { grid-template-columns: 1fr; }
+    .participation-kit-cols { grid-template-columns: 1fr; }
   }
 </style>
 </head>

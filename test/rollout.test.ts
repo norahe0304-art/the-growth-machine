@@ -27,9 +27,18 @@ import type { RolloutDraft } from "../src/types.js";
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const MACHINE_MJS = path.join(REPO_ROOT, "scripts", "machine.mjs");
 
+const postKitFixture = (file: string, caption: string) => ({
+  file,
+  caption,
+  hashtags: ["#reveal", "#familyfirst", "#throwback"],
+  altText: "A restored wedding photograph glowing with recovered color against the faded original.",
+  postingNote: "Post inside the first 48 hours of the observation window, reply-pin the strongest comment.",
+});
+
 const validDraft: RolloutDraft = {
   variantId: "v2",
   name: "WEB_CONV_MOF_EVG_STIL_THEP_THEWOR_FANS_V03",
+  participationKit: null,
   channels: [
     {
       channel: "instagram",
@@ -37,6 +46,9 @@ const validDraft: RolloutDraft = {
       nativeFormat: "ugc-still",
       assetName: "IG_CONV_MOF_EVG_STIL_THEP_THEWOR_FANS_V03",
       assetPath: null,
+      coverPath: null,
+      videoDurationSec: null,
+      illustrativeLabel: null,
       channelCopy: "Swipe closer. New crest, same picture.",
       channelScript: null,
       assetSpec: "Creator aesthetic 1:1 still shot on a phone, the crest visible but unretouched.",
@@ -47,6 +59,7 @@ const validDraft: RolloutDraft = {
       ],
       kpi: "3.5% instagram engagement rate inside the 21 day window",
       kpiThresholdNote: "Matches the plan's preregistered scaleAt of 0.035 for the evergreen angle.",
+      postKit: postKitFixture("IG_CONV_MOF_EVG_STIL_THEP_THEWOR_FANS_V03.png", "Swipe closer. New crest, same picture."),
     },
     {
       channel: "tiktok",
@@ -54,6 +67,9 @@ const validDraft: RolloutDraft = {
       nativeFormat: "video",
       assetName: "TT_CONV_MOF_EVG_STIL_THEP_THEWOR_FANS_V03",
       assetPath: null,
+      coverPath: "waves/wave-03/assets/rollout/TT_CONV_MOF_EVG_STIL_THEP_THEWOR_FANS_V03.png",
+      videoDurationSec: null,
+      illustrativeLabel: null,
       channelCopy: "Wait for it. New crest, same picture.",
       channelScript: [
         "Shot 1 (establish): the untouched profile picture fills the frame, everyday and familiar.",
@@ -68,6 +84,7 @@ const validDraft: RolloutDraft = {
       ],
       kpi: "3.5% tiktok engagement rate inside the 21 day window",
       kpiThresholdNote: "Matches the plan's preregistered scaleAt of 0.035 for the evergreen angle.",
+      postKit: postKitFixture("TT_CONV_MOF_EVG_STIL_THEP_THEWOR_FANS_V03.mp4", "Wait for it. New crest, same picture."),
     },
     {
       channel: "x",
@@ -75,6 +92,9 @@ const validDraft: RolloutDraft = {
       nativeFormat: "still",
       assetName: "XTW_CONV_MOF_EVG_STIL_THEP_THEWOR_FANS_V03",
       assetPath: null,
+      coverPath: null,
+      videoDurationSec: null,
+      illustrativeLabel: null,
       channelCopy: "New drop, same thread. New crest, same picture.",
       channelScript: null,
       assetSpec: "16:9 still posted natively, the copy line carried as the post text.",
@@ -85,6 +105,7 @@ const validDraft: RolloutDraft = {
       ],
       kpi: "3.5% x engagement rate inside the 21 day window",
       kpiThresholdNote: "Matches the plan's preregistered scaleAt of 0.035 for the evergreen angle.",
+      postKit: postKitFixture("XTW_CONV_MOF_EVG_STIL_THEP_THEWOR_FANS_V03.png", "New drop, same thread. New crest, same picture."),
     },
   ],
 };
@@ -243,6 +264,124 @@ test("deriveChannelAssetName: swaps only the CHANNEL segment, the other eight ar
   const derived = deriveChannelAssetName(base, "tiktok");
   assert.equal(derived, "TT_CONV_MOF_EVG_STIL_THEP_THEWOR_FANS_V03");
   assert.deepEqual(derived.split("_").slice(1), base.split("_").slice(1));
+});
+
+// ============================================================
+// postKit / participationKit: the real per-channel deliverable and the
+// ugc-loop concept's real "how real users participate" mechanism, added
+// when "video channel" stopped meaning a cover frame and a script and
+// "ugc-loop concept" stopped meaning a faked UGC image.
+// ============================================================
+test("validateRolloutDraft: rejects a channel missing postKit", () => {
+  const withoutPostKit = { ...validDraft.channels[0], postKit: undefined };
+  const result = validateRolloutDraft({
+    ...validDraft,
+    channels: [withoutPostKit, validDraft.channels[1], validDraft.channels[2]],
+  });
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.match(result.errors.join(";"), /channels\[0\]\.postKit: missing or not an object/);
+});
+
+test("validateRolloutDraft: rejects a postKit with hashtags outside the 3 to 6 range", () => {
+  const result = validateRolloutDraft({
+    ...validDraft,
+    channels: [
+      { ...validDraft.channels[0], postKit: { ...validDraft.channels[0].postKit, hashtags: ["#one"] } },
+      validDraft.channels[1],
+      validDraft.channels[2],
+    ],
+  });
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.match(result.errors.join(";"), /channels\[0\]\.postKit\.hashtags: must have 3 to 6 entries/);
+});
+
+test("validateRolloutDraft: rejects a video channel missing coverPath", () => {
+  const result = validateRolloutDraft({
+    ...validDraft,
+    channels: [validDraft.channels[0], { ...validDraft.channels[1], coverPath: null }, validDraft.channels[2]],
+  });
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.match(result.errors.join(";"), /channels\[1\]\.coverPath: a video channel must carry a no-text cover frame path/);
+});
+
+test("validateRolloutDraft: rejects a non-video channel carrying a coverPath", () => {
+  const result = validateRolloutDraft({
+    ...validDraft,
+    channels: [{ ...validDraft.channels[0], coverPath: "some/path.png" }, validDraft.channels[1], validDraft.channels[2]],
+  });
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.match(result.errors.join(";"), /channels\[0\]\.coverPath: must be null for a non-video channel/);
+});
+
+test("validateRolloutDraft: rejects a video channel with a rendered assetPath but no videoDurationSec", () => {
+  const result = validateRolloutDraft({
+    ...validDraft,
+    channels: [
+      validDraft.channels[0],
+      { ...validDraft.channels[1], assetPath: "waves/wave-03/assets/rollout/TT_..._V03.mp4" },
+      validDraft.channels[2],
+    ],
+  });
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.match(result.errors.join(";"), /channels\[1\]\.videoDurationSec: must be a positive number once assetPath holds a rendered mp4/);
+});
+
+test("validateRolloutDraft: accepts a null participationKit (non ugc-loop concept)", () => {
+  const result = validateRolloutDraft(validDraft);
+  assert.deepEqual(result, { ok: true });
+});
+
+test("validateRolloutDraft: accepts a well formed participationKit", () => {
+  const withKit = {
+    ...validDraft,
+    participationKit: {
+      mechanic: "Recreate the pose at home and post it with the credit tag pointed at the couple you copied.",
+      creatorShotList: [
+        "Cold open already mid-pose, no setup shot.",
+        "One clear beat held on the exact match, phone handheld, real room light.",
+        "Whip to whoever is laughing off camera, unscripted.",
+        "Land on the credit tag or a spoken shoutout.",
+      ],
+      seedCaptions: [
+        "We tried the pose everyone is talking about. No regrets.",
+        "Recreating the wedding photo of the year in our kitchen.",
+        "Tagged the couple who did it before us. Your turn next.",
+      ],
+      creditRule: "Every recreation must tag the couple whose version it copied before it can seed the next one.",
+    },
+  };
+  const result = validateRolloutDraft(withKit);
+  assert.deepEqual(result, { ok: true });
+});
+
+test("validateRolloutDraft: rejects a participationKit with an em dash inside mechanic", () => {
+  const withKit = {
+    ...validDraft,
+    participationKit: {
+      mechanic: "Recreate the pose at home — post it with the credit tag.",
+      creatorShotList: ["shot one", "shot two", "shot three"],
+      seedCaptions: ["caption one", "caption two", "caption three"],
+      creditRule: "Every recreation must tag the previous couple.",
+    },
+  };
+  const result = validateRolloutDraft(withKit);
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.match(result.errors.join(";"), /participationKit\.mechanic: contains an em dash or en dash/);
+});
+
+test("validateRolloutDraft: rejects a participationKit with the wrong seedCaptions count", () => {
+  const withKit = {
+    ...validDraft,
+    participationKit: {
+      mechanic: "Recreate the pose at home and post it with the credit tag.",
+      creatorShotList: ["shot one", "shot two", "shot three"],
+      seedCaptions: ["only one caption"],
+      creditRule: "Every recreation must tag the previous couple.",
+    },
+  };
+  const result = validateRolloutDraft(withKit);
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.match(result.errors.join(";"), /participationKit\.seedCaptions: must have exactly 3 entries/);
 });
 
 test("deriveChannelAssetName: different channels on the same base name produce different assetNames", () => {
