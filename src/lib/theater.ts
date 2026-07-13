@@ -7,17 +7,25 @@
  * [POS]: the showing layer of the ten-station pipeline, sibling to report.ts inside lib/. report.ts
  *   is the static record of a wave; theater.ts is a 100-130 second split-screen replay of the exact
  *   same record: THE WORK (left, a live activity log, station by station, every line a real fact
- *   pulled from WaveReadout) drives THE EVIDENCE (right, a stack of auditable cards: variant cards,
- *   the nine-segment name, the threshold table, the produced stills, judge scores, a three-curve
- *   race with verdict stamps, the winning still (the cut, held static, no video yet), and the
- *   channel rollout -- where, only after station 8b's second approval gate has actually cleared
- *   real video-generation spend and the render itself has happened, that same still crossfades into
- *   its real rendered video as the closing money shot. The still-to-video timing mirrors the real
- *   pipeline's causality on purpose: skill/SKILL.md gates video behind that second approval, so the
- *   replay never shows rendered motion before the log line that approves it. Nothing on either side
- *   is invented. Ships alongside scripts/record-theater.mjs, which
+ *   pulled from WaveReadout) drives THE EVIDENCE (right, a stack of auditable cards, evidence flowing
+ *   one direction only -- down, never scrolled back up to an older card to watch it change: variant
+ *   cards, the nine-segment name, the threshold table, the produced stills, judge scores, a
+ *   three-curve race with verdict stamps, the winning still (the cut, held static forever, no video
+ *   tag ever added to it), every rollout channel chip (a video-native channel's chip carries its own
+ *   hidden <video> from first render, showing only its still cover until this asset's own crossfade
+ *   fires), and finally the money shot -- a brand new card appended to the bottom of the stack, only
+ *   after station 8b's second approval gate has actually cleared real video-generation spend and the
+ *   render itself has happened, where the hero still crossfades into its real rendered video. The
+ *   still-to-video timing mirrors the real pipeline's causality on purpose: skill/SKILL.md gates
+ *   video behind that second approval, so the replay never shows rendered motion -- hero or any
+ *   channel chip -- before the log line that approves it. Every media-stage box (hero, money shot,
+ *   channel chips, produced stills) caps at 60vh so a 9:16 render or portrait still never runs a card
+ *   off the bottom of the recording viewport (scripts/record-theater.mjs's fixed 1280x800). Nothing
+ *   on either side is invented. Ships alongside scripts/record-theater.mjs, which
  *   drives a real Chromium tab through it and captures the replay to mp4, and alongside
- *   theater-live.ts, the same show fed by a wave still in progress instead of a finished readout.
+ *   theater-live.ts, the same show fed by a wave still in progress instead of a finished readout
+ *   (theater-live.ts imports THEATER_CSS from here, so the 60vh media caps apply to live.html too;
+ *   its own addCard() already only ever appends to the bottom, no scroll-jump bug to fix there).
  * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */
 import { readFile } from "node:fs/promises";
@@ -466,8 +474,12 @@ body { font-family: var(--font-sans); font-weight: 300; line-height: 1.5; overfl
 .plan-table th { text-align: left; text-transform: uppercase; letter-spacing: 0.04em; font-size: 10px; color: var(--muted); padding: 6px 8px; border-bottom: 1px solid var(--ink); }
 .plan-table td { padding: 8px; border-bottom: 1px solid var(--hairline); }
 
-/* produce */
-.produce-media img { width: 100%; height: auto; display: block; filter: blur(14px); opacity: 0.35; transition: filter 1.1s ease, opacity 1.1s ease; border: 1px solid var(--hairline); }
+/* produce -- max-height caps every still to a fraction of the viewport so a
+   9:16 portrait render never runs the card (media + caption) off the
+   bottom of one screen; see waves/wave-04/STATE.md for the taste-gate
+   screenshots that set 60vh. */
+.produce-media { display: flex; align-items: center; justify-content: center; max-height: 60vh; overflow: hidden; background: #f4f3f0; }
+.produce-media img { max-width: 100%; max-height: 60vh; width: auto; height: auto; object-fit: contain; display: block; filter: blur(14px); opacity: 0.35; transition: filter 1.1s ease, opacity 1.1s ease; border: 1px solid var(--hairline); }
 .produce-media img.clear { filter: blur(0); opacity: 1; }
 .produce-copy { font-size: 13px; font-style: italic; margin-top: 10px; min-height: 1.6em; }
 
@@ -488,32 +500,40 @@ body { font-family: var(--font-sans); font-weight: 300; line-height: 1.5; overfl
 .race-stamp.iterate { color: #6b6b63; }
 .race-reason { font-size: 11px; color: var(--muted); margin-top: 4px; }
 
-/* the cut, the hero card */
+/* the cut, the hero card + the money-shot card + every rollout channel
+   chip: one shared media-stage box, height capped to a fraction of the
+   viewport (not a fixed px height, so a 9:16 rollout video or portrait
+   still is never taller than the screen it's recorded in -- see
+   waves/wave-04/STATE.md for the taste-gate screenshots that set 60vh). */
 .hero-card { position: relative; overflow: hidden; }
-.hero-media { position: relative; width: 100%; height: 320px; background: #f4f3f0; }
+.hero-media, .rollout-chip-media { position: relative; width: 100%; height: 60vh; background: #f4f3f0; overflow: hidden; }
 /* contain, not cover: the concept still is 16:9 and the rendered rollout
    video is often a vertical 9:16 mobile cut, a real aspect mismatch, not a
    styling choice. object-fit:contain letterboxes both inside the same
    fixed stage so the crossfade still lines up without cropping either
    one. */
-.hero-media img, .hero-media video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
-.hero-media img { opacity: 1; transition: opacity 1.4s ease, transform 6s ease; }
-.hero-media img.breathe { transform: scale(1.04); }
-.hero-media img.faded { opacity: 0; }
-.hero-media video { opacity: 0; transition: opacity 1.4s ease; }
-.hero-media video.shown { opacity: 1; }
-.hero-media .shimmer {
+.hero-media img, .hero-media video, .rollout-chip-media img, .rollout-chip-media video {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;
+}
+.hero-media img, .rollout-chip-media img { opacity: 1; transition: opacity 1.4s ease, transform 6s ease; }
+.hero-media img.breathe, .rollout-chip-media img.breathe { transform: scale(1.04); }
+.hero-media img.faded, .rollout-chip-media img.faded { opacity: 0; }
+.hero-media video, .rollout-chip-media video { opacity: 0; transition: opacity 1.4s ease; }
+.hero-media video.shown, .rollout-chip-media video.shown { opacity: 1; }
+.hero-media .shimmer, .rollout-chip-media .shimmer {
   position: absolute; inset: 0; pointer-events: none; opacity: 0;
   background: linear-gradient(115deg, transparent 40%, rgba(255,255,255,0.55) 50%, transparent 60%);
   background-size: 220% 220%; background-position: -60% -60%;
   transition: opacity 0.3s ease;
 }
-.hero-media .shimmer.sweep { opacity: 1; animation: sweep 0.9s ease forwards; }
+.hero-media .shimmer.sweep, .rollout-chip-media .shimmer.sweep { opacity: 1; animation: sweep 0.9s ease forwards; }
 @keyframes sweep { from { background-position: -60% -60%; } to { background-position: 160% 160%; } }
 .hero-caption { padding-top: 12px; }
 
-/* rollout waterfall */
-.rollout-chip-media img, .rollout-chip-media video { width: 100%; height: auto; display: block; background: #f4f3f0; }
+/* rollout waterfall: a video-native channel's chip carries its own hidden
+   <video> from first render (see THEATER_JS) and shares the media-stage
+   rules above; a still-only channel's chip is just the <img> half of the
+   same box. */
 .rollout-meta { padding-top: 8px; }
 .rollout-channel { font-size: 13px; font-weight: 400; text-transform: capitalize; }
 .rollout-role { font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
@@ -934,10 +954,13 @@ const THEATER_JS = `
   // rendered. Station 8b's second approval gate (paid, real spend) hasn't
   // even been asked yet, let alone cleared. So this beat shows exactly what
   // exists right now -- the winning still, breathing, captioned -- and
-  // nothing else. The <video> tag is built into the card's markup below so
-  // the rollout beat can crossfade into it later without rebuilding the
-  // card, but it stays untouched here: .hero-media video is opacity:0 by
-  // default (see CSS) and nothing in this block ever adds .shown to it.
+  // nothing else. This card stays purely static for its entire life: no
+  // <video> tag is ever added to it, here or later. The still-to-video
+  // crossfade does not reuse this card -- see "the money shot" inside the
+  // rollout beat below, a brand new card appended to the bottom of the
+  // evidence stack once the render actually exists. Information flows one
+  // direction only, down; nothing ever scrolls back up to an old card to
+  // watch it change.
   queueHeader("cut", "the cut");
   if (DATA.hero.variantId) {
     queueAction("rollout: producing the channel cut for " + DATA.hero.variantId + " (" + DATA.hero.workingTitle + ")");
@@ -948,8 +971,6 @@ const THEATER_JS = `
         var c = el("article", "evidence-card hero-card");
         var mediaHTML = '<div class="hero-media">' +
           (DATA.hero.imgURI ? '<img id="heroImg" src="' + DATA.hero.imgURI + '" alt="' + esc(DATA.hero.workingTitle) + '" />' : "") +
-          (DATA.hero.videoRelSrc ? '<video id="heroVideo" muted loop playsinline src="' + esc(DATA.hero.videoRelSrc) + '"></video>' : "") +
-          '<div class="shimmer" id="heroShimmer"></div>' +
           "</div>" +
           '<div class="hero-caption"><div class="evidence-title">' + esc(DATA.hero.workingTitle) + '</div><p class="evidence-caption" id="heroCopy"></p></div>';
         c.innerHTML = mediaHTML;
@@ -978,35 +999,50 @@ const THEATER_JS = `
 
   // ================= ROLLOUT + LEARN =================
   // Sequence is fixed, not incidental: skill/SKILL.md station 8b ships every
-  // still channel cut first, then stops dead for a second approval gate
-  // (video generation spends real money on a paid API, stills do not) before
-  // any video is submitted for render. The mp4 lands last, as the payoff of
-  // that approval, not before it.
+  // channel cut first -- a video-native channel included, but only its
+  // still cover, the same coverPath the real pipeline exports before any
+  // paid render is even requested -- then stops dead for a second approval
+  // gate (video generation spends real money on a paid API, stills do not)
+  // before any video is submitted for render. Each video-native chip is
+  // built once, right here, still-only: its own <video> tag exists in the
+  // DOM from the start but stays hidden (opacity:0, no autoplay), same
+  // idiom the hero card used to use. Only after the approval-gate log line
+  // and the "operator approved video spend" line that follows it does that
+  // SAME chip crossfade in place -- no new card, no video appearing
+  // anywhere that wasn't already showing a still a moment before.
   queueHeader("rollout", "station 8b / rollout");
-  var stillChannels = [];
-  var videoChannels = [];
+  var allChannels = [];
   DATA.rollouts.forEach(function (draft) {
-    draft.channels.forEach(function (ch) {
-      if (ch.nativeFormat === "video") videoChannels.push(ch);
-      else stillChannels.push(ch);
-    });
+    draft.channels.forEach(function (ch) { allChannels.push(ch); });
   });
+  var videoChannels = allChannels.filter(function (ch) { return ch.nativeFormat === "video"; });
+  var chipVideoRefs = {};
+  var chipCounter = 0;
 
   function renderChannelChip(ch) {
     var c = el("article", "evidence-card");
-    var media = ch.nativeFormat === "video" && ch.videoRelSrc
-      ? '<div class="rollout-chip-media"><video muted autoplay loop playsinline src="' + esc(ch.videoRelSrc) + '"></video></div>'
-      : ch.coverURI
-      ? '<div class="rollout-chip-media"><img src="' + ch.coverURI + '" alt="' + esc(ch.channel) + '" /></div>'
-      : "";
+    var isVideoChannel = ch.nativeFormat === "video" && !!ch.videoRelSrc;
+    var mediaHTML = "";
+    if (isVideoChannel) {
+      chipCounter++;
+      var chipKey = "chip" + chipCounter;
+      chipVideoRefs[ch.channel + "|" + ch.videoRelSrc] = chipKey;
+      mediaHTML = '<div class="rollout-chip-media">' +
+        (ch.coverURI ? '<img id="' + chipKey + 'Img" src="' + ch.coverURI + '" alt="' + esc(ch.channel) + '" />' : "") +
+        '<video id="' + chipKey + 'Video" muted loop playsinline src="' + esc(ch.videoRelSrc) + '"></video>' +
+        '<div class="shimmer" id="' + chipKey + 'Shimmer"></div>' +
+        "</div>";
+    } else if (ch.coverURI) {
+      mediaHTML = '<div class="rollout-chip-media"><img src="' + ch.coverURI + '" alt="' + esc(ch.channel) + '" /></div>';
+    }
     var ctaTag = ch.ctaPolicy ? '<span class="cta-tag cta-' + esc(ch.ctaPolicy.level) + '">CTA ' + esc(ch.ctaPolicy.level) + '</span>' : "";
-    c.innerHTML = media + '<div class="rollout-meta"><div class="rollout-channel">' + esc(ch.channel) +
+    c.innerHTML = mediaHTML + '<div class="rollout-meta"><div class="rollout-channel">' + esc(ch.channel) +
       '</div><div class="rollout-role">' + esc(ch.role) + '</div><p class="rollout-copy">' + esc(ch.channelCopy) +
       '</p><p class="rollout-kpi">' + esc(ch.kpi) + "</p>" + ctaTag + "</div>";
     addCard(c, ch.ctaPolicy ? ch.kpiThresholdNote + " / cta: " + ch.ctaPolicy.reason : ch.kpiThresholdNote);
   }
 
-  stillChannels.forEach(function (ch) {
+  allChannels.forEach(function (ch) {
     queueAction("shipping " + ch.channel + " cut: " + ch.kpi, function () { renderChannelChip(ch); });
   });
 
@@ -1024,26 +1060,55 @@ const THEATER_JS = `
     );
     cursor += spendHold;
     queueAction("operator approved video spend", function () {
-      videoChannels.forEach(function (ch) { renderChannelChip(ch); });
+      // Crossfade each already-visible chip's own still into its own
+      // video, in place. Nothing is appended, nothing is scrolled to --
+      // this beat's evidence is a state change on cards the viewer has
+      // already seen, not a new arrival.
+      videoChannels.forEach(function (ch) {
+        if (!ch.videoRelSrc) return;
+        var chipKey = chipVideoRefs[ch.channel + "|" + ch.videoRelSrc];
+        if (!chipKey) return;
+        var img = document.getElementById(chipKey + "Img");
+        var video = document.getElementById(chipKey + "Video");
+        var shimmer = document.getElementById(chipKey + "Shimmer");
+        if (!img || !video || !shimmer) return;
+        setTimeout(function () {
+          shimmer.classList.add("sweep");
+          setTimeout(function () {
+            video.classList.add("shown");
+            img.classList.add("faded");
+            video.play().catch(function () {});
+          }, 500);
+        }, 400);
+      });
     });
 
-    // ============= THE CUT, continued: still -> video money shot =============
-    // Only now -- after the approval-gate log line above and the render
-    // action that followed it have both already printed -- does the hero
-    // card built back in THE CUT get to turn into its real rendered video.
-    // This is the causality skill/SKILL.md station 8b describes: video
-    // generation spends real money and sits behind its own approval gate,
-    // separate from the still's. The mp4 lands last, as the payoff of that
-    // approval, not before it. Reuses the existing hero card (scrolled back
-    // into view) rather than building a second one, same idiom as every
-    // other evidence beat in this file.
+    // ============= THE MONEY SHOT: a brand new card =============
+    // Appended to the bottom of the evidence stack, only now -- after the
+    // approval-gate log line and the render action that followed it have
+    // both already printed. This is the causality skill/SKILL.md station 8b
+    // describes: video generation spends real money and sits behind its own
+    // approval gate, separate from the still's. The mp4 lands last, as the
+    // payoff of that approval, not before it. Unlike the old version of
+    // this beat, it does NOT reuse or scroll back up to the hero card built
+    // in THE CUT (that card stays static forever, see the note there) --
+    // it's a fresh card, so the natural downward scroll addCard() already
+    // performs for every new card is all the motion this beat needs.
+    // Information flows one direction: down.
     if (DATA.hero.videoRelSrc) {
       queueAction("still becomes motion: " + DATA.hero.workingTitle + " image-to-video render, the money shot", function () {
-        var img = document.getElementById("heroImg");
-        var video = document.getElementById("heroVideo");
-        var shimmer = document.getElementById("heroShimmer");
-        var heroCard = img ? img.closest(".hero-card") : null;
-        if (heroCard) heroCard.scrollIntoView({ block: "start" });
+        var c = el("article", "evidence-card hero-card money-shot-card");
+        c.innerHTML = '<div class="evidence-eyebrow">the money shot</div>' +
+          '<div class="hero-media">' +
+          (DATA.hero.imgURI ? '<img id="moneyShotImg" class="breathe" src="' + DATA.hero.imgURI + '" alt="' + esc(DATA.hero.workingTitle) + '" />' : "") +
+          '<video id="moneyShotVideo" muted loop playsinline src="' + esc(DATA.hero.videoRelSrc) + '"></video>' +
+          '<div class="shimmer" id="moneyShotShimmer"></div>' +
+          "</div>" +
+          '<div class="hero-caption"><div class="evidence-title">' + esc(DATA.hero.workingTitle) + '</div><p class="evidence-caption">' + esc(DATA.hero.copy) + "</p></div>";
+        addCard(c, DATA.hero.productionNote || "the rendered money shot, image-to-video render, real generation call");
+        var img = document.getElementById("moneyShotImg");
+        var video = document.getElementById("moneyShotVideo");
+        var shimmer = document.getElementById("moneyShotShimmer");
         if (img && video && shimmer) {
           setTimeout(function () {
             shimmer.classList.add("sweep");
