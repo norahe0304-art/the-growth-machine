@@ -1,0 +1,22 @@
+{
+  "variantId": "v3",
+  "workingTitle": "The Recreation",
+  "audience": "couples who already recreate famous photos together",
+  "insight": "recreating an iconic pose is an interaction couples already know, and this week hands them the most discussed pose on earth",
+  "assetXElement": "the iconic wedding pose x a one tap recreate template with credit",
+  "formats": [
+    "still",
+    "motion"
+  ],
+  "successMetric": "recreation chain length per seeded template",
+  "referenceSet": {
+    "source": "references/tiktok.md",
+    "status": "starter-unverified",
+    "note": "recreation chains compound when the template credits the previous couple, ugc loop grammar"
+  },
+  "generationPrompts": {
+    "image": "A side by side pair: left an editorial wedding portrait pose in silhouette, faces not visible, right an ordinary couple in their kitchen recreating the exact pose, phone camera realism. Authentic phone-camera still, natural handheld framing, real lighting imperfections, no studio retouching, no added graphic elements. A small credit tag in the corner of the right frame. No logos, no watermarks. 16:9.",
+    "motion": "[for ChatCut] three shot script: shot 1 the silhouette pose reference; shot 2 the couple lines up the same pose at home, laughing; shot 3 the credit tag stamps on and the hook line lands, 6 seconds total",
+    "copy": "Write one hook line, 20 words or fewer, inviting couples to recreate the pose everyone is talking about, restrained tone, no exclamation marks"
+  }
+}

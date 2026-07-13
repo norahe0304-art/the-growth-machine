@@ -1,0 +1,612 @@
+{
+  "moment": "the wedding everyone is watching",
+  "waveNumber": 4,
+  "variants": [
+    {
+      "id": "v1",
+      "asset": "your selfie",
+      "assetKind": "thing",
+      "newElement": "a black tie wedding guest look",
+      "angle": "the feed is asking what would I wear and this answers it with your own face",
+      "angleType": "moment",
+      "workingTitle": "Dress Code"
+    },
+    {
+      "id": "v2",
+      "asset": "your parents' wedding photo",
+      "assetKind": "thing",
+      "newElement": "restored and in motion for ten seconds",
+      "angle": "the celebrity wedding points everyone back to the album in their own house",
+      "angleType": "evergreen",
+      "workingTitle": "The First Dance, Again"
+    },
+    {
+      "id": "v3",
+      "asset": "recreating an iconic pose",
+      "assetKind": "interaction",
+      "newElement": "a one tap recreate template with credit",
+      "angle": "couples already recreate famous photos and this week supplies the pose",
+      "angleType": "ugc-loop",
+      "workingTitle": "The Recreation"
+    }
+  ],
+  "briefs": [
+    {
+      "variantId": "v1",
+      "workingTitle": "Dress Code",
+      "audience": "people following the wedding of the year from their couch",
+      "insight": "the whole feed is asking one question, what would I wear to that wedding, and nobody has an answer photo",
+      "assetXElement": "your selfie x a black tie wedding guest look",
+      "formats": [
+        "still",
+        "motion"
+      ],
+      "successMetric": "generation to share rate within 48 hours",
+      "referenceSet": {
+        "source": "references/cross-channel.md",
+        "status": "starter-unverified",
+        "note": "transformation before and after pattern, hook leads with the question the feed is already asking"
+      },
+      "generationPrompts": {
+        "image": "Editorial phone frame composition, before and after split: left a casual mirror selfie, right the same person styled in a black tie wedding guest look, evening light, champagne and garden party depth behind. Editorial tech cover with a defocused photographic background: a saturated color core melting into shadow, visible depth of field, subtle film grain, no flat fills. No logos, no watermarks. 16:9.",
+        "motion": "[for ChatCut] three shot script: shot 1 the plain mirror selfie on a phone screen; shot 2 the styled wedding guest version steps into a garden evening; shot 3 the hook line lands, 6 seconds total",
+        "copy": "Write one hook line, 20 words or fewer, about finally having an answer to what you would wear, restrained tone, no exclamation marks"
+      }
+    },
+    {
+      "variantId": "v2",
+      "workingTitle": "The First Dance, Again",
+      "audience": "anyone whose parents' wedding album lives in a shoebox",
+      "insight": "a celebrity wedding makes everyone think about the weddings in their own family, and the photos are already in the house",
+      "assetXElement": "your parents' wedding photo x restored, in motion for ten seconds",
+      "formats": [
+        "still",
+        "motion"
+      ],
+      "successMetric": "7 day share rate into family threads",
+      "referenceSet": {
+        "source": "references/meta.md",
+        "status": "starter-unverified",
+        "note": "restoration reveals are battle tested UGC grammar, emotion carried by the user's own material"
+      },
+      "generationPrompts": {
+        "image": "A restored vintage wedding photograph held gently in two hands, the restored version glowing with recovered color and detail against the faded original beneath, warm domestic light. Editorial tech cover with a defocused photographic background: a saturated color core melting into shadow, visible depth of field, subtle film grain, no flat fills. No logos, no watermarks. 16:9.",
+        "motion": "[for ChatCut] three shot script: shot 1 the faded print in a shoebox; shot 2 color and detail return, the couple begins their first dance for ten seconds; shot 3 the hook line lands over the moving frame, 8 seconds total",
+        "copy": "Write one hook line, 20 words or fewer, about parents dancing again, restrained tone, no exclamation marks"
+      }
+    },
+    {
+      "variantId": "v3",
+      "workingTitle": "The Recreation",
+      "audience": "couples who already recreate famous photos together",
+      "insight": "recreating an iconic pose is an interaction couples already know, and this week hands them the most discussed pose on earth",
+      "assetXElement": "the iconic wedding pose x a one tap recreate template with credit",
+      "formats": [
+        "still",
+        "motion"
+      ],
+      "successMetric": "recreation chain length per seeded template",
+      "referenceSet": {
+        "source": "references/tiktok.md",
+        "status": "starter-unverified",
+        "note": "recreation chains compound when the template credits the previous couple, ugc loop grammar"
+      },
+      "generationPrompts": {
+        "image": "A side by side pair: left an editorial wedding portrait pose in silhouette, faces not visible, right an ordinary couple in their kitchen recreating the exact pose, phone camera realism. Authentic phone-camera still, natural handheld framing, real lighting imperfections, no studio retouching, no added graphic elements. A small credit tag in the corner of the right frame. No logos, no watermarks. 16:9.",
+        "motion": "[for ChatCut] three shot script: shot 1 the silhouette pose reference; shot 2 the couple lines up the same pose at home, laughing; shot 3 the credit tag stamps on and the hook line lands, 6 seconds total",
+        "copy": "Write one hook line, 20 words or fewer, inviting couples to recreate the pose everyone is talking about, restrained tone, no exclamation marks"
+      }
+    }
+  ],
+  "namedAssets": [
+    {
+      "variantId": "v1",
+      "format": "still",
+      "name": "WEB_CONV_TOF_HOT_STIL_THEF_THEWED_PEOP_V04",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "CONV",
+        "FUNNEL": "TOF",
+        "TEMP": "HOT",
+        "FORMAT": "STIL",
+        "HOOK": "THEF",
+        "MOMENT": "THEWED",
+        "PERSONA": "PEOP",
+        "VER": "V04"
+      }
+    },
+    {
+      "variantId": "v1",
+      "format": "motion",
+      "name": "WEB_CONV_TOF_HOT_MOTN_THEF_THEWED_PEOP_V04",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "CONV",
+        "FUNNEL": "TOF",
+        "TEMP": "HOT",
+        "FORMAT": "MOTN",
+        "HOOK": "THEF",
+        "MOMENT": "THEWED",
+        "PERSONA": "PEOP",
+        "VER": "V04"
+      }
+    },
+    {
+      "variantId": "v2",
+      "format": "still",
+      "name": "WEB_CONV_MOF_EVG_STIL_THEC_THEWED_ANYO_V04",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "CONV",
+        "FUNNEL": "MOF",
+        "TEMP": "EVG",
+        "FORMAT": "STIL",
+        "HOOK": "THEC",
+        "MOMENT": "THEWED",
+        "PERSONA": "ANYO",
+        "VER": "V04"
+      }
+    },
+    {
+      "variantId": "v2",
+      "format": "motion",
+      "name": "WEB_CONV_MOF_EVG_MOTN_THEC_THEWED_ANYO_V04",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "CONV",
+        "FUNNEL": "MOF",
+        "TEMP": "EVG",
+        "FORMAT": "MOTN",
+        "HOOK": "THEC",
+        "MOMENT": "THEWED",
+        "PERSONA": "ANYO",
+        "VER": "V04"
+      }
+    },
+    {
+      "variantId": "v3",
+      "format": "still",
+      "name": "WEB_ENGT_BOF_LOOP_STIL_COUP_THEWED_COUP_V04",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "ENGT",
+        "FUNNEL": "BOF",
+        "TEMP": "LOOP",
+        "FORMAT": "STIL",
+        "HOOK": "COUP",
+        "MOMENT": "THEWED",
+        "PERSONA": "COUP",
+        "VER": "V04"
+      }
+    },
+    {
+      "variantId": "v3",
+      "format": "motion",
+      "name": "WEB_ENGT_BOF_LOOP_MOTN_COUP_THEWED_COUP_V04",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "ENGT",
+        "FUNNEL": "BOF",
+        "TEMP": "LOOP",
+        "FORMAT": "MOTN",
+        "HOOK": "COUP",
+        "MOMENT": "THEWED",
+        "PERSONA": "COUP",
+        "VER": "V04"
+      }
+    }
+  ],
+  "plan": {
+    "moment": "the wedding everyone is watching",
+    "waveNumber": 4,
+    "arms": [
+      {
+        "variantId": "v1",
+        "format": "still",
+        "name": "WEB_CONV_TOF_HOT_STIL_THEF_THEWED_PEOP_V04",
+        "trafficSplitPct": 33.33,
+        "budgetIllustrative": 500
+      },
+      {
+        "variantId": "v2",
+        "format": "still",
+        "name": "WEB_CONV_MOF_EVG_STIL_THEC_THEWED_ANYO_V04",
+        "trafficSplitPct": 33.33,
+        "budgetIllustrative": 250
+      },
+      {
+        "variantId": "v3",
+        "format": "still",
+        "name": "WEB_ENGT_BOF_LOOP_STIL_COUP_THEWED_COUP_V04",
+        "trafficSplitPct": 33.33,
+        "budgetIllustrative": 350
+      }
+    ],
+    "preRegisteredThresholds": {
+      "moment": {
+        "scaleAt": 0.045,
+        "killAt": 0.015,
+        "fatigueSlope": -0.004
+      },
+      "evergreen": {
+        "scaleAt": 0.035,
+        "killAt": 0.012,
+        "fatigueSlope": -0.0015
+      },
+      "ugc-loop": {
+        "scaleAt": 0.05,
+        "killAt": 0.018,
+        "fatigueSlope": -0.002
+      }
+    },
+    "engagementThresholds": {
+      "moment": {
+        "scaleAt": 0.08,
+        "killAt": 0.02,
+        "fatigueSlope": -0.01
+      },
+      "evergreen": {
+        "scaleAt": 0.06,
+        "killAt": 0.015,
+        "fatigueSlope": -0.004
+      },
+      "ugc-loop": {
+        "scaleAt": 0.1,
+        "killAt": 0.025,
+        "fatigueSlope": -0.006
+      }
+    },
+    "dates": {
+      "start": "2026-07-12",
+      "end": "2026-08-02",
+      "days": 21
+    },
+    "rationale": "Wave 4 splits traffic evenly across three variants for \"the wedding everyone is watching\"; the 21-day observation window covers the full fatigue-curve inflection point"
+  },
+  "produced": [
+    {
+      "variantId": "v1",
+      "format": "still",
+      "name": "WEB_CONV_TOF_HOT_STIL_THEF_THEWED_PEOP_V04",
+      "assetPath": "waves/wave-04/assets/WEB_CONV_TOF_HOT_STIL_THEF_THEWED_PEOP_V04.png",
+      "copy": "Everyone is asking what they would wear. You have a photo now.",
+      "motionScript": null,
+      "imageModelUsed": "codex-exec",
+      "regeneratedCount": 0
+    },
+    {
+      "variantId": "v1",
+      "format": "motion",
+      "name": "WEB_CONV_TOF_HOT_MOTN_THEF_THEWED_PEOP_V04",
+      "assetPath": null,
+      "copy": "The invitation never came. The outfit did.",
+      "motionScript": [
+        "Shot 1: a plain mirror selfie on a phone screen",
+        "Shot 2: the styled wedding guest version steps into a garden evening",
+        "Shot 3: the hook line lands"
+      ],
+      "imageModelUsed": null,
+      "regeneratedCount": 0
+    },
+    {
+      "variantId": "v2",
+      "format": "still",
+      "name": "WEB_CONV_MOF_EVG_STIL_THEC_THEWED_ANYO_V04",
+      "assetPath": "waves/wave-04/assets/WEB_CONV_MOF_EVG_STIL_THEC_THEWED_ANYO_V04.png",
+      "copy": "They danced to this once. Watch it again.",
+      "motionScript": null,
+      "imageModelUsed": "codex-exec",
+      "regeneratedCount": 0
+    },
+    {
+      "variantId": "v2",
+      "format": "motion",
+      "name": "WEB_CONV_MOF_EVG_MOTN_THEC_THEWED_ANYO_V04",
+      "assetPath": null,
+      "copy": "Thirty years in a shoebox. Ten seconds of the first dance.",
+      "motionScript": [
+        "Shot 1: the faded print in a shoebox",
+        "Shot 2: color and detail return, the couple begins their first dance",
+        "Shot 3: the hook line lands over the moving frame"
+      ],
+      "imageModelUsed": null,
+      "regeneratedCount": 0
+    },
+    {
+      "variantId": "v3",
+      "format": "still",
+      "name": "WEB_ENGT_BOF_LOOP_STIL_COUP_THEWED_COUP_V04",
+      "assetPath": "waves/wave-04/assets/WEB_ENGT_BOF_LOOP_STIL_COUP_THEWED_COUP_V04.png",
+      "copy": "The pose everyone is talking about. Your kitchen works fine.",
+      "motionScript": null,
+      "imageModelUsed": "codex-exec",
+      "regeneratedCount": 0
+    },
+    {
+      "variantId": "v3",
+      "format": "motion",
+      "name": "WEB_ENGT_BOF_LOOP_MOTN_COUP_THEWED_COUP_V04",
+      "assetPath": null,
+      "copy": "Same pose. Your house. Tag the next couple.",
+      "motionScript": [
+        "Shot 1: the silhouette pose reference",
+        "Shot 2: the couple lines up the same pose at home, laughing",
+        "Shot 3: the credit tag stamps on and the hook line lands"
+      ],
+      "imageModelUsed": null,
+      "regeneratedCount": 0
+    }
+  ],
+  "judged": [
+    {
+      "variantId": "v1",
+      "format": "still",
+      "score": {
+        "onBrief": 3,
+        "legible": 3,
+        "shareable": 2,
+        "brandFit": 3
+      },
+      "passed": true,
+      "regenerated": false,
+      "notes": "Phone frame before and after lands the makeover cleanly; format is familiar, hence shareable 2."
+    },
+    {
+      "variantId": "v1",
+      "format": "motion",
+      "score": {
+        "onBrief": 3,
+        "legible": 3,
+        "shareable": 2,
+        "brandFit": 3
+      },
+      "passed": true,
+      "regenerated": false,
+      "notes": "Phone frame before and after lands the makeover cleanly; format is familiar, hence shareable 2."
+    },
+    {
+      "variantId": "v2",
+      "format": "still",
+      "score": {
+        "onBrief": 3,
+        "legible": 3,
+        "shareable": 3,
+        "brandFit": 3
+      },
+      "passed": true,
+      "regenerated": false,
+      "notes": "Restored print against the faded original in warm domestic light; the strongest emotional read of the wave."
+    },
+    {
+      "variantId": "v2",
+      "format": "motion",
+      "score": {
+        "onBrief": 3,
+        "legible": 3,
+        "shareable": 3,
+        "brandFit": 3
+      },
+      "passed": true,
+      "regenerated": false,
+      "notes": "Restored print against the faded original in warm domestic light; the strongest emotional read of the wave."
+    },
+    {
+      "variantId": "v3",
+      "format": "still",
+      "score": {
+        "onBrief": 3,
+        "legible": 3,
+        "shareable": 3,
+        "brandFit": 2
+      },
+      "passed": true,
+      "regenerated": false,
+      "notes": "Silhouette reference beside a kitchen recreation with visible credit tag; UGC register earns brandFit under the pet-to-human precedent."
+    },
+    {
+      "variantId": "v3",
+      "format": "motion",
+      "score": {
+        "onBrief": 3,
+        "legible": 3,
+        "shareable": 3,
+        "brandFit": 2
+      },
+      "passed": true,
+      "regenerated": false,
+      "notes": "Silhouette reference beside a kitchen recreation with visible credit tag; UGC register earns brandFit under the pet-to-human precedent."
+    }
+  ],
+  "simulated": [
+    {
+      "variantId": "v1",
+      "format": "still",
+      "angleType": "moment",
+      "days": 21,
+      "predictedCTR": [
+        0.02053502217214554,
+        0.04009808827377855,
+        0.06092004926223308,
+        0.04786323549422542,
+        0.04005872147974991,
+        0.032073509830084695,
+        0.0253295510468825,
+        0.018149526846604376,
+        0.014531426915206177,
+        0.011970670766793133,
+        0.009230613831869915,
+        0.00909363459191212,
+        0.008496691390775139,
+        0.00402666762697725,
+        0.0049131394747512205,
+        0.0019014239509959694,
+        0.003439747704976919,
+        0.004101556447724149,
+        0.0014707595150848162,
+        0.0020163432130790243,
+        0.00306211572758456
+      ],
+      "shareRate": [
+        0.009162794723501427,
+        0.0181187402353622,
+        0.027896406121877954,
+        0.021539173422334728,
+        0.017533950333901302,
+        0.014931267536866183,
+        0.012056309946795298,
+        0.00810689492612563,
+        0.006404795614597647,
+        0.004443506987893928,
+        0.00490559724030293,
+        0.0041513997535958394,
+        0.00389601271911822,
+        0.0025861045565405273,
+        0.0017995782788224517,
+        0.00011441625897108069,
+        0.0011743023793015432,
+        0.0024536135686917507,
+        0.0006154505233062774,
+        0.0012700827044804315,
+        0.0019976018029135463
+      ],
+      "seed": "2037712458"
+    },
+    {
+      "variantId": "v2",
+      "format": "still",
+      "angleType": "evergreen",
+      "days": 21,
+      "predictedCTR": [
+        0.023827514864245704,
+        0.02682389513999038,
+        0.0287501747761337,
+        0.028884782925516196,
+        0.028619970452152477,
+        0.029754128212563003,
+        0.03178644626789436,
+        0.030923116146396867,
+        0.03384875157197017,
+        0.033208494149407096,
+        0.032869413277919035,
+        0.033874661830546195,
+        0.03667793771457817,
+        0.034044037638870844,
+        0.03574941645086667,
+        0.03716234014900188,
+        0.03542996516778909,
+        0.0366939685996013,
+        0.03734204545312786,
+        0.03681099536538615,
+        0.037486623839475215
+      ],
+      "shareRate": [
+        0.005200539172096712,
+        0.00735225870236708,
+        0.007624753227095257,
+        0.006270502921726512,
+        0.006291805444778946,
+        0.008331657798608592,
+        0.007694487907031291,
+        0.00851754103340116,
+        0.009291498404231414,
+        0.00806474347838147,
+        0.00910448426074409,
+        0.008171017805420292,
+        0.008849402226556453,
+        0.008434506922188643,
+        0.008897920399179958,
+        0.008911326530319105,
+        0.00982145725645086,
+        0.009762129872090795,
+        0.010327192989814191,
+        0.009475078714751934,
+        0.009710355901392177
+      ],
+      "seed": "2016555457"
+    },
+    {
+      "variantId": "v3",
+      "format": "still",
+      "angleType": "ugc-loop",
+      "days": 21,
+      "predictedCTR": [
+        0.022084270149469374,
+        0.020220079940743742,
+        0.021587977299466727,
+        0.0200233265645802,
+        0.023567066714167594,
+        0.02385266977082938,
+        0.021870625630021095,
+        0.028242191903851924,
+        0.027546500331349668,
+        0.0261920831143856,
+        0.027484099449217314,
+        0.02769259986802935,
+        0.02501116999108344,
+        0.026097660354897377,
+        0.032105574274733664,
+        0.03189089094039053,
+        0.03353455606132746,
+        0.03061094141408801,
+        0.031373046328611674,
+        0.032462599893398586,
+        0.03148778521951288
+      ],
+      "shareRate": [
+        0.019318583964183924,
+        0.018964678488019852,
+        0.01860010129008442,
+        0.017619652734789996,
+        0.02036629613721743,
+        0.020563752790261063,
+        0.020211626317258924,
+        0.025438613126743583,
+        0.024446262824852016,
+        0.024286678302418437,
+        0.024705516603533175,
+        0.02495342825794592,
+        0.02238621498312801,
+        0.023933011437710375,
+        0.029736588286317887,
+        0.02788866450133547,
+        0.029944207334041593,
+        0.02729980484953895,
+        0.027664676790487022,
+        0.028322801378265025,
+        0.028195748779259622
+      ],
+      "seed": "1403158264"
+    }
+  ],
+  "decided": [
+    {
+      "variantId": "v1",
+      "format": "still",
+      "verdict": "KILL",
+      "reason": "last-3-day average CTR 0.0022 fell below the preregistered killAt 0.015: verdict: kill",
+      "finalCTR": 0.0021830728185828004,
+      "slope": -0.0002604364609723562,
+      "source": "simulated"
+    },
+    {
+      "variantId": "v2",
+      "format": "still",
+      "verdict": "SCALE",
+      "reason": "last-3-day average CTR 0.0372 reached the preregistered scaleAt 0.035: verdict: scale",
+      "finalCTR": 0.03721322155266307,
+      "slope": 0.00022932188871189088,
+      "source": "simulated"
+    },
+    {
+      "variantId": "v3",
+      "format": "still",
+      "verdict": "ITERATE",
+      "reason": "last-3-day average CTR 0.0318 sits between killAt and scaleAt, slope has not tripped the fatigue threshold: verdict: iterate",
+      "finalCTR": 0.03177447714717438,
+      "slope": -0.00010255210687007237,
+      "source": "simulated"
+    }
+  ],
+  "measured": [],
+  "injectedLearnings": "Winning traits from wave 3: thing asset \"your profile picture\" + angleType=evergreen + HOOK=THEP. Prioritize reusing these asset shapes and angleType combinations in new variants."
+}

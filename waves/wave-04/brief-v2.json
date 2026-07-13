@@ -1,0 +1,22 @@
+{
+  "variantId": "v2",
+  "workingTitle": "The First Dance, Again",
+  "audience": "anyone whose parents' wedding album lives in a shoebox",
+  "insight": "a celebrity wedding makes everyone think about the weddings in their own family, and the photos are already in the house",
+  "assetXElement": "your parents' wedding photo x restored, in motion for ten seconds",
+  "formats": [
+    "still",
+    "motion"
+  ],
+  "successMetric": "7 day share rate into family threads",
+  "referenceSet": {
+    "source": "references/meta.md",
+    "status": "starter-unverified",
+    "note": "restoration reveals are battle tested UGC grammar, emotion carried by the user's own material"
+  },
+  "generationPrompts": {
+    "image": "A restored vintage wedding photograph held gently in two hands, the restored version glowing with recovered color and detail against the faded original beneath, warm domestic light. Editorial tech cover with a defocused photographic background: a saturated color core melting into shadow, visible depth of field, subtle film grain, no flat fills. No logos, no watermarks. 16:9.",
+    "motion": "[for ChatCut] three shot script: shot 1 the faded print in a shoebox; shot 2 color and detail return, the couple begins their first dance for ten seconds; shot 3 the hook line lands over the moving frame, 8 seconds total",
+    "copy": "Write one hook line, 20 words or fewer, about parents dancing again, restrained tone, no exclamation marks"
+  }
+}

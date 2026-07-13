@@ -1,0 +1,22 @@
+{
+  "variantId": "v1",
+  "workingTitle": "Dress Code",
+  "audience": "people following the wedding of the year from their couch",
+  "insight": "the whole feed is asking one question, what would I wear to that wedding, and nobody has an answer photo",
+  "assetXElement": "your selfie x a black tie wedding guest look",
+  "formats": [
+    "still",
+    "motion"
+  ],
+  "successMetric": "generation to share rate within 48 hours",
+  "referenceSet": {
+    "source": "references/cross-channel.md",
+    "status": "starter-unverified",
+    "note": "transformation before and after pattern, hook leads with the question the feed is already asking"
+  },
+  "generationPrompts": {
+    "image": "Editorial phone frame composition, before and after split: left a casual mirror selfie, right the same person styled in a black tie wedding guest look, evening light, champagne and garden party depth behind. Editorial tech cover with a defocused photographic background: a saturated color core melting into shadow, visible depth of field, subtle film grain, no flat fills. No logos, no watermarks. 16:9.",
+    "motion": "[for ChatCut] three shot script: shot 1 the plain mirror selfie on a phone screen; shot 2 the styled wedding guest version steps into a garden evening; shot 3 the hook line lands, 6 seconds total",
+    "copy": "Write one hook line, 20 words or fewer, about finally having an answer to what you would wear, restrained tone, no exclamation marks"
+  }
+}
