@@ -56,8 +56,21 @@ Prompts always go through stdin, never through a shell argument, a detached/back
 `codex exec` reads an empty stdin if the prompt is passed as an argument instead
 (the same judgment call `30x-covers`' command skeleton already made).
 
+Harden every `codex exec` call with three flags, learned the hard way on wave 7's live run:
+`--ignore-user-config` (a user config that wires MCP servers sprays transport errors into
+stdout and can hang a bare call), `--sandbox workspace-write` (`--ignore-user-config` also
+drops the user's sandbox setting, and the read-only default makes image saves die with
+"Operation not permitted"), and `--output-last-message <file>` (read the answer from that
+file, never from stdout). Two prompt pins that go with them: pin the output language
+("all field values in English", codex auto-loads this repo's Chinese AGENTS.md and it
+bleeds into JSON fields), and pin channel names verbatim from the taxonomy ("in-app
+profile surface", never a paraphrase, the rollout validator's names are load-bearing).
+
 ## Gotchas
 
+- Every `codex exec` call carries `--ignore-user-config --sandbox workspace-write
+  --output-last-message <file>`, and prompts pin English output plus verbatim channel
+  names (wave 7 casebook, all five bites documented in waves/wave-07/STATE.md).
 - Never set `OPENAI_API_KEY`, keep `plan`'s rationale sentence on its mock path.
 - One retry ceiling pipeline-wide: a failed still, judge dimension, or rollout image gets
   exactly one retry, then ship (or null out) and move on.

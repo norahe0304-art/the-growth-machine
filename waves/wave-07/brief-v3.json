@@ -1,0 +1,24 @@
+{
+  "variantId": "v3",
+  "workingTitle": "Interrupt My Draft",
+  "audience": "People who draft things out loud before sending them, especially creators, students, founders, and chronically online writers testing speeches, apologies, hot takes, or vulnerable messages.",
+  "insight": "The funny tension is not that GPT-Live can interrupt anyone; it is that people want to choose the exact sentence where being interrupted would hurt, help, or expose the draft the most.",
+  "assetXElement": "Existing asset: reading your own draft aloud. New element: one deadpan interruption at the sentence the listener chooses.",
+  "formats": [
+    "still",
+    "motion"
+  ],
+  "successMetric": "Viewers understand the challenge in under 2 seconds and comment with the exact sentence they would choose for the interruption.",
+  "referenceSet": [
+    {
+      "source": "references/cross-channel.md starter rules (marketing-prompts, MIT)",
+      "entry": "The identity callout. Name the exact person this is for, in second person, before saying what it is.",
+      "status": "starter-unverified"
+    }
+  ],
+  "generationPrompts": {
+    "image": "Create an authentic UGC-style phone-camera still of a person sitting at a kitchen table late in the evening, reading their own draft aloud from a laptop while a phone nearby is clearly recording audio. The subject should look mid-sentence, slightly vulnerable and focused, with one hand hovering near the laptop trackpad and the other holding a mug or printed draft. The moment should imply they are about to be interrupted, but do not show any text overlay, UI labels, logos, watermarks, captions, or graphic elements. Composition: natural handheld vertical framing, slightly off-center subject, laptop screen angled away so no readable text appears, phone in foreground softly visible, background lived-in and imperfect. Lighting: real apartment lighting with warm overhead spill, mild shadows, small exposure imperfections, no studio polish. Style: documentary phone snapshot, candid, low-retouch, realistic skin texture, slight motion softness, ordinary clothes, everyday setting. Mood: playful tension, private rehearsal turning into a public internet challenge. No brand marks, no OpenAI logo, no watermark, no added graphics.",
+    "motion": "For ChatCut: Create a short vertical UGC loop, 9:16, 8 to 10 seconds, built around the challenge 'Interrupt My Draft.' Shot logic: start on a handheld phone-camera view of a person reading their own draft aloud from a laptop at a kitchen table. Keep the camera close and natural, with tiny handheld drift and real room noise energy. Beat 1, seconds 0-2: the person starts confidently reading a draft, as if rehearsing a speech, apology, pitch, or hot take. Beat 2, seconds 2-5: they reach a sentence that feels emotionally loaded or overconfident; leave a tiny pause that makes the audience anticipate the chosen interruption point. Beat 3, seconds 5-7: an unseen AI voice interrupts in a flat, deadpan tone with one short line that punctures the sentence without being cruel. The person freezes, half offended and half impressed. Beat 4, seconds 7-10: they glance at the phone as if inviting the viewer to try it with their own draft, then the loop cuts back to the start cleanly. Visual style: authentic phone-camera footage, natural handheld framing, real lighting imperfections, no studio retouching, no added graphics, no captions burned into the image, no logos or watermarks. Performance direction: awkward, funny, believable, not exaggerated. Sound direction: room tone, soft laptop fan or table sounds, the reading voice close to camera, interruption voice crisp and deadpan. End frame should visually motivate comments: viewers should instantly understand they can choose the sentence where the interruption lands.",
+    "copy": "Generate short-form social copy for a UGC loop called 'Interrupt My Draft.' Tone: playful, second-person, internet-native, lightly provocative, not corporate. Length: write 6 options, each under 120 characters, plus 3 comment prompts under 80 characters. Use the identity callout rule: name the exact person this is for in second person before explaining the challenge. Key points to include: this is for people reading drafts aloud; GPT-Live can listen and speak at the same time; the viewer chooses the exact sentence where the interruption should happen; the joke is one perfectly timed deadpan interruption, not a long debate. Avoid technical jargon, avoid hype, avoid trust claims, avoid mentioning logos or brands beyond GPT-Live if needed. Make the copy feel like a repeatable challenge people can remix with speeches, apologies, pitches, essays, or hot takes."
+  }
+}

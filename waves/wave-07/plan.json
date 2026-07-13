@@ -1,0 +1,67 @@
+{
+  "moment": "GPT-Live talks over you: OpenAI's new full-duplex voice model (July 2026) can listen and speak at the same time, even interrupt mid-sentence, and the internet's first instinct is to playfully test, argue with, and try to break it rather than trust it.",
+  "waveNumber": 7,
+  "arms": [
+    {
+      "variantId": "v1",
+      "format": "still",
+      "name": "WEB_CONV_MOF_EVG_STIL_YOUR_GPTLIV_PEOP_V07",
+      "trafficSplitPct": 33.33,
+      "budgetIllustrative": 250
+    },
+    {
+      "variantId": "v2",
+      "format": "still",
+      "name": "WEB_ENGT_TOF_HOT_STIL_THEF_GPTLIV_AICU_V07",
+      "trafficSplitPct": 33.33,
+      "budgetIllustrative": 500
+    },
+    {
+      "variantId": "v3",
+      "format": "still",
+      "name": "WEB_ENGT_BOF_LOOP_STIL_PEOP_GPTLIV_PEOP_V07",
+      "trafficSplitPct": 33.33,
+      "budgetIllustrative": 350
+    }
+  ],
+  "preRegisteredThresholds": {
+    "moment": {
+      "scaleAt": 0.045,
+      "killAt": 0.015,
+      "fatigueSlope": -0.004
+    },
+    "evergreen": {
+      "scaleAt": 0.035,
+      "killAt": 0.012,
+      "fatigueSlope": -0.0015
+    },
+    "ugc-loop": {
+      "scaleAt": 0.05,
+      "killAt": 0.018,
+      "fatigueSlope": -0.002
+    }
+  },
+  "engagementThresholds": {
+    "moment": {
+      "scaleAt": 0.08,
+      "killAt": 0.02,
+      "fatigueSlope": -0.01
+    },
+    "evergreen": {
+      "scaleAt": 0.06,
+      "killAt": 0.015,
+      "fatigueSlope": -0.004
+    },
+    "ugc-loop": {
+      "scaleAt": 0.1,
+      "killAt": 0.025,
+      "fatigueSlope": -0.006
+    }
+  },
+  "dates": {
+    "start": "2026-07-13",
+    "end": "2026-08-03",
+    "days": 21
+  },
+  "rationale": "Wave 7 splits traffic evenly across three variants for \"GPT-Live talks over you: OpenAI's new full-duplex voice model (July 2026) can listen and speak at the same time, even interrupt mid-sentence, and the internet's first instinct is to playfully test, argue with, and try to break it rather than trust it.\"; the 21-day observation window covers the full fatigue-curve inflection point"
+}

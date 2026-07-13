@@ -1,0 +1,31 @@
+{
+  "variants": [
+    {
+      "id": "v1",
+      "asset": "your chat history",
+      "assetKind": "thing",
+      "newElement": "an interrupting voice that reads one old exchange back at the worst possible moment",
+      "angle": "Your own receipts become the sparring partner, turning stored history into a dry argument you can post without OpenAI becoming the punchline.",
+      "angleType": "evergreen",
+      "workingTitle": "Receipts Talk Back"
+    },
+    {
+      "id": "v2",
+      "asset": "recording a voice note",
+      "assetKind": "interaction",
+      "newElement": "a full-duplex voice that cuts in once before you finish your point",
+      "angle": "The familiar act of leaving a voice note becomes a live stress test: can you keep your thought while the model talks over you?",
+      "angleType": "moment",
+      "workingTitle": "Talkover Test"
+    },
+    {
+      "id": "v3",
+      "asset": "reading your own draft aloud",
+      "assetKind": "interaction",
+      "newElement": "one deadpan interruption at the sentence the listener chooses",
+      "angle": "People remix the same simple challenge by feeding their own drafts, speeches, apologies, or hot takes into a single well-timed interruption.",
+      "angleType": "ugc-loop",
+      "workingTitle": "Interrupt My Draft"
+    }
+  ]
+}

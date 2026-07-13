@@ -1,0 +1,24 @@
+{
+  "variantId": "v1",
+  "workingTitle": "Receipts Talk Back",
+  "audience": "People who use AI chat daily and recognize the uneasy intimacy of a product that remembers enough to quote them back.",
+  "insight": "The expected belief is that live voice AI feels useful because it responds faster; the reversal is that it gets funny and uncomfortable when it responds too well, interrupting you with your own receipts before you can revise the story.",
+  "assetXElement": "Existing asset: your chat history. New element: an interrupting voice that reads one old exchange back at the worst possible moment.",
+  "formats": [
+    "still",
+    "motion"
+  ],
+  "successMetric": "The piece should make viewers instantly understand the joke without making OpenAI the punchline: the tension is between the user and their own stored history becoming a sparring partner.",
+  "referenceSet": [
+    {
+      "source": "references/cross-channel.md starter rules (marketing-prompts, MIT)",
+      "entry": "The reversal. State the expected belief, then contradict it in the same breath, doubt before offer.",
+      "status": "starter-unverified"
+    }
+  ],
+  "generationPrompts": {
+    "image": "Create an editorial tech cover image about a live AI voice interrupting someone with their own chat receipts. Composition: a vertical magazine-cover style frame with generous negative space in the upper third for future headline placement, no visible logo, no watermark, no brand marks, no readable company names. Subject: a dimly lit desk at night with a phone or laptop showing an abstract chat interface, messages blurred and unreadable, while a glowing audio waveform rises from the screen like an interrupting voice. Add one visual metaphor: a single old chat bubble, treated like a translucent receipt slip, floating forward from the device and casting a soft shadow across the desk. Mood: witty, tense, slightly embarrassing, not dystopian. Visual grammar: editorial tech cover with a defocused photographic background, saturated color core melting into shadow, visible depth of field, subtle film grain, realistic lens behavior, shallow focus, cinematic contrast, no flat fills. Lighting: saturated electric cyan and hot coral core light emerging from the device, fading into deep charcoal shadows around the edges; rim light on the receipt-like chat bubble; soft practical desk light in the far background, heavily defocused. Style: high-end photographic editorial, modern technology magazine cover, tactile reflections, glass and screen glow, realistic materials, tasteful negative space, no cartoon elements, no text inside the image.",
+    "motion": "For ChatCut: Create a 9:16 short motion piece built around the joke that live voice AI can interrupt you with your own chat history. Shot logic: open on a tight, cinematic close-up of a phone or laptop on a dark desk, shallow depth of field, blurred chat history visible but unreadable. A calm voice waveform begins pulsing from the screen as if the assistant is listening. The user starts to speak off-camera, but before the sentence finishes, the waveform sharply cuts in. Animate one old exchange as a translucent receipt-like chat bubble sliding forward from the screen into the foreground at the exact interruption moment. The receipt should feel like it is being read aloud by the device, not by a human narrator. Camera movement: slow push-in for the first two seconds, sudden micro-jolt on the interruption, then a controlled drift sideways as the receipt hovers and the device glow intensifies. Lighting: saturated cyan and coral screen glow melting into shadow, film grain, visible depth of field, no flat graphic backgrounds. Pacing: 0-2s quiet setup, 2-4s interruption and receipt reveal, 4-7s awkward pause with the waveform still pulsing, 7-9s final hold on the receipt casting a shadow over the desk. Tone: playful argument with technology, dry and self-aware, not scary, not anti-OpenAI. Do not include logos, watermarks, readable brand names, or UI text that identifies any company.",
+    "copy": "Generate short social copy for a post about GPT-Live style full-duplex voice AI that can listen and speak at the same time, including interrupting mid-sentence. Use the reversal structure: state the expected belief, then contradict it in the same breath. Tone: dry, witty, internet-native, lightly uncomfortable, not alarmist, not anti-OpenAI. Length: 1 punchy headline under 12 words, 1 subhead under 24 words, and 3 caption options under 140 characters each. Key points to include: live AI voice feels impressive until it interrupts you; the funniest test is making it argue with your own old chat history; the punchline is your receipts talking back, not OpenAI itself. Avoid technical jargon except the phrase full-duplex if it fits naturally. Do not mention safety panic, surveillance panic, or dystopia. Make the output ready to paste into a creative brief."
+  }
+}

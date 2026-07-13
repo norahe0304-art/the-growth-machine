@@ -1,0 +1,24 @@
+{
+  "variantId": "v2",
+  "workingTitle": "Talkover Test",
+  "audience": "AI-curious creators, product people, and internet-native early adopters who already record voice notes and are primed to test new OpenAI voice behavior through playful friction.",
+  "insight": "A voice note used to be a private one-way dump of thought. Full-duplex voice turns that familiar habit into a live interruption test: the moment the model cuts in before you finish, the user stops trusting the flow and starts testing who controls the conversation.",
+  "assetXElement": "Existing asset: recording a voice note. New element: a full-duplex AI voice that cuts in once before the speaker finishes their point.",
+  "formats": [
+    "still",
+    "motion"
+  ],
+  "successMetric": "Stops the feed by making viewers instantly recognize the familiar voice-note gesture, then feel the new tension of being interrupted before the thought lands.",
+  "referenceSet": [
+    {
+      "source": "references/cross-channel.md starter rules (marketing-prompts, MIT)",
+      "entry": "The before-you pattern interrupt. Open with a command against the expected next action, stop scrolling, don't do X, breaks feed autopilot.",
+      "status": "starter-unverified"
+    }
+  ],
+  "generationPrompts": {
+    "image": "Create a vertical editorial tech cover image about a person recording a voice note while an AI voice interrupts before they finish. Composition: close-up of a hand holding a smartphone in voice-note recording mode, thumb near the record button, with the speaker's blurred face partially visible in the background as if mid-thought. Add one clear new visual element: a luminous full-duplex AI voice waveform cutting across the phone screen and slightly into the air, angled like an interruption slicing into the scene. The waveform should feel active, saturated, and intrusive, but not like a logo. Visual grammar: editorial tech cover, defocused photographic background, visible depth of field, saturated color core melting into shadow, subtle film grain, cinematic realism, high contrast, tactile phone glass, soft reflections, generous negative space for headline placement. Lighting: dark room or late-night desk lighting, cyan and magenta core glow from the phone, warm skin highlights, deep shadows around the edges. Mood: playful stress test, not horror; tense, modern, curious. Style: premium magazine cover photography, realistic, no flat fills, no vector-art look, no cartoon, no UI brand marks. Do not include any logo, watermark, OpenAI mark, app icon, readable brand name, or text inside the image.",
+    "motion": "for ChatCut: Create a 9:16 short motion script, 8 seconds total, based on the concept 'Talkover Test.' Shot logic: start with the expected action, then interrupt it. 0.0-1.5s: tight handheld macro shot of a thumb pressing record on a voice-note interface; ambient room tone, subtle phone haptic. 1.5-3.0s: camera slowly pushes in as the speaker begins talking, mouth softly defocused in the background, waveform moving calmly on screen. 3.0-4.2s: before the speaker finishes, a brighter second waveform cuts across the first one from the side, visually interrupting it; add a quick audio duck and a clean synthetic voice blip that overlaps the human voice for one beat. 4.2-6.5s: the human speaker pauses, tries to continue, and the two waveforms briefly coexist in tension; camera tilts slightly, keeping phone sharp and face blurred. 6.5-8.0s: freeze on the phone with the intrusive waveform still glowing, leaving generous negative space for copy overlay. Visual style: editorial tech cover in motion, defocused photographic background, saturated cyan-magenta color core melting into shadow, visible depth of field, subtle film grain, cinematic handheld realism, no flat fills, no logos, no watermarks, no readable brand UI. The motion should feel like a familiar voice note becoming a live stress test: can you keep your thought while the model talks over you?",
+    "copy": "Generate short social ad copy for the creative concept 'Talkover Test.' Tone: internet-native, sharp, playful, slightly confrontational, curious rather than alarmist. Length: provide 6 headline options under 9 words each, 4 hook lines under 16 words each, and 2 caption options under 45 words each. Use the before-you pattern interrupt: open against the expected next action, such as 'Before you send that voice note...' Key points to include: recording a voice note used to be one-way; OpenAI's July 2026 full-duplex voice model can listen and speak at the same time; the model may cut in before you finish; the internet's first instinct is to test, argue with, and try to break it; the emotional tension is whether you can keep your thought while the AI talks over you. Avoid hype clichés, avoid claiming trust or safety, avoid technical jargon beyond 'full-duplex voice,' and do not mention logos or brand visuals."
+  }
+}

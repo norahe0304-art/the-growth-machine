@@ -1,0 +1,757 @@
+{
+  "moment": "GPT-Live talks over you: OpenAI's new full-duplex voice model (July 2026) can listen and speak at the same time, even interrupt mid-sentence, and the internet's first instinct is to playfully test, argue with, and try to break it rather than trust it.",
+  "waveNumber": 7,
+  "variants": [
+    {
+      "id": "v1",
+      "asset": "your chat history",
+      "assetKind": "thing",
+      "newElement": "an interrupting voice that reads one old exchange back at the worst possible moment",
+      "angle": "Your own receipts become the sparring partner, turning stored history into a dry argument you can post without OpenAI becoming the punchline.",
+      "angleType": "evergreen",
+      "workingTitle": "Receipts Talk Back"
+    },
+    {
+      "id": "v2",
+      "asset": "recording a voice note",
+      "assetKind": "interaction",
+      "newElement": "a full-duplex voice that cuts in once before you finish your point",
+      "angle": "The familiar act of leaving a voice note becomes a live stress test: can you keep your thought while the model talks over you?",
+      "angleType": "moment",
+      "workingTitle": "Talkover Test"
+    },
+    {
+      "id": "v3",
+      "asset": "reading your own draft aloud",
+      "assetKind": "interaction",
+      "newElement": "one deadpan interruption at the sentence the listener chooses",
+      "angle": "People remix the same simple challenge by feeding their own drafts, speeches, apologies, or hot takes into a single well-timed interruption.",
+      "angleType": "ugc-loop",
+      "workingTitle": "Interrupt My Draft"
+    }
+  ],
+  "briefs": [
+    {
+      "variantId": "v1",
+      "workingTitle": "Receipts Talk Back",
+      "audience": "People who use AI chat daily and recognize the uneasy intimacy of a product that remembers enough to quote them back.",
+      "insight": "The expected belief is that live voice AI feels useful because it responds faster; the reversal is that it gets funny and uncomfortable when it responds too well, interrupting you with your own receipts before you can revise the story.",
+      "assetXElement": "Existing asset: your chat history. New element: an interrupting voice that reads one old exchange back at the worst possible moment.",
+      "formats": [
+        "still",
+        "motion"
+      ],
+      "successMetric": "The piece should make viewers instantly understand the joke without making OpenAI the punchline: the tension is between the user and their own stored history becoming a sparring partner.",
+      "referenceSet": [
+        {
+          "source": "references/cross-channel.md starter rules (marketing-prompts, MIT)",
+          "entry": "The reversal. State the expected belief, then contradict it in the same breath, doubt before offer.",
+          "status": "starter-unverified"
+        }
+      ],
+      "generationPrompts": {
+        "image": "Create an editorial tech cover image about a live AI voice interrupting someone with their own chat receipts. Composition: a vertical magazine-cover style frame with generous negative space in the upper third for future headline placement, no visible logo, no watermark, no brand marks, no readable company names. Subject: a dimly lit desk at night with a phone or laptop showing an abstract chat interface, messages blurred and unreadable, while a glowing audio waveform rises from the screen like an interrupting voice. Add one visual metaphor: a single old chat bubble, treated like a translucent receipt slip, floating forward from the device and casting a soft shadow across the desk. Mood: witty, tense, slightly embarrassing, not dystopian. Visual grammar: editorial tech cover with a defocused photographic background, saturated color core melting into shadow, visible depth of field, subtle film grain, realistic lens behavior, shallow focus, cinematic contrast, no flat fills. Lighting: saturated electric cyan and hot coral core light emerging from the device, fading into deep charcoal shadows around the edges; rim light on the receipt-like chat bubble; soft practical desk light in the far background, heavily defocused. Style: high-end photographic editorial, modern technology magazine cover, tactile reflections, glass and screen glow, realistic materials, tasteful negative space, no cartoon elements, no text inside the image.",
+        "motion": "For ChatCut: Create a 9:16 short motion piece built around the joke that live voice AI can interrupt you with your own chat history. Shot logic: open on a tight, cinematic close-up of a phone or laptop on a dark desk, shallow depth of field, blurred chat history visible but unreadable. A calm voice waveform begins pulsing from the screen as if the assistant is listening. The user starts to speak off-camera, but before the sentence finishes, the waveform sharply cuts in. Animate one old exchange as a translucent receipt-like chat bubble sliding forward from the screen into the foreground at the exact interruption moment. The receipt should feel like it is being read aloud by the device, not by a human narrator. Camera movement: slow push-in for the first two seconds, sudden micro-jolt on the interruption, then a controlled drift sideways as the receipt hovers and the device glow intensifies. Lighting: saturated cyan and coral screen glow melting into shadow, film grain, visible depth of field, no flat graphic backgrounds. Pacing: 0-2s quiet setup, 2-4s interruption and receipt reveal, 4-7s awkward pause with the waveform still pulsing, 7-9s final hold on the receipt casting a shadow over the desk. Tone: playful argument with technology, dry and self-aware, not scary, not anti-OpenAI. Do not include logos, watermarks, readable brand names, or UI text that identifies any company.",
+        "copy": "Generate short social copy for a post about GPT-Live style full-duplex voice AI that can listen and speak at the same time, including interrupting mid-sentence. Use the reversal structure: state the expected belief, then contradict it in the same breath. Tone: dry, witty, internet-native, lightly uncomfortable, not alarmist, not anti-OpenAI. Length: 1 punchy headline under 12 words, 1 subhead under 24 words, and 3 caption options under 140 characters each. Key points to include: live AI voice feels impressive until it interrupts you; the funniest test is making it argue with your own old chat history; the punchline is your receipts talking back, not OpenAI itself. Avoid technical jargon except the phrase full-duplex if it fits naturally. Do not mention safety panic, surveillance panic, or dystopia. Make the output ready to paste into a creative brief."
+      }
+    },
+    {
+      "variantId": "v2",
+      "workingTitle": "Talkover Test",
+      "audience": "AI-curious creators, product people, and internet-native early adopters who already record voice notes and are primed to test new OpenAI voice behavior through playful friction.",
+      "insight": "A voice note used to be a private one-way dump of thought. Full-duplex voice turns that familiar habit into a live interruption test: the moment the model cuts in before you finish, the user stops trusting the flow and starts testing who controls the conversation.",
+      "assetXElement": "Existing asset: recording a voice note. New element: a full-duplex AI voice that cuts in once before the speaker finishes their point.",
+      "formats": [
+        "still",
+        "motion"
+      ],
+      "successMetric": "Stops the feed by making viewers instantly recognize the familiar voice-note gesture, then feel the new tension of being interrupted before the thought lands.",
+      "referenceSet": [
+        {
+          "source": "references/cross-channel.md starter rules (marketing-prompts, MIT)",
+          "entry": "The before-you pattern interrupt. Open with a command against the expected next action, stop scrolling, don't do X, breaks feed autopilot.",
+          "status": "starter-unverified"
+        }
+      ],
+      "generationPrompts": {
+        "image": "Create a vertical editorial tech cover image about a person recording a voice note while an AI voice interrupts before they finish. Composition: close-up of a hand holding a smartphone in voice-note recording mode, thumb near the record button, with the speaker's blurred face partially visible in the background as if mid-thought. Add one clear new visual element: a luminous full-duplex AI voice waveform cutting across the phone screen and slightly into the air, angled like an interruption slicing into the scene. The waveform should feel active, saturated, and intrusive, but not like a logo. Visual grammar: editorial tech cover, defocused photographic background, visible depth of field, saturated color core melting into shadow, subtle film grain, cinematic realism, high contrast, tactile phone glass, soft reflections, generous negative space for headline placement. Lighting: dark room or late-night desk lighting, cyan and magenta core glow from the phone, warm skin highlights, deep shadows around the edges. Mood: playful stress test, not horror; tense, modern, curious. Style: premium magazine cover photography, realistic, no flat fills, no vector-art look, no cartoon, no UI brand marks. Do not include any logo, watermark, OpenAI mark, app icon, readable brand name, or text inside the image.",
+        "motion": "for ChatCut: Create a 9:16 short motion script, 8 seconds total, based on the concept 'Talkover Test.' Shot logic: start with the expected action, then interrupt it. 0.0-1.5s: tight handheld macro shot of a thumb pressing record on a voice-note interface; ambient room tone, subtle phone haptic. 1.5-3.0s: camera slowly pushes in as the speaker begins talking, mouth softly defocused in the background, waveform moving calmly on screen. 3.0-4.2s: before the speaker finishes, a brighter second waveform cuts across the first one from the side, visually interrupting it; add a quick audio duck and a clean synthetic voice blip that overlaps the human voice for one beat. 4.2-6.5s: the human speaker pauses, tries to continue, and the two waveforms briefly coexist in tension; camera tilts slightly, keeping phone sharp and face blurred. 6.5-8.0s: freeze on the phone with the intrusive waveform still glowing, leaving generous negative space for copy overlay. Visual style: editorial tech cover in motion, defocused photographic background, saturated cyan-magenta color core melting into shadow, visible depth of field, subtle film grain, cinematic handheld realism, no flat fills, no logos, no watermarks, no readable brand UI. The motion should feel like a familiar voice note becoming a live stress test: can you keep your thought while the model talks over you?",
+        "copy": "Generate short social ad copy for the creative concept 'Talkover Test.' Tone: internet-native, sharp, playful, slightly confrontational, curious rather than alarmist. Length: provide 6 headline options under 9 words each, 4 hook lines under 16 words each, and 2 caption options under 45 words each. Use the before-you pattern interrupt: open against the expected next action, such as 'Before you send that voice note...' Key points to include: recording a voice note used to be one-way; OpenAI's July 2026 full-duplex voice model can listen and speak at the same time; the model may cut in before you finish; the internet's first instinct is to test, argue with, and try to break it; the emotional tension is whether you can keep your thought while the AI talks over you. Avoid hype clichés, avoid claiming trust or safety, avoid technical jargon beyond 'full-duplex voice,' and do not mention logos or brand visuals."
+      }
+    },
+    {
+      "variantId": "v3",
+      "workingTitle": "Interrupt My Draft",
+      "audience": "People who draft things out loud before sending them, especially creators, students, founders, and chronically online writers testing speeches, apologies, hot takes, or vulnerable messages.",
+      "insight": "The funny tension is not that GPT-Live can interrupt anyone; it is that people want to choose the exact sentence where being interrupted would hurt, help, or expose the draft the most.",
+      "assetXElement": "Existing asset: reading your own draft aloud. New element: one deadpan interruption at the sentence the listener chooses.",
+      "formats": [
+        "still",
+        "motion"
+      ],
+      "successMetric": "Viewers understand the challenge in under 2 seconds and comment with the exact sentence they would choose for the interruption.",
+      "referenceSet": [
+        {
+          "source": "references/cross-channel.md starter rules (marketing-prompts, MIT)",
+          "entry": "The identity callout. Name the exact person this is for, in second person, before saying what it is.",
+          "status": "starter-unverified"
+        }
+      ],
+      "generationPrompts": {
+        "image": "Create an authentic UGC-style phone-camera still of a person sitting at a kitchen table late in the evening, reading their own draft aloud from a laptop while a phone nearby is clearly recording audio. The subject should look mid-sentence, slightly vulnerable and focused, with one hand hovering near the laptop trackpad and the other holding a mug or printed draft. The moment should imply they are about to be interrupted, but do not show any text overlay, UI labels, logos, watermarks, captions, or graphic elements. Composition: natural handheld vertical framing, slightly off-center subject, laptop screen angled away so no readable text appears, phone in foreground softly visible, background lived-in and imperfect. Lighting: real apartment lighting with warm overhead spill, mild shadows, small exposure imperfections, no studio polish. Style: documentary phone snapshot, candid, low-retouch, realistic skin texture, slight motion softness, ordinary clothes, everyday setting. Mood: playful tension, private rehearsal turning into a public internet challenge. No brand marks, no OpenAI logo, no watermark, no added graphics.",
+        "motion": "For ChatCut: Create a short vertical UGC loop, 9:16, 8 to 10 seconds, built around the challenge 'Interrupt My Draft.' Shot logic: start on a handheld phone-camera view of a person reading their own draft aloud from a laptop at a kitchen table. Keep the camera close and natural, with tiny handheld drift and real room noise energy. Beat 1, seconds 0-2: the person starts confidently reading a draft, as if rehearsing a speech, apology, pitch, or hot take. Beat 2, seconds 2-5: they reach a sentence that feels emotionally loaded or overconfident; leave a tiny pause that makes the audience anticipate the chosen interruption point. Beat 3, seconds 5-7: an unseen AI voice interrupts in a flat, deadpan tone with one short line that punctures the sentence without being cruel. The person freezes, half offended and half impressed. Beat 4, seconds 7-10: they glance at the phone as if inviting the viewer to try it with their own draft, then the loop cuts back to the start cleanly. Visual style: authentic phone-camera footage, natural handheld framing, real lighting imperfections, no studio retouching, no added graphics, no captions burned into the image, no logos or watermarks. Performance direction: awkward, funny, believable, not exaggerated. Sound direction: room tone, soft laptop fan or table sounds, the reading voice close to camera, interruption voice crisp and deadpan. End frame should visually motivate comments: viewers should instantly understand they can choose the sentence where the interruption lands.",
+        "copy": "Generate short-form social copy for a UGC loop called 'Interrupt My Draft.' Tone: playful, second-person, internet-native, lightly provocative, not corporate. Length: write 6 options, each under 120 characters, plus 3 comment prompts under 80 characters. Use the identity callout rule: name the exact person this is for in second person before explaining the challenge. Key points to include: this is for people reading drafts aloud; GPT-Live can listen and speak at the same time; the viewer chooses the exact sentence where the interruption should happen; the joke is one perfectly timed deadpan interruption, not a long debate. Avoid technical jargon, avoid hype, avoid trust claims, avoid mentioning logos or brands beyond GPT-Live if needed. Make the copy feel like a repeatable challenge people can remix with speeches, apologies, pitches, essays, or hot takes."
+      }
+    }
+  ],
+  "namedAssets": [
+    {
+      "variantId": "v1",
+      "format": "still",
+      "name": "WEB_CONV_MOF_EVG_STIL_YOUR_GPTLIV_PEOP_V07",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "CONV",
+        "FUNNEL": "MOF",
+        "TEMP": "EVG",
+        "FORMAT": "STIL",
+        "HOOK": "YOUR",
+        "MOMENT": "GPTLIV",
+        "PERSONA": "PEOP",
+        "VER": "V07"
+      }
+    },
+    {
+      "variantId": "v1",
+      "format": "motion",
+      "name": "WEB_CONV_MOF_EVG_MOTN_YOUR_GPTLIV_PEOP_V07",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "CONV",
+        "FUNNEL": "MOF",
+        "TEMP": "EVG",
+        "FORMAT": "MOTN",
+        "HOOK": "YOUR",
+        "MOMENT": "GPTLIV",
+        "PERSONA": "PEOP",
+        "VER": "V07"
+      }
+    },
+    {
+      "variantId": "v2",
+      "format": "still",
+      "name": "WEB_ENGT_TOF_HOT_STIL_THEF_GPTLIV_AICU_V07",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "ENGT",
+        "FUNNEL": "TOF",
+        "TEMP": "HOT",
+        "FORMAT": "STIL",
+        "HOOK": "THEF",
+        "MOMENT": "GPTLIV",
+        "PERSONA": "AICU",
+        "VER": "V07"
+      }
+    },
+    {
+      "variantId": "v2",
+      "format": "motion",
+      "name": "WEB_ENGT_TOF_HOT_MOTN_THEF_GPTLIV_AICU_V07",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "ENGT",
+        "FUNNEL": "TOF",
+        "TEMP": "HOT",
+        "FORMAT": "MOTN",
+        "HOOK": "THEF",
+        "MOMENT": "GPTLIV",
+        "PERSONA": "AICU",
+        "VER": "V07"
+      }
+    },
+    {
+      "variantId": "v3",
+      "format": "still",
+      "name": "WEB_ENGT_BOF_LOOP_STIL_PEOP_GPTLIV_PEOP_V07",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "ENGT",
+        "FUNNEL": "BOF",
+        "TEMP": "LOOP",
+        "FORMAT": "STIL",
+        "HOOK": "PEOP",
+        "MOMENT": "GPTLIV",
+        "PERSONA": "PEOP",
+        "VER": "V07"
+      }
+    },
+    {
+      "variantId": "v3",
+      "format": "motion",
+      "name": "WEB_ENGT_BOF_LOOP_MOTN_PEOP_GPTLIV_PEOP_V07",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "ENGT",
+        "FUNNEL": "BOF",
+        "TEMP": "LOOP",
+        "FORMAT": "MOTN",
+        "HOOK": "PEOP",
+        "MOMENT": "GPTLIV",
+        "PERSONA": "PEOP",
+        "VER": "V07"
+      }
+    }
+  ],
+  "plan": {
+    "moment": "GPT-Live talks over you: OpenAI's new full-duplex voice model (July 2026) can listen and speak at the same time, even interrupt mid-sentence, and the internet's first instinct is to playfully test, argue with, and try to break it rather than trust it.",
+    "waveNumber": 7,
+    "arms": [
+      {
+        "variantId": "v1",
+        "format": "still",
+        "name": "WEB_CONV_MOF_EVG_STIL_YOUR_GPTLIV_PEOP_V07",
+        "trafficSplitPct": 33.33,
+        "budgetIllustrative": 250
+      },
+      {
+        "variantId": "v2",
+        "format": "still",
+        "name": "WEB_ENGT_TOF_HOT_STIL_THEF_GPTLIV_AICU_V07",
+        "trafficSplitPct": 33.33,
+        "budgetIllustrative": 500
+      },
+      {
+        "variantId": "v3",
+        "format": "still",
+        "name": "WEB_ENGT_BOF_LOOP_STIL_PEOP_GPTLIV_PEOP_V07",
+        "trafficSplitPct": 33.33,
+        "budgetIllustrative": 350
+      }
+    ],
+    "preRegisteredThresholds": {
+      "moment": {
+        "scaleAt": 0.045,
+        "killAt": 0.015,
+        "fatigueSlope": -0.004
+      },
+      "evergreen": {
+        "scaleAt": 0.035,
+        "killAt": 0.012,
+        "fatigueSlope": -0.0015
+      },
+      "ugc-loop": {
+        "scaleAt": 0.05,
+        "killAt": 0.018,
+        "fatigueSlope": -0.002
+      }
+    },
+    "engagementThresholds": {
+      "moment": {
+        "scaleAt": 0.08,
+        "killAt": 0.02,
+        "fatigueSlope": -0.01
+      },
+      "evergreen": {
+        "scaleAt": 0.06,
+        "killAt": 0.015,
+        "fatigueSlope": -0.004
+      },
+      "ugc-loop": {
+        "scaleAt": 0.1,
+        "killAt": 0.025,
+        "fatigueSlope": -0.006
+      }
+    },
+    "dates": {
+      "start": "2026-07-13",
+      "end": "2026-08-03",
+      "days": 21
+    },
+    "rationale": "Wave 7 splits traffic evenly across three variants for \"GPT-Live talks over you: OpenAI's new full-duplex voice model (July 2026) can listen and speak at the same time, even interrupt mid-sentence, and the internet's first instinct is to playfully test, argue with, and try to break it rather than trust it.\"; the 21-day observation window covers the full fatigue-curve inflection point"
+  },
+  "produced": [
+    {
+      "variantId": "v1",
+      "format": "still",
+      "name": "WEB_CONV_MOF_EVG_STIL_YOUR_GPTLIV_PEOP_V07",
+      "assetPath": "waves/wave-07/assets/WEB_CONV_MOF_EVG_STIL_YOUR_GPTLIV_PEOP_V07.png",
+      "copy": "You expect full-duplex voice AI to impress you; then it interrupts with your old chat receipts and wins the argument.",
+      "motionScript": null,
+      "imageModelUsed": "codex-exec",
+      "regeneratedCount": 0
+    },
+    {
+      "variantId": "v1",
+      "format": "motion",
+      "name": "WEB_CONV_MOF_EVG_MOTN_YOUR_GPTLIV_PEOP_V07",
+      "assetPath": null,
+      "copy": "You expect full-duplex voice AI to impress you; then it interrupts with your old chat receipts and wins the argument.",
+      "motionScript": [
+        "Shot 1: a dim desk at night, a laptop chat history glowing softly, a calm waveform pulsing as the user starts to speak off camera.",
+        "Shot 2: the waveform sharply cuts in mid sentence and one old exchange slides forward off the screen as a translucent receipt slip, read aloud by the device.",
+        "Shot 3: awkward hold on the hovering receipt casting a shadow over the desk, the hook line locks in as on-screen copy and the frame holds."
+      ],
+      "imageModelUsed": null,
+      "regeneratedCount": 0
+    },
+    {
+      "variantId": "v2",
+      "format": "still",
+      "name": "WEB_ENGT_TOF_HOT_STIL_THEF_GPTLIV_AICU_V07",
+      "assetPath": "waves/wave-07/assets/WEB_ENGT_TOF_HOT_STIL_THEF_GPTLIV_AICU_V07.png",
+      "copy": "Before you send that voice note, try keeping your thought while full-duplex voice cuts in and the internet argues back.",
+      "motionScript": null,
+      "imageModelUsed": "codex-exec",
+      "regeneratedCount": 0
+    },
+    {
+      "variantId": "v2",
+      "format": "motion",
+      "name": "WEB_ENGT_TOF_HOT_MOTN_THEF_GPTLIV_AICU_V07",
+      "assetPath": null,
+      "copy": "Before you send that voice note, try keeping your thought while full-duplex voice cuts in and the internet argues back.",
+      "motionScript": [
+        "Shot 1: handheld macro of a thumb pressing record on a voice note interface, room tone, the speaker begins talking with the waveform moving calmly.",
+        "Shot 2: before the point lands, a brighter second waveform slices across the first from the side, the human voice and the synthetic voice overlap for one beat.",
+        "Shot 3: freeze on the phone with the intrusive waveform still glowing, negative space opens up and the hook line lands as the copy overlay."
+      ],
+      "imageModelUsed": null,
+      "regeneratedCount": 0
+    },
+    {
+      "variantId": "v3",
+      "format": "still",
+      "name": "WEB_ENGT_BOF_LOOP_STIL_PEOP_GPTLIV_PEOP_V07",
+      "assetPath": "waves/wave-07/assets/WEB_ENGT_BOF_LOOP_STIL_PEOP_GPTLIV_PEOP_V07.png",
+      "copy": "You, reading a draft out loud: let viewers pick the exact sentence where GPT-Live cuts in with one deadpan interruption.",
+      "motionScript": null,
+      "imageModelUsed": "codex-exec",
+      "regeneratedCount": 0
+    },
+    {
+      "variantId": "v3",
+      "format": "motion",
+      "name": "WEB_ENGT_BOF_LOOP_MOTN_PEOP_GPTLIV_PEOP_V07",
+      "assetPath": null,
+      "copy": "You, reading a draft out loud: let viewers pick the exact sentence where GPT-Live cuts in with one deadpan interruption.",
+      "motionScript": [
+        "Shot 1: single-take handheld phone video, a person at a messy kitchen table starts reading their own draft aloud, casual framing, natural room noise.",
+        "Shot 2: at the exact sentence the viewers chose, GPT-Live cuts in with one short deadpan interruption and the reader stops, half offended, half impressed.",
+        "Shot 3: the reader laughs under their breath, says that was the exact sentence, and resets the page, a loopable ending that invites the viewer to try their own draft."
+      ],
+      "imageModelUsed": null,
+      "regeneratedCount": 0
+    }
+  ],
+  "judged": [
+    {
+      "variantId": "v1",
+      "format": "still",
+      "score": {
+        "onBrief": 3,
+        "legible": 3,
+        "shareable": 3,
+        "brandFit": 3
+      },
+      "passed": true,
+      "regenerated": false,
+      "notes": "The line fuses live full-duplex interruption with old chat receipts as the punchline. It is immediately understandable, dry, specific, and ready to post. OpenAI is not the punchline, and there are no rights issues."
+    },
+    {
+      "variantId": "v1",
+      "format": "motion",
+      "score": {
+        "onBrief": 3,
+        "legible": 2,
+        "shareable": 3,
+        "brandFit": 3
+      },
+      "passed": true,
+      "regenerated": false,
+      "notes": "The interrupting voice and old chat receipts fuse cleanly into the core joke. The motion is understandable, though the one-second read depends on how quickly the receipt reveal appears. The copy is a ready-made caption with a relatable self-own. Brand fit is strong: restrained OpenAI presence, dry specific register, and no rights issues."
+    },
+    {
+      "variantId": "v2",
+      "format": "still",
+      "score": {
+        "onBrief": 2,
+        "legible": 2,
+        "shareable": 2,
+        "brandFit": 2
+      },
+      "passed": true,
+      "regenerated": false,
+      "notes": "The copy includes the voice-note setup, full-duplex interruption, and internet testing behavior, but it compresses the whole concept into explanation rather than making the asset and new element feel inseparable. It is understandable quickly, though slightly abstract without the image. Shareability is passable because 'try keeping your thought' is relatable, but it is not yet a ready-made caption people would naturally repost. Brand fit is mostly restrained and rights-safe, but the register leans a bit generic with 'the internet argues back' rather than staying dry and specific to the exact interruption moment."
+    },
+    {
+      "variantId": "v2",
+      "format": "motion",
+      "score": {
+        "onBrief": 3,
+        "legible": 3,
+        "shareable": 3,
+        "brandFit": 3
+      },
+      "passed": true,
+      "regenerated": false,
+      "notes": "The voice-note gesture and full-duplex interruption fuse cleanly: the second waveform interrupts before the thought lands, matching the insight. The three-shot structure is instantly readable. The copy is a usable social caption with a clear before-you hook. Brand fit is strong: restrained OpenAI presence, dry specific register, and no rights-risk elements."
+    },
+    {
+      "variantId": "v3",
+      "format": "still",
+      "score": {
+        "onBrief": 3,
+        "legible": 2,
+        "shareable": 2,
+        "brandFit": 3
+      },
+      "passed": true,
+      "regenerated": false,
+      "notes": "Faithfully combines reading a draft aloud with the viewer-chosen deadpan interruption. The challenge is understandable, though the sentence is a little dense for one-second comprehension. It is remixable but reads more like an instruction than a caption someone would eagerly repost. Brand presence is restrained, dry, specific, and rights-safe."
+    },
+    {
+      "variantId": "v3",
+      "format": "motion",
+      "score": {
+        "onBrief": 3,
+        "legible": 3,
+        "shareable": 2,
+        "brandFit": 3
+      },
+      "passed": true,
+      "regenerated": false,
+      "notes": "The existing act of reading a draft aloud and the new element of a chosen deadpan interruption are tightly fused. The setup is instantly understandable in the copy and three-beat motion script. Shareability is solid because viewers can imagine their own sentence, but the produced copy is more explanatory than a ready-made caption. Brand fit is clean: restrained OpenAI presence, dry specific register, and no rights issues."
+    }
+  ],
+  "simulated": [
+    {
+      "variantId": "v1",
+      "format": "still",
+      "angleType": "evergreen",
+      "days": 21,
+      "predictedCTR": [
+        0.022591096112245967,
+        0.024311053302509718,
+        0.02741407538339923,
+        0.029700221845216878,
+        0.030126442257426965,
+        0.028880068259767498,
+        0.03149383051429585,
+        0.03037607733700054,
+        0.03169232557994324,
+        0.03395348798416341,
+        0.03302256433744226,
+        0.03618495613458925,
+        0.034993837606357,
+        0.03368032045726276,
+        0.03425120780606678,
+        0.03592975701549808,
+        0.03488815751813196,
+        0.03902905190916231,
+        0.03683398645066881,
+        0.038744833046463575,
+        0.0379276656396687
+      ],
+      "shareRate": [
+        0.004972860432630939,
+        0.006741498823835982,
+        0.006326129855458761,
+        0.007223676074596079,
+        0.006757984747206864,
+        0.00625332799565216,
+        0.008033148761644699,
+        0.008351101702963007,
+        0.008864722426284596,
+        0.007799118934031041,
+        0.008641820213487977,
+        0.00895916468680693,
+        0.008081958875574535,
+        0.007946367423209788,
+        0.008075152950801232,
+        0.008011779845156173,
+        0.007913704709503408,
+        0.010601702777653611,
+        0.008266959183554261,
+        0.008839528361308685,
+        0.010430245155002921
+      ],
+      "seed": "2882134127"
+    },
+    {
+      "variantId": "v2",
+      "format": "still",
+      "angleType": "moment",
+      "days": 21,
+      "predictedCTR": [
+        0.020151666717603798,
+        0.039559473942965266,
+        0.059469155590981246,
+        0.049160218348830144,
+        0.03865226572917276,
+        0.029433766557869567,
+        0.026438136891630222,
+        0.020128386787148147,
+        0.0170623458877729,
+        0.014581215271390916,
+        0.00912179456695135,
+        0.0075115955784071375,
+        0.005316016598507755,
+        0.006857823934808657,
+        0.0040692919010164,
+        0.0020248959663693783,
+        0.003726835882143798,
+        0.0018860138369894471,
+        0.0018338025364955197,
+        0,
+        0.0006328097392206385
+      ],
+      "shareRate": [
+        0.009204825929459183,
+        0.018282607074454425,
+        0.026114663658384232,
+        0.02219779965435156,
+        0.017529059258381458,
+        0.012290076504430437,
+        0.012134883203200369,
+        0.009662048956709428,
+        0.008132206311323938,
+        0.005781954802328695,
+        0.004580655749805491,
+        0.0027002710601120696,
+        0.0016793026044063242,
+        0.0037425939689339485,
+        0.0009874635484848169,
+        0.0008995050687835222,
+        0.0022197532020777266,
+        0.001447765671963086,
+        0.0001743014535649089,
+        0,
+        0.000784198605116531
+      ],
+      "seed": "587844772"
+    },
+    {
+      "variantId": "v3",
+      "format": "still",
+      "angleType": "ugc-loop",
+      "days": 21,
+      "predictedCTR": [
+        0.023308301892131567,
+        0.023517927358858284,
+        0.021970789615996182,
+        0.02149388500768691,
+        0.0212320955125615,
+        0.021114632077515124,
+        0.022283747432753444,
+        0.027808830213546753,
+        0.0312703256893903,
+        0.029967995885573327,
+        0.03041915260795504,
+        0.030058574424870314,
+        0.03137858806345612,
+        0.029103739807195963,
+        0.038896461162976924,
+        0.03957671528801322,
+        0.03990237437587232,
+        0.0381692475129664,
+        0.040470902299769226,
+        0.038468353905975826,
+        0.03836563159737737
+      ],
+      "shareRate": [
+        0.021290092142950745,
+        0.0220684686858207,
+        0.02055348772443831,
+        0.019213727761246264,
+        0.018857980721816422,
+        0.01964918274944648,
+        0.020423936890996995,
+        0.025141203904636204,
+        0.02764203156160191,
+        0.025974166213460267,
+        0.027730299009215087,
+        0.027693000803533943,
+        0.02799860971618444,
+        0.02702778051581234,
+        0.03589628094774858,
+        0.03563717538737879,
+        0.03553516286271811,
+        0.03512839253223688,
+        0.03653774224114791,
+        0.034818936821866785,
+        0.03488779092044756
+      ],
+      "seed": "2289553986"
+    }
+  ],
+  "decided": [
+    {
+      "variantId": "v1",
+      "format": "still",
+      "verdict": "SCALE",
+      "reason": "last-3-day average CTR 0.0378 reached the preregistered scaleAt 0.035: verdict: scale",
+      "finalCTR": 0.03783549504560036,
+      "slope": 0.0006644769462597711,
+      "source": "simulated"
+    },
+    {
+      "variantId": "v2",
+      "format": "still",
+      "verdict": "KILL",
+      "reason": "last-3-day average CTR 0.0008 fell below the preregistered killAt 0.015: verdict: kill",
+      "finalCTR": 0.0008222040919053861,
+      "slope": -0.0005804382772776542,
+      "source": "simulated"
+    },
+    {
+      "variantId": "v3",
+      "format": "still",
+      "verdict": "ITERATE",
+      "reason": "last-3-day average CTR 0.0391 sits between killAt and scaleAt, slope has not tripped the fatigue threshold: verdict: iterate",
+      "finalCTR": 0.03910162926770747,
+      "slope": -0.00011573869774916267,
+      "source": "simulated"
+    }
+  ],
+  "measured": [],
+  "rollouts": [
+    {
+      "variantId": "v1",
+      "name": "WEB_CONV_MOF_EVG_STIL_YOUR_GPTLIV_PEOP_V07",
+      "channels": [
+        {
+          "channel": "TikTok",
+          "role": "discovery",
+          "assetSpec": "Ship a 9:16 three shot motion script with a cover frame. Shot one shows a dark desk close up with a blurred chat history and a calm waveform listening. Shot two cuts in with a small camera jolt as a translucent receipt bubble slides out before the user finishes speaking. Shot three holds on the awkward glowing receipt shadow while the waveform keeps pulsing. The cover frame is the receipt bubble hovering in front of the device with no readable UI text.",
+          "executionSteps": [
+            "Cut the winning still into a native short motion sequence with the interruption landing in the first four seconds.",
+            "Keep all chat text blurred so the joke reads through timing, waveform behavior, and the receipt shape.",
+            "Post with minimal captioning so the video works with sound off and no explanatory setup."
+          ],
+          "kpi": "Reach a 3.5 percent swipe stop to click rate over the first 72 hours.",
+          "kpiThresholdNote": "This uses the preregistered scaleAt threshold of 0.035 because the channel cut earns SCALE only if its first 72 hour outcome matches or beats the winning concept bar.",
+          "channelCopy": "Live voice is impressive until your receipts join the call.",
+          "assetName": "TT_CONV_MOF_EVG_STIL_YOUR_GPTLIV_PEOP_V07",
+          "nativeFormat": "video",
+          "channelScript": [
+            "Shot 1: dark desk close up, blurred chat history glowing on the laptop, a calm waveform pulsing as a voice starts talking off camera.",
+            "Shot 2: small camera jolt, the waveform cuts in mid sentence and a translucent receipt bubble slides forward off the screen before the speaker finishes.",
+            "Shot 3: hold on the hovering receipt casting a shadow over the desk, the line lands as the overlay: Live voice is impressive until your receipts join the call."
+          ],
+          "illustrativeLabel": null,
+          "assetPath": "waves/wave-07/assets/rollout/TT_CONV_MOF_EVG_STIL_YOUR_GPTLIV_PEOP_V07.mp4",
+          "coverPath": "waves/wave-07/assets/rollout/TT_CONV_MOF_EVG_STIL_YOUR_GPTLIV_PEOP_V07_cover.png",
+          "videoDurationSec": 8.04,
+          "postKit": {
+            "file": "waves/wave-07/assets/rollout/TT_CONV_MOF_EVG_STIL_YOUR_GPTLIV_PEOP_V07.mp4",
+            "caption": "We let the new live voice read the receipts. It did not wait for the end of the sentence. Volume up is optional, the interruption is not.",
+            "hashtags": [
+              "#gptlive",
+              "#voiceai",
+              "#chathistory",
+              "#aiinterruption"
+            ],
+            "altText": "A dark desk at night with a laptop showing a blurred chat history, an orange voice waveform cutting across the screen, and a translucent receipt like chat bubble floating forward.",
+            "postingNote": "Post in the evening US window while the GPT-Live interruption tests are still climbing, pin the strongest reply that quotes its own receipt."
+          }
+        },
+        {
+          "channel": "Instagram",
+          "role": "amplification",
+          "assetSpec": "Ship a candid creator still made for the grid and Reels cover behavior. The image shows a hand half covering a phone on a desk as a glowing receipt like chat bubble floats forward, with the creator caught in the small embarrassment of being quoted back. The styling is polished live trend material with soft flash, shallow focus, and no brand marks.",
+          "executionSteps": [
+            "Recast the winning concept as a creator reaction still rather than a product scene.",
+            "Use the receipt bubble as the visual punchline and keep the person visible enough to make the embarrassment human.",
+            "Post while the live AI voice conversation is active enough that the format reads as current, not archival."
+          ],
+          "kpi": "Reach a 4.0 percent profile action rate over the first 72 hours.",
+          "kpiThresholdNote": "This threshold sits above the concept scaleAt bar because Instagram is an amplification arm and must prove the winner travels with stronger intent, not just passive reach.",
+          "channelCopy": "Thought live voice would just be faster. Turns out it also remembers exactly what you said last Tuesday.",
+          "assetName": "IG_CONV_MOF_EVG_STIL_YOUR_GPTLIV_PEOP_V07",
+          "nativeFormat": "ugc-still",
+          "channelScript": null,
+          "illustrativeLabel": null,
+          "assetPath": "waves/wave-07/assets/rollout/IG_CONV_MOF_EVG_STIL_YOUR_GPTLIV_PEOP_V07.png",
+          "coverPath": null,
+          "videoDurationSec": null,
+          "postKit": {
+            "file": "waves/wave-07/assets/rollout/IG_CONV_MOF_EVG_STIL_YOUR_GPTLIV_PEOP_V07.png",
+            "caption": "Asked live voice for a quick answer. It opened with something I said last Tuesday. The receipts are alive and they have a speaking slot now.",
+            "hashtags": [
+              "#gptlive",
+              "#voicenotes",
+              "#receipts",
+              "#aimoment"
+            ],
+            "altText": "A candid creator style photo of a hand half covering a phone on a desk while a glowing receipt like chat bubble floats forward from the screen.",
+            "postingNote": "Post while the live voice trend is still climbing, use the still as a grid post and reuse it as a Reels cover if a video cut follows."
+          }
+        },
+        {
+          "channel": "X",
+          "role": "amplification",
+          "assetSpec": "Ship a native still that is text forward and conversational. Use a simple dark desk crop with the floating receipt bubble in the lower corner and generous empty space for the post text to do the work. The image should feel like a reaction attached to a live moment, not a campaign visual.",
+          "executionSteps": [
+            "Post as a person reacting to the moment rather than as a brand announcement.",
+            "Lead with the one line reversal and attach the still as proof of mood, not as the whole joke.",
+            "Reply once with the named asset lineage and no extra explainer unless the post clears early engagement."
+          ],
+          "kpi": "Reach a 1.8 percent outbound click rate over the first 24 hours.",
+          "kpiThresholdNote": "This uses a channel specific threshold below the 0.035 concept CTR because X is judged on live moment response and outbound intent, not the same paid creative CTR system.",
+          "channelCopy": "Full duplex voice sounds great until it starts cross examining you with your own chat history.",
+          "assetName": "XTW_CONV_MOF_EVG_STIL_YOUR_GPTLIV_PEOP_V07",
+          "nativeFormat": "still",
+          "channelScript": null,
+          "illustrativeLabel": null,
+          "assetPath": "waves/wave-07/assets/rollout/XTW_CONV_MOF_EVG_STIL_YOUR_GPTLIV_PEOP_V07.png",
+          "coverPath": null,
+          "videoDurationSec": null,
+          "postKit": {
+            "file": "waves/wave-07/assets/rollout/XTW_CONV_MOF_EVG_STIL_YOUR_GPTLIV_PEOP_V07.png",
+            "caption": "Full duplex voice sounds great until it starts cross examining you with your own chat history. Exhibit A attached.",
+            "hashtags": [
+              "#gptlive",
+              "#voiceai",
+              "#receipts"
+            ],
+            "altText": "A dark desk scene with a floating translucent receipt bubble in the lower corner and generous empty space above it.",
+            "postingNote": "Post from a person voice reacting to the live moment within the trend window, reply once with the lineage name if early engagement clears."
+          }
+        },
+        {
+          "channel": "in-app profile surface",
+          "role": "conversion",
+          "assetSpec": "Ship a mask safe functional UI crop. Use a tight crop of the abstract receipt bubble and pulsing waveform as a preset tile or one tap prompt surface, with no decorative campaign framing. The crop must survive rounded masks, small tiles, and dark mode placement.",
+          "executionSteps": [
+            "Turn the winning insight into a one tap prompt that lets users replay an old exchange as a dry sparring partner.",
+            "Place the crop in a functional surface where the user can activate the mode immediately.",
+            "Measure only users who see the prompt and complete the first generated response."
+          ],
+          "kpi": "Reach a 12 percent prompt activation rate among exposed users over seven days.",
+          "kpiThresholdNote": "This threshold is separate from the external creative scaleAt system because in-app must prove feature level conversion, not social CTR.",
+          "channelCopy": "Make my receipts talk back.",
+          "assetName": "APP_CONV_MOF_EVG_STIL_YOUR_GPTLIV_PEOP_V07",
+          "nativeFormat": "surface",
+          "channelScript": null,
+          "illustrativeLabel": null,
+          "assetPath": "waves/wave-07/assets/rollout/APP_CONV_MOF_EVG_STIL_YOUR_GPTLIV_PEOP_V07.png",
+          "coverPath": null,
+          "videoDurationSec": null,
+          "postKit": {
+            "file": "waves/wave-07/assets/rollout/APP_CONV_MOF_EVG_STIL_YOUR_GPTLIV_PEOP_V07.png",
+            "caption": "Make my receipts talk back. One tap replays an old exchange as a dry sparring partner.",
+            "hashtags": [
+              "#gptlive",
+              "#chathistory",
+              "#voicemode"
+            ],
+            "altText": "A tight UI tile crop of a translucent receipt bubble and a pulsing waveform on a dark background, safe inside a circular mask.",
+            "postingNote": "Ship behind a surface flag to voice mode users first, measure activation before widening exposure."
+          }
+        }
+      ],
+      "participationKit": null
+    }
+  ],
+  "injectedLearnings": "Winning traits from wave 6: thing asset \"your chat history\" + angleType=evergreen + HOOK=RETR. Prioritize reusing these asset shapes and angleType combinations in new variants."
+}

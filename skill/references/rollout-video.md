@@ -63,9 +63,14 @@ Applies whenever station 8b produces a channel cut whose `nativeFormat` is `vide
 example `tiktok`). Two real steps, never a single fake-motion shortcut: ffmpeg assembles
 only, it never originates motion.
 
-**Step 1, real video, image to video generation.** Use the `libtv-skill`
-(`~/.claude/skills/libtv-skill/SKILL.md`, liblib.tv's image-to-video capability) off the
-winning concept still, `waves/wave-{NN}/assets/{winning NamedAsset.name}.png`:
+**Step 1, real video, image to video generation.** Any real i2v backend qualifies; two
+paths have shipped waves so far. The proven default is the **ToAPIs gateway**
+(`VIDEO_API_KEY` in the repo `.env`, docs at docs.toapis.com, seedance/hailuo model
+family, waves 4 and 7 precedent): submit the winning concept still plus one plain
+natural-motion sentence, poll the task, download the raw mp4. The alternative below is
+the `libtv-skill` (liblib.tv's image-to-video capability), kept for machines where it is
+installed and logged in; check availability before choosing it. Either way the source is
+the winning concept still, `waves/wave-{NN}/assets/{winning NamedAsset.name}.png`:
 
 ```bash
 python3 {libtv-skill baseDir}/scripts/upload_file.py waves/wave-{NN}/assets/{winning NamedAsset.name}.png
