@@ -13,7 +13,7 @@
  *   THE EVIDENCE (right, a tiered, borderless stack, evidence flowing one direction only -- down,
  *   never scrolled back up to an older card to watch it change). The right column is organised by
  *   three tiers (公理一): Tier 1 verdicts (the input, the proposals triptych, the race, the winner,
- *   the featured cuts, the closing bill), Tier 2 process shelves (the produce still shelf, the
+ *   the channels-ready rack, the closing bill), Tier 2 process shelves (the produce still shelf, the
  *   per-draft channel-cut shelves), Tier 3 footnotes (the nine-segment name, the threshold table,
  *   the library rows). No card borders; hierarchy is size, whitespace and alignment, hairline only
  *   inside tables and the money-shot stage. The narrative is spoken by in-flow chapter headers --
@@ -24,24 +24,18 @@
  *   before the log line that approved it. The three produced stills land as a shelf of thumbnails
  *   with each judge verdict stamped onto its own corner (no separate scorecards). The race draws its
  *   preregistered thresholds as dashed rules on the chart and presses each verdict stamp down at its
- *   curve's terminal point; the SCALE finalCTR counts up as an oversized figure. The winning still
+ *   curve's terminal point; the SCALE finalCTR counts up as a restrained workspace figure. The winning still
  *   is the cut, held static forever (no video tag ever added to it). Rollout channel cuts stand in
- *   per-draft shelves (a video-native channel's cell carries its own hidden <video> from first
- *   render, showing only its still cover until this asset's own crossfade fires); the featured
- *   tiktok cuts are one brand new Tier-1 card per rolled-out video channel (DATA.featuredVideos,
- *   built off every rollout draft that shipped a real rendered mp4, not just the SCALE-verdict hero),
- *   each wearing a small corner tag ("THE TIKTOK CUT · N/M") and appended to the bottom of the stack
- *   in sequence, only after station 8b's approval log line has cleared real video-generation spend
- *   and the render itself has happened. A closing Tier-1 bill card tallies the wave's whole output
+ *   per-draft shelves as static covers only, even for video-native channels. A single channels-ready
+ *   rack appears only after station 8b's approval log line has cleared real video-generation spend.
+ *   That rack groups all rollout drafts by channel name in readout order, exposes real click
+ *   toggles, and is the only replay surface that ever plays rendered videos. A closing Tier-1 bill card tallies the wave's whole output
  *   (moment / bets / named assets / stills / videos / winner / seconds of video) in counted-up
- *   figures, every one derivable from readout, before the install hook. Each featured card holds for
- *   its own real ffprobe'd duration (durationSec) plus a
- *   crossfade/breathing buffer, un-stretched by PACE (same posture as the insight approval gate's
- *   gateHold), so a video is never cut off and two videos never play in the same beat -- one card's
- *   hold fully elapses before the next queueAction fires. Still-to-video timing mirrors the real
+ *   figures, every one derivable from readout, before the install hook. Each rack video holds for
+ *   its own real ffprobe'd duration (durationSec), with a real closed gap between channels and a real
+ *   no-play gap between multiple videos in the same channel. Still-to-video timing mirrors the real
  *   pipeline's causality on purpose: skill/SKILL.md gates video behind that second approval, so the
- *   replay never shows rendered motion -- hero, any channel chip, or any featured card -- before the
- *   log line that approves it. Every media-stage box (hero, featured video, channel chips, produced
+ *   replay never shows rendered motion before the log line that approves it. Every media-stage box (hero, channel rack, channel chips, produced
  *   stills) caps at 60vh so a 9:16 render or portrait still never runs a card off the bottom of the
  *   recording viewport (scripts/record-theater.mjs's fixed 1280x800). Nothing on either side is
  *   invented. Ships alongside scripts/record-theater.mjs, which drives a real Chromium tab through
@@ -88,7 +82,7 @@ async function assetDataURI(assetPath: string | null): Promise<string | null> {
 
 // Real rendered-video runtime, shelled out to the system ffprobe (same
 // shell-out posture scripts/record-theater.mjs already takes with ffmpeg).
-// Used to size each featured-video card's on-screen hold to the asset's
+// Used to size each rendered-video channel hold to the asset's
 // actual duration instead of a guessed constant -- readout.json's own
 // videoDurationSec field is the pre-end-card content length, not the final
 // mp4's real runtime once a brand end card / transition has been appended
@@ -215,22 +209,6 @@ interface TheaterHero {
   productionNote: string | null;
 }
 
-// One card per rolled-out video channel that actually rendered (real mp4 on
-// disk, not the SCALE-verdict hero alone) -- see the L3 header for why this
-// exists alongside TheaterHero rather than replacing it. workingTitle and
-// channelCopy both come straight off the matching rollout draft/channel in
-// readout.json, never invented here.
-interface TheaterFeaturedVideo {
-  variantId: string;
-  workingTitle: string;
-  channel: string;
-  videoRelSrc: string;
-  coverURI: string | null;
-  channelCopy: string;
-  durationSec: number | null;
-  productionNote: string | null;
-}
-
 interface TheaterData {
   moment: string;
   waveNumber: number;
@@ -242,7 +220,6 @@ interface TheaterData {
   rationale: string;
   rollouts: TheaterRolloutPayload[];
   hero: TheaterHero;
-  featuredVideos: TheaterFeaturedVideo[];
   libraryBefore: { wave: number; winners: string[] }[];
   libraryNewLine: { wave: number; winners: string[] };
   installCmd: string;
@@ -328,32 +305,6 @@ async function buildRolloutPayload(waveDirRel: string, readout: WaveReadout, dra
   };
 }
 
-// Every rollout draft that shipped a real rendered video channel gets its
-// own featured card -- not just the SCALE-verdict hero. Order follows
-// readout.rollouts (the same order the real pipeline produced them in), so
-// the replay's sequence is a fact, not a curation choice. workingTitle and
-// channelCopy are read straight off the already-built rollout payload
-// (itself sourced from readout.json's variants[] and rollouts[].channels[]),
-// nothing here is authored.
-function buildFeaturedVideos(rollouts: TheaterRolloutPayload[]): TheaterFeaturedVideo[] {
-  const featured: TheaterFeaturedVideo[] = [];
-  for (const draft of rollouts) {
-    const videoChannel = draft.channels.find((ch) => ch.nativeFormat === "video" && ch.videoRelSrc);
-    if (!videoChannel || !videoChannel.videoRelSrc) continue;
-    featured.push({
-      variantId: draft.variantId,
-      workingTitle: draft.workingTitle,
-      channel: videoChannel.channel,
-      videoRelSrc: videoChannel.videoRelSrc,
-      coverURI: videoChannel.coverURI,
-      channelCopy: videoChannel.channelCopy,
-      durationSec: videoChannel.durationSec,
-      productionNote: videoChannel.productionNote,
-    });
-  }
-  return featured;
-}
-
 async function buildHero(waveDirRel: string, readout: WaveReadout): Promise<TheaterHero> {
   const scaleDecision = readout.decided.find((d) => d.verdict === "SCALE");
   if (!scaleDecision) {
@@ -382,7 +333,6 @@ export async function renderTheater(readout: WaveReadout, libraryEntries?: Learn
   const variants = await Promise.all(readout.variants.map((v) => buildVariantPayload(readout, v)));
   const rollouts = await Promise.all(readout.rollouts.map((d) => buildRolloutPayload(waveDirRel, readout, d)));
   const hero = await buildHero(waveDirRel, readout);
-  const featuredVideos = buildFeaturedVideos(rollouts);
 
   const namedAssets = readout.namedAssets.map((n) => ({ name: n.name, format: n.format, segments: n.segments }));
 
@@ -408,7 +358,6 @@ export async function renderTheater(readout: WaveReadout, libraryEntries?: Learn
     rationale: readout.plan.rationale,
     rollouts,
     hero,
-    featuredVideos,
     libraryBefore,
     libraryNewLine: { wave: readout.waveNumber, winners: thisWaveWinners },
     installCmd: "./install.sh",
@@ -530,10 +479,9 @@ body { font-family: var(--font-sans); font-weight: 300; line-height: 1.5; overfl
 .log-line .cursor { display: inline-block; width: 6px; height: 12px; background: var(--ink); margin-left: 2px; vertical-align: -2px; animation: blink 0.9s steps(1) infinite; }
 @keyframes blink { 50% { opacity: 0; } }
 
-.evidence-stack { flex: 1 1 auto; overflow-y: auto; padding: 18px; display: flex; flex-direction: column; gap: 14px; scroll-behavior: smooth; }
+.evidence-stack { flex: 1 1 auto; overflow-y: auto; padding: 16px 18px 24px; display: flex; flex-direction: column; gap: 24px; scroll-behavior: smooth; }
 /* Flexbox gives every child an automatic min-height of 0 the instant it has
-   overflow != visible (the hero card's shimmer sweep needs overflow:hidden
-   to clip). Without flex-shrink:0, once total card height exceeds the
+   overflow != visible. Without flex-shrink:0, once total card height exceeds the
    panel's height, the flex algorithm crushes that one card down to a
    sliver instead of leaving it at its natural content size and letting the
    panel scroll. Every card keeps its real height; the panel scrolls. */
@@ -548,26 +496,25 @@ body { font-family: var(--font-sans); font-weight: 300; line-height: 1.5; overfl
    physical overshoot -- a thing landing, not a fade materialising.
    ------------------------------------------------------------------ */
 .evidence-card {
-  padding: 4px 2px; opacity: 0; transform: translateY(-18px);
+  padding: 12px; background: #fdfcf9; opacity: 0; transform: translateY(-18px);
   transition: opacity 0.5s ease, transform 0.62s cubic-bezier(0.2, 1.15, 0.32, 1);
   cursor: default;
 }
 .evidence-card.in { opacity: 1; transform: translateY(0); }
 .evidence-card[data-evidence] { cursor: pointer; }
 
-/* Tier 1 -- the verdicts. Full width, generous air above, the display
-   face doing the talking: proposals triptych, the race, the winner,
-   the featured cuts, the bill. */
-.tier1 { padding: 26px 2px 18px; }
+.tier1 { padding: 14px 12px 16px; }
 /* Tier 3 -- the footnotes. Small, muted, tucked right under the beat it
    annotates: name lineage, thresholds, library rows. */
-.tier3 { padding: 4px 2px 14px; }
+.tier3 { padding: 12px; }
 .tier3 .evidence-eyebrow { margin-bottom: 4px; }
 
-.evidence-title { font-family: var(--font-display); font-weight: 400; font-size: 20px; margin: 0 0 8px; line-height: 1.15; }
-.tier1 .evidence-title { font-size: 27px; }
-.evidence-eyebrow { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); margin-bottom: 8px; }
-.evidence-caption { font-size: 12px; line-height: 1.5; color: var(--muted); }
+.evidence-title { font-family: var(--font-display); font-weight: 400; font-size: 16px; margin: 0 0 7px; line-height: 1.18; }
+.tier1 .evidence-title { font-size: 18px; }
+.mission-card .evidence-title { font-size: 31px; line-height: 1.08; max-width: 14em; }
+.evidence-eyebrow { display: flex; align-items: center; gap: 10px; font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); margin-bottom: 10px; white-space: nowrap; }
+.evidence-eyebrow::after { content: ""; flex: 1 1 auto; border-top: 1px solid var(--hairline); }
+.evidence-caption { font-size: 12px; line-height: 1.42; color: var(--muted); margin: 6px 0 0; }
 .evidence-name { font-family: var(--font-mono); font-size: 11px; color: var(--ink); word-break: break-all; }
 
 /* ------------------------------------------------------------------
@@ -577,12 +524,13 @@ body { font-family: var(--font-sans); font-weight: 300; line-height: 1.5; overfl
    pause. This is how a zero-context marketer follows the story: moment in
    -> three bets -> machine grades itself -> race -> it kills its own ->
    winner ships -> library smarter. */
-.chapter { padding: 40px 2px 30px; }
-.chapter-line { font-family: var(--font-display); font-weight: 400; font-size: 30px; line-height: 1.28; color: var(--ink); max-width: 15em; margin: 0; }
-.chapter-index { display: block; font-family: var(--font-sans); font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.16em; color: var(--muted); margin-bottom: 14px; }
+.chapter { padding: 18px 12px; background: var(--paper); }
+.chapter-line { font-family: var(--font-display); font-weight: 400; font-size: 18px; line-height: 1.32; color: var(--ink); max-width: 31em; margin: 0; }
+.chapter-index { display: flex; align-items: center; gap: 10px; font-family: var(--font-sans); font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); margin-bottom: 10px; }
+.chapter-index::after { content: ""; flex: 1 1 auto; border-top: 1px solid var(--hairline); }
 
 /* insight cards */
-.variant-row { display: flex; gap: 8px; font-size: 14px; margin: 4px 0; }
+.variant-row { display: flex; gap: 8px; font-size: 13px; margin: 4px 0; }
 .variant-row b { font-weight: 400; }
 .angle-badge { display: inline-block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; border: 1px solid currentColor; padding: 2px 7px; margin-top: 8px; }
 
@@ -591,13 +539,13 @@ body { font-family: var(--font-sans); font-weight: 300; line-height: 1.5; overfl
    its own log line types, all landing in the same row. Equal columns,
    a single hairline rule between them, no boxes. */
 .triptych { display: flex; gap: 0; align-items: stretch; }
-.triptych-cell { flex: 1 1 0; padding: 0 18px; opacity: 0; transform: translateY(-14px); transition: opacity 0.5s ease, transform 0.55s cubic-bezier(0.2, 1.15, 0.32, 1); }
+.triptych-cell { flex: 1 1 0; padding: 0 14px; opacity: 0; transform: translateY(-14px); transition: opacity 0.5s ease, transform 0.55s cubic-bezier(0.2, 1.15, 0.32, 1); }
 .triptych-cell.in { opacity: 1; transform: translateY(0); }
 .triptych-cell + .triptych-cell { border-left: 1px solid var(--hairline); }
 .triptych-cell:first-child { padding-left: 2px; }
 .triptych-cell:last-child { padding-right: 2px; }
 .triptych-num { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
-.triptych-title { font-family: var(--font-display); font-size: 21px; line-height: 1.12; margin: 0 0 10px; }
+.triptych-title { font-family: var(--font-display); font-size: 16px; line-height: 1.18; margin: 0 0 8px; }
 .triptych-formula { font-size: 12px; line-height: 1.45; margin-bottom: 4px; }
 .triptych-formula b { font-weight: 400; }
 .triptych-formula .x { color: var(--muted); padding: 0 3px; }
@@ -659,7 +607,7 @@ body { font-family: var(--font-sans); font-weight: 300; line-height: 1.5; overfl
    删除独立阈值卡), and each verdict stamp presses down at its own curve's
    terminal point, not in a separate list below. */
 .race-plot { position: relative; width: 100%; }
-.race-card svg { display: block; width: 100%; height: 300px; }
+.race-card svg { display: block; width: 100%; height: 240px; }
 .race-card .curve-path { fill: none; stroke-width: 2.5; }
 .race-card .threshold-line { stroke-width: 1; stroke-dasharray: 4 4; opacity: 0.5; }
 .race-card .threshold-label { font-family: var(--font-mono); font-size: 9px; }
@@ -676,8 +624,8 @@ body { font-family: var(--font-sans); font-weight: 300; line-height: 1.5; overfl
 .curve-stamp.iterate { color: #6b6b63; }
 
 /* the winning number, counted up on the SCALE verdict (公理四: 数字主角). */
-.race-verdict { margin-top: 22px; display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; }
-.race-bignum { font-family: var(--font-display); font-size: 62px; line-height: 0.9; color: #2f6b3f; }
+.race-verdict { margin-top: 16px; display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.race-bignum { font-family: var(--font-display); font-size: 26px; line-height: 1; color: #2f6b3f; }
 .race-bignum-note { font-size: 12px; color: var(--muted); line-height: 1.5; max-width: 20em; }
 .race-bignum-note b { color: var(--ink); font-weight: 500; }
 
@@ -701,57 +649,59 @@ body { font-family: var(--font-sans); font-weight: 300; line-height: 1.5; overfl
 /* contain, not cover: the concept still is 16:9 and the rendered rollout
    video is often a vertical 9:16 mobile cut, a real aspect mismatch, not a
    styling choice. object-fit:contain letterboxes both inside the same
-   fixed stage so the crossfade still lines up without cropping either
-   one. */
-.hero-media img, .hero-media video, .rollout-chip-media img, .rollout-chip-media video {
+   fixed stage. */
+.hero-media img, .hero-media video, .rollout-chip-media img, .rollout-chip-media video, .channel-media img, .channel-media video {
   position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;
 }
 .hero-media img, .rollout-chip-media img { opacity: 1; transition: opacity 1.4s ease, transform 6s ease; }
 .hero-media img.breathe, .rollout-chip-media img.breathe { transform: scale(1.04); }
 .hero-media img.faded, .rollout-chip-media img.faded { opacity: 0; }
-.hero-media video, .rollout-chip-media video { opacity: 0; transition: opacity 1.4s ease; }
+.hero-media video { opacity: 0; transition: opacity 1.4s ease; }
+.rollout-chip-media video { opacity: 1; }
 .hero-media video.shown, .rollout-chip-media video.shown { opacity: 1; }
-.hero-media .shimmer, .rollout-chip-media .shimmer {
-  position: absolute; inset: 0; pointer-events: none; opacity: 0;
-  background: linear-gradient(115deg, transparent 40%, rgba(255,255,255,0.55) 50%, transparent 60%);
-  background-size: 220% 220%; background-position: -60% -60%;
-  transition: opacity 0.3s ease;
-}
-.hero-media .shimmer.sweep, .rollout-chip-media .shimmer.sweep { opacity: 1; animation: sweep 0.9s ease forwards; }
-@keyframes sweep { from { background-position: -60% -60%; } to { background-position: 160% 160%; } }
 .hero-caption { padding-top: 12px; }
 
-/* rollout waterfall: a video-native channel's chip carries its own hidden
-   <video> from first render (see THEATER_JS) and shares the media-stage
-   rules above; a still-only channel's chip is just the <img> half of the
-   same box. */
 .rollout-meta { padding-top: 8px; }
 .rollout-channel { font-size: 13px; font-weight: 400; text-transform: capitalize; }
 .rollout-role { font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
 .rollout-copy { font-size: 12px; font-style: italic; margin-top: 4px; }
 .rollout-kpi { font-size: 11px; color: var(--muted); margin-top: 6px; }
 
-/* rollout shelf (公理三, Tier 2): the channel cuts stand side by side as a
-   shelf, one cell per channel (channel name + role), the way a channel
-   manager would see the lineup. A video-native channel keeps its
-   still-cover cell here (skill/SKILL.md 8b: ship every cut first, video as
-   its still cover) and crossfades to video in place after the spend log
-   line; the full-size play is the featured cut below. */
-.rollout-shelf { display: flex; gap: 14px; align-items: flex-start; flex-wrap: wrap; }
+.rollout-shelf { display: flex; gap: 12px; align-items: flex-start; flex-wrap: wrap; }
 .rollout-cell { flex: 1 1 30%; min-width: 150px; opacity: 0; transform: translateY(-14px); transition: opacity 0.5s ease, transform 0.55s cubic-bezier(0.2, 1.15, 0.32, 1); }
 .rollout-cell.in { opacity: 1; transform: translateY(0); }
 .rollout-cell .rollout-chip-media { height: 22vh; background: #f4f3f0; }
 .rollout-cell .rollout-meta { padding-top: 7px; }
-.rollout-cell .rollout-copy { font-size: 11px; }
+.rollout-cell .rollout-copy { font-size: 11px; line-height: 1.35; }
 .rollout-cell .rollout-kpi { font-size: 10px; }
 
-/* featured cut tag (公理二 revised): no pre-pause, just a small badge
-   pressed into the video card's own corner, riding in with the card. */
-.featured-tag {
-  position: absolute; top: 10px; left: 10px; z-index: 3;
-  font-family: var(--font-mono); font-size: 10px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase;
-  padding: 4px 9px; background: rgba(26,26,26,0.82); color: #fff;
+.channels-ready-card { background: #fdfcf9; }
+.channel-rack { display: flex; flex-direction: column; gap: 8px; }
+.channel-entry { border-top: 1px solid var(--hairline); }
+.channel-toggle {
+  appearance: none; width: 100%; border: 0; background: transparent; color: var(--ink);
+  display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center;
+  padding: 10px 0; text-align: left; font-family: var(--font-sans); cursor: pointer;
 }
+.channel-title { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.channel-name { font-family: var(--font-display); font-size: 17px; line-height: 1.12; text-transform: capitalize; }
+.channel-role { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+.channel-ready { font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; border: 1px solid var(--hairline); padding: 2px 7px; color: var(--muted); }
+.channel-body { display: none; padding: 2px 0 14px; opacity: 0; }
+.channel-entry.is-open .channel-body { display: block; opacity: 1; }
+.channel-items { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.channel-item { min-width: 0; }
+.channel-media { position: relative; height: min(42vh, 360px); max-height: 60vh; background: #f4f3f0; overflow: hidden; }
+.channel-media video { opacity: 1; background: #f4f3f0; }
+.channel-item.is-playing .channel-media { outline: 1px solid var(--ink); outline-offset: -1px; }
+.channel-gap-note {
+  display: none; margin: 8px 0 0; font-size: 10px; text-transform: uppercase;
+  letter-spacing: 0.06em; color: var(--muted);
+}
+.channel-body.is-gap .channel-gap-note { display: block; }
+.channel-copy { font-size: 11px; line-height: 1.35; color: var(--ink); margin: 7px 0 0; }
+.channel-kpi { font-size: 10px; line-height: 1.35; color: var(--muted); margin: 5px 0 0; }
+
 .cta-tag { display: inline-block; margin-top: 6px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; border: 1px solid var(--muted); padding: 2px 7px; color: var(--muted); }
 .cta-tag.cta-full { border-color: var(--ink); color: var(--ink); }
 .cta-tag.cta-soft { border-color: #8a7a4a; color: #8a7a4a; }
@@ -760,16 +710,16 @@ body { font-family: var(--font-sans); font-weight: 300; line-height: 1.5; overfl
    numbers, in the flow. This is the payoff beat -- all this work, done for
    you. Big Playfair figures counted up, wide air, no chrome. Every figure
    is countable from readout; nothing here is authored. */
-.bill-card { padding: 34px 2px 20px; }
-.bill-lead { font-family: var(--font-display); font-size: 25px; line-height: 1.2; margin: 0 0 22px; }
-.bill-grid { display: flex; flex-wrap: wrap; gap: 26px 40px; }
+.bill-card { padding: 16px 12px 18px; }
+.bill-lead { font-family: var(--font-sans); font-size: 14px; line-height: 1.35; margin: 0 0 16px; }
+.bill-grid { display: flex; flex-wrap: wrap; gap: 20px 32px; }
 .bill-item { min-width: 84px; }
 .bill-num { font-family: var(--font-display); font-size: 48px; line-height: 0.9; color: var(--ink); }
 .bill-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); margin-top: 7px; max-width: 10em; }
 
 /* closing */
 .closing-card .install-line { font-family: var(--font-mono); font-size: 13px; background: #f7f6f3; border: 1px solid var(--hairline); padding: 8px 10px; margin: 8px 0; }
-.closing-line { font-family: var(--font-display); font-size: 17px; margin-top: 8px; }
+.closing-line { font-family: var(--font-display); font-size: 15px; margin-top: 8px; }
 
 .bottombar { flex: 0 0 auto; position: relative; border-top: 1px solid var(--hairline); padding: 9px 20px 10px; }
 .bottombar-fill { position: absolute; top: -1px; left: 0; height: 1px; background: var(--ink); width: 0%; transition: width 0.4s ease; }
@@ -796,7 +746,7 @@ body { font-family: var(--font-sans); font-weight: 300; line-height: 1.5; overfl
 }
 .approval-gate.show { display: flex; opacity: 1; }
 .approval-gate-text {
-  font-family: var(--font-display); font-size: 40px; letter-spacing: 0.02em; color: var(--ink);
+  font-family: var(--font-display); font-size: 18px; letter-spacing: 0.02em; color: var(--ink);
   animation: breathe-gate 1.6s ease-in-out infinite;
 }
 @keyframes breathe-gate { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
@@ -807,19 +757,6 @@ body { font-family: var(--font-sans); font-weight: 300; line-height: 1.5; overfl
 }
 `;
 
-// ============================================================
-// JS engine. A single rAF-driven virtual clock replaces raw setTimeout so
-// the whole replay is pausable: TIMELINE holds [time, fn] entries (the
-// array-of-time/target/class shape the spec calls for, generalized to a
-// callback so the handful of compound beats -- typewriter, curve self-draw,
-// still-to-video crossfade -- can live beside the simple class toggles).
-// Left column ("the work") is a sequential log built station by station from
-// real WaveReadout fields; each line, once fully revealed, may drop one card
-// into the right column ("the evidence") and pulse it. ?speed=N divides
-// every delay. Space bar pauses/resumes. Clicking any [data-evidence]
-// element pauses and opens a lightbox citing where that fact comes from.
-// Playback stamps body[data-done="1"] on the final beat.
-// ============================================================
 const THEATER_JS = `
 (function () {
   "use strict";
@@ -858,7 +795,7 @@ const THEATER_JS = `
       document.querySelectorAll("video").forEach(function (v) { if (!v.paused) { videosPausedByUser.push(v); v.pause(); } });
     } else {
       pausedTotal += performance.now() - pauseStart;
-      videosPausedByUser.forEach(function (v) { v.play().catch(function () {}); });
+      videosPausedByUser.forEach(function (v) { playRackVideo(v); });
       videosPausedByUser = [];
     }
   }
@@ -986,6 +923,214 @@ const THEATER_JS = `
     });
   }
 
+  function buildChannelGroups() {
+    var groups = [];
+    var byName = {};
+    DATA.rollouts.forEach(function (draft) {
+      draft.channels.forEach(function (ch) {
+        var key = ch.channel;
+        if (!byName[key]) {
+          byName[key] = { channel: ch.channel, role: ch.role, items: [] };
+          groups.push(byName[key]);
+        }
+        byName[key].items.push({
+          variantId: draft.variantId,
+          workingTitle: draft.workingTitle,
+          role: ch.role,
+          nativeFormat: ch.nativeFormat,
+          coverURI: ch.coverURI,
+          videoRelSrc: ch.videoRelSrc,
+          durationSec: ch.durationSec,
+          channelCopy: ch.channelCopy,
+          kpi: ch.kpi,
+          productionNote: ch.productionNote
+        });
+      });
+    });
+    return groups;
+  }
+
+  var channelGroups = buildChannelGroups();
+  var channelRackCard = null;
+  var channelRackEntries = [];
+  var channelAutoToken = 0;
+  var VIDEO_GAP_MS = 1700;
+  var CHANNEL_GAP_MS = 1100;
+  var CHANNEL_SETTLE_MS = 700;
+  var STILL_CHANNEL_HOLD_MS = 2400;
+  var VIDEO_SETTLE_MS = 900;
+
+  function videoItemDurationMs(item) {
+    var sec = Number(item.durationSec);
+    return Number.isFinite(sec) && sec > 0 ? sec * 1000 : 8000;
+  }
+
+  function channelGroupHoldMs(group) {
+    var videos = group.items.filter(function (item) { return item.nativeFormat === "video" && item.videoRelSrc; });
+    if (videos.length === 0) return STILL_CHANNEL_HOLD_MS;
+    return videos.reduce(function (sum, item) { return sum + videoItemDurationMs(item); }, 0) +
+      Math.max(0, videos.length - 1) * VIDEO_GAP_MS +
+      VIDEO_SETTLE_MS;
+  }
+
+  function channelRackSequenceMs() {
+    if (channelGroups.length === 0) return 0;
+    return CHANNEL_SETTLE_MS + channelGroups.reduce(function (sum, group, i) {
+      return sum + channelGroupHoldMs(group) + (i < channelGroups.length - 1 ? CHANNEL_GAP_MS : 0);
+    }, 0);
+  }
+
+  function playRackVideo(video) {
+    video.play().catch(function () {});
+  }
+
+  function pauseRackVideo(video, reset) {
+    video.pause();
+    if (reset) {
+      try { video.currentTime = 0; } catch (e) {}
+    }
+  }
+
+  function clearChannelEntry(entry, reset) {
+    entry.timers.forEach(function (timer) { clearTimeout(timer); });
+    entry.timers = [];
+    entry.token++;
+    entry.body.classList.remove("is-gap");
+    entry.videos.forEach(function (video) {
+      pauseRackVideo(video, reset);
+      var item = video.closest(".channel-item");
+      if (item) item.classList.remove("is-playing");
+    });
+  }
+
+  function playChannelEntrySequence(entry) {
+    clearChannelEntry(entry, true);
+    var videos = entry.videos;
+    if (videos.length === 0) return;
+    var token = entry.token;
+    function playAt(index) {
+      if (entry.token !== token || !entry.node.classList.contains("is-open")) return;
+      entry.body.classList.remove("is-gap");
+      if (index >= videos.length) return;
+      var video = videos[index];
+      var item = video.closest(".channel-item");
+      if (item) item.classList.add("is-playing");
+      try { video.currentTime = 0; } catch (e) {}
+      playRackVideo(video);
+      var timer = setTimeout(function () {
+        pauseRackVideo(video, false);
+        if (item) item.classList.remove("is-playing");
+        if (index + 1 >= videos.length) return;
+        entry.body.classList.add("is-gap");
+        var gapTimer = setTimeout(function () { playAt(index + 1); }, VIDEO_GAP_MS);
+        entry.timers.push(gapTimer);
+      }, videoItemDurationMs({
+        durationSec: video.getAttribute("data-duration-sec"),
+        nativeFormat: "video",
+        videoRelSrc: video.getAttribute("src")
+      }));
+      entry.timers.push(timer);
+    }
+    playAt(0);
+  }
+
+  function closeChannelEntry(index) {
+    var entry = channelRackEntries[index];
+    if (!entry) return;
+    entry.node.classList.remove("is-open");
+    entry.button.setAttribute("aria-expanded", "false");
+    clearChannelEntry(entry, true);
+  }
+
+  function openChannelEntry(index) {
+    channelRackEntries.forEach(function (_entry, i) {
+      if (i !== index) closeChannelEntry(i);
+    });
+    var entry = channelRackEntries[index];
+    if (!entry) return;
+    entry.node.classList.add("is-open");
+    entry.button.setAttribute("aria-expanded", "true");
+    entry.node.scrollIntoView({ block: "nearest" });
+    playChannelEntrySequence(entry);
+  }
+
+  function renderChannelItem(item, groupIndex, itemIndex) {
+    var media = "";
+    if (item.nativeFormat === "video" && item.videoRelSrc) {
+      media = '<div class="channel-media">' +
+        '<video muted playsinline preload="metadata" data-duration-sec="' + esc(item.durationSec || "") + '" src="' + esc(item.videoRelSrc) + '"' +
+        (item.coverURI ? ' poster="' + item.coverURI + '"' : "") + "></video>" +
+        "</div>";
+    } else if (item.coverURI) {
+      media = '<div class="channel-media"><img src="' + item.coverURI + '" alt="' + esc(item.workingTitle) + '" /></div>';
+    } else {
+      media = '<div class="channel-media"><span class="evidence-caption">No produced asset was recorded for this channel.</span></div>';
+    }
+    return '<div class="channel-item" data-channel-group="' + groupIndex + '" data-channel-item="' + itemIndex + '">' +
+      media +
+      '<div class="rollout-role">' + esc(item.variantId) + " / " + esc(item.workingTitle) + "</div>" +
+      '<p class="channel-copy">' + esc(item.channelCopy) + "</p>" +
+      '<p class="channel-kpi">' + esc(item.kpi) + "</p>" +
+      "</div>";
+  }
+
+  function renderChannelsReadyRack() {
+    if (channelRackCard) return channelRackCard;
+    var c = el("article", "evidence-card tier1 channels-ready-card");
+    var rows = channelGroups.map(function (group, groupIndex) {
+      return '<section class="channel-entry" data-channel-index="' + groupIndex + '">' +
+        '<button class="channel-toggle" type="button" aria-expanded="false" aria-controls="channelBody' + groupIndex + '">' +
+        '<span class="channel-title"><span class="channel-name">' + esc(group.channel) + '</span><span class="channel-role">' + esc(group.role) + '</span></span>' +
+        '<span class="channel-ready">ready</span>' +
+        "</button>" +
+        '<div class="channel-body" id="channelBody' + groupIndex + '">' +
+        '<div class="channel-items">' + group.items.map(function (item, itemIndex) { return renderChannelItem(item, groupIndex, itemIndex); }).join("") + "</div>" +
+        '<div class="channel-gap-note">No video is playing between cuts.</div>' +
+        "</div>" +
+        "</section>";
+    }).join("");
+    c.innerHTML = '<div class="evidence-eyebrow">channels ready</div><div class="channel-rack">' + rows + "</div>";
+    addCard(c, "readout.rollouts grouped by channel name in first-seen order, including every shipped channel item");
+    channelRackCard = c;
+    channelRackEntries = Array.prototype.slice.call(c.querySelectorAll(".channel-entry")).map(function (node) {
+      return {
+        node: node,
+        button: node.querySelector(".channel-toggle"),
+        body: node.querySelector(".channel-body"),
+        videos: Array.prototype.slice.call(node.querySelectorAll("video")),
+        timers: [],
+        token: 0
+      };
+    });
+    channelRackEntries.forEach(function (entry, index) {
+      entry.button.addEventListener("click", function (event) {
+        event.stopPropagation();
+        channelAutoToken++;
+        if (entry.node.classList.contains("is-open")) closeChannelEntry(index);
+        else openChannelEntry(index);
+      });
+    });
+    return c;
+  }
+
+  function startChannelRackSequence() {
+    if (channelGroups.length === 0) return;
+    renderChannelsReadyRack();
+    var token = ++channelAutoToken;
+    function run(index) {
+      if (token !== channelAutoToken || index >= channelRackEntries.length) return;
+      openChannelEntry(index);
+      var hold = channelGroupHoldMs(channelGroups[index]);
+      setTimeout(function () {
+        if (token !== channelAutoToken) return;
+        closeChannelEntry(index);
+        if (index + 1 >= channelRackEntries.length) return;
+        setTimeout(function () { run(index + 1); }, CHANNEL_GAP_MS);
+      }, hold);
+    }
+    setTimeout(function () { run(0); }, CHANNEL_SETTLE_MS);
+  }
+
   // ================= OPEN =================
   queueHeader("open", "$ growth-machine wave " + String(DATA.waveNumber).padStart(2, "0"));
   // The mission card: audience sees the brief before it sees anyone work
@@ -999,7 +1144,7 @@ const THEATER_JS = `
   // existed since the plan stage, before simulate/decide ever ran) --
   // nothing invented, just no longer a raw JSON-string dump.
   queueAction("mission: " + DATA.moment, function () {
-    var c = el("article", "evidence-card tier1");
+    var c = el("article", "evidence-card tier1 mission-card");
     // 陈述句军规(advisor 覆盖判决): 完整主谓宾句子,禁断句蹦跳/戏剧化拟人/镜像结构。
     // 数字取自真数据(variants.length / planDays),非编造。
     var openingCaption = DATA.variants.length + " variants will run a simulated " + DATA.planDays +
@@ -1277,17 +1422,6 @@ const THEATER_JS = `
   });
 
   // ================= THE CUT (winning still, no video yet) =================
-  // Real causality: at this point in the actual pipeline no video has been
-  // rendered. Station 8b's second approval gate (paid, real spend) hasn't
-  // even been asked yet, let alone cleared. So this beat shows exactly what
-  // exists right now -- the winning still, breathing, captioned -- and
-  // nothing else. This card stays purely static for its entire life: no
-  // <video> tag is ever added to it, here or later. The still-to-video
-  // crossfade does not reuse this card -- see "the money shot" inside the
-  // rollout beat below, a brand new card appended to the bottom of the
-  // evidence stack once the render actually exists. Information flows one
-  // direction only, down; nothing ever scrolls back up to an old card to
-  // watch it change.
   queueHeader("cut", "the cut");
   if (DATA.hero.variantId) {
     queueAction("rollout: producing the channel cut for " + DATA.hero.variantId + " (" + DATA.hero.workingTitle + ")");
@@ -1317,26 +1451,9 @@ const THEATER_JS = `
       addCard(c, "decided[], no verdict === SCALE");
     });
   }
-  // Hold just long enough to read the still + its typewriter caption
-  // (breathe starts at 200ms, caption typing finishes well inside this
-  // window). The rest of the original 7000*PACE budget this beat used to
-  // hold moves down to station 8b below, where the still-to-video
-  // crossfade actually happens now -- see the note there.
   cursor += 2800 * PACE;
 
   // ================= ROLLOUT + LEARN =================
-  // Sequence is fixed, not incidental: skill/SKILL.md station 8b ships every
-  // channel cut first -- a video-native channel included, but only its
-  // still cover, the same coverPath the real pipeline exports before any
-  // paid render is even requested -- then stops dead for a second approval
-  // gate (video generation spends real money on a paid API, stills do not)
-  // before any video is submitted for render. Each video-native chip is
-  // built once, right here, still-only: its own <video> tag exists in the
-  // DOM from the start but stays hidden (opacity:0, no autoplay), same
-  // idiom the hero card used to use. Only after the approval-gate log line
-  // and the "operator approved video spend" line that follows it does that
-  // SAME chip crossfade in place -- no new card, no video appearing
-  // anywhere that wasn't already showing a still a moment before.
   queueHeader("rollout", "station 8b / rollout");
   queueChapter("Act IV", "The winner ships to every channel in that channel's native format.");
   var allChannels = [];
@@ -1344,13 +1461,6 @@ const THEATER_JS = `
     draft.channels.forEach(function (ch) { allChannels.push(ch); });
   });
   var videoChannels = allChannels.filter(function (ch) { return ch.nativeFormat === "video"; });
-  var chipVideoRefs = {};
-  var chipCounter = 0;
-  // One shelf per rollout draft (公理三 Tier 2): the channel cuts stand
-  // side by side, channel name + role, the way a channel manager reads the
-  // lineup -- not one full-width card each. A video-native channel keeps
-  // its still-cover cell here and crossfades in place after the spend log
-  // line; the full-size play is the featured cut below.
   var draftShelves = {};
   function renderChannelCell(draft, di, ch) {
     var holder = draftShelves[di];
@@ -1363,18 +1473,8 @@ const THEATER_JS = `
       draftShelves[di] = holder;
     }
     var cell = el("div", "rollout-cell");
-    var isVideoChannel = ch.nativeFormat === "video" && !!ch.videoRelSrc;
     var mediaHTML = "";
-    if (isVideoChannel) {
-      chipCounter++;
-      var chipKey = "chip" + chipCounter;
-      chipVideoRefs[ch.channel + "|" + ch.videoRelSrc] = chipKey;
-      mediaHTML = '<div class="rollout-chip-media">' +
-        (ch.coverURI ? '<img id="' + chipKey + 'Img" src="' + ch.coverURI + '" alt="' + esc(ch.channel) + '" />' : "") +
-        '<video id="' + chipKey + 'Video" muted loop playsinline src="' + esc(ch.videoRelSrc) + '"></video>' +
-        '<div class="shimmer" id="' + chipKey + 'Shimmer"></div>' +
-        "</div>";
-    } else if (ch.coverURI) {
+    if (ch.coverURI) {
       mediaHTML = '<div class="rollout-chip-media"><img src="' + ch.coverURI + '" alt="' + esc(ch.channel) + '" /></div>';
     }
     var ctaTag = ch.ctaPolicy ? '<span class="cta-tag cta-' + esc(ch.ctaPolicy.level) + '">CTA ' + esc(ch.ctaPolicy.level) + '</span>' : "";
@@ -1399,104 +1499,14 @@ const THEATER_JS = `
       .filter(Boolean)
       .join(" / ") || "backend not recorded in this readout";
     var spendHold = 2000;
-    // The station-8b video-spend approval is real (paid API budget, stills
-    // are not), and the fact stays on THE WORK log. The full-screen gate
-    // that used to announce it is gone (taste verdict). Causality holds by
-    // timeline order alone: the crossfade and every featured card below are
-    // queued strictly after this approval line, so no rendered motion ever
-    // appears before the line that approved its spend.
     queueAction(
       videoChannels.length + " video" + (videoChannels.length > 1 ? "s" : "") + " pending real generation spend: " + backends
     );
     cursor += spendHold;
     queueAction("operator approved video spend", function () {
-      // Crossfade each already-visible chip's own still into its own
-      // video, in place. Nothing is appended, nothing is scrolled to --
-      // this beat's evidence is a state change on cards the viewer has
-      // already seen, not a new arrival.
-      videoChannels.forEach(function (ch) {
-        if (!ch.videoRelSrc) return;
-        var chipKey = chipVideoRefs[ch.channel + "|" + ch.videoRelSrc];
-        if (!chipKey) return;
-        var img = document.getElementById(chipKey + "Img");
-        var video = document.getElementById(chipKey + "Video");
-        var shimmer = document.getElementById(chipKey + "Shimmer");
-        if (!img || !video || !shimmer) return;
-        setTimeout(function () {
-          shimmer.classList.add("sweep");
-          setTimeout(function () {
-            video.classList.add("shown");
-            img.classList.add("faded");
-            video.play().catch(function () {});
-          }, 500);
-        }, 400);
-      });
+      startChannelRackSequence();
     });
-
-    // ============= THE FEATURED CUTS: one brand new card per shipped video =============
-    // Appended to the bottom of the evidence stack, only now -- after the
-    // approval-gate log line and the render action that followed it have
-    // both already printed. This is the causality skill/SKILL.md station 8b
-    // describes: video generation spends real money and sits behind its own
-    // approval gate, separate from the still's. The mp4s land last, as the
-    // payoff of that approval, not before it. These cards do NOT reuse or
-    // scroll back up to the hero card built in THE CUT (that card stays
-    // static forever, see the note there) -- each is a fresh card, so the
-    // natural downward scroll addCard() already performs for every new card
-    // is all the motion this beat needs. Information flows one direction:
-    // down. DATA.featuredVideos carries every rollout draft that actually
-    // shipped a rendered video, not just the SCALE-verdict hero -- an
-    // operator-promoted ITERATE arm (see draft.operatorNote upstream) gets
-    // the same spotlight its mp4 earned. Cards fire strictly in sequence:
-    // each queueAction only fires once the previous card's own hold has
-    // fully elapsed (cursor advances by that hold before the next
-    // queueAction is even queued), so two videos never share a beat and
-    // the second one's complete arc is never cut short for time.
-    DATA.featuredVideos.forEach(function (fv, fvIndex) {
-      var ordinal = (fvIndex + 1) + "/" + DATA.featuredVideos.length;
-      var eyebrow = "the " + fv.channel + " cut · " + ordinal;
-      var mediaId = "featured" + fvIndex;
-      queueAction(eyebrow + ": " + fv.workingTitle + " image-to-video render ships in full", function () {
-        var c = el("article", "evidence-card tier1 hero-card featured-video-card");
-        // No pre-pause (公理二 revised): a small tag pressed into the card's
-        // own corner, riding in with the card's own entrance.
-        var tagText = esc(("the " + fv.channel + " cut · " + ordinal).toUpperCase());
-        c.innerHTML =
-          '<div class="hero-media">' +
-          '<div class="featured-tag">' + tagText + '</div>' +
-          (fv.coverURI ? '<img id="' + mediaId + 'Img" class="breathe" src="' + fv.coverURI + '" alt="' + esc(fv.workingTitle) + '" />' : "") +
-          '<video id="' + mediaId + 'Video" muted loop playsinline src="' + esc(fv.videoRelSrc) + '"></video>' +
-          '<div class="shimmer" id="' + mediaId + 'Shimmer"></div>' +
-          "</div>" +
-          '<div class="hero-caption"><div class="evidence-title">' + esc(fv.workingTitle) + '</div><p class="evidence-caption">' + esc(fv.channelCopy) + "</p></div>";
-        addCard(c, fv.productionNote || "the rendered " + fv.channel + " cut, image-to-video render, real generation call");
-        var img = document.getElementById(mediaId + "Img");
-        var video = document.getElementById(mediaId + "Video");
-        var shimmer = document.getElementById(mediaId + "Shimmer");
-        if (img && video && shimmer) {
-          setTimeout(function () {
-            shimmer.classList.add("sweep");
-            setTimeout(function () {
-              video.classList.add("shown");
-              img.classList.add("faded");
-              video.play().catch(function () {});
-            }, 500);
-          }, 400);
-        }
-      });
-      // Hold un-stretched by PACE (same posture as the insight gate's
-      // gateHold above): this is the card's own real runtime, not
-      // content-driven pacing. crossfadeDelayMs (900ms: 400ms shimmer +
-      // 500ms play) plus the asset's real ffprobe'd duration plus a
-      // breathing buffer, so the card is never advanced past while its
-      // video is still mid-play. Falls back to 8000ms only if ffprobe
-      // could not read the file (never happens for the two wave-04
-      // assets this beat currently carries, both probed clean).
-      var crossfadeDelayMs = 900;
-      var breathingBufferMs = 2000;
-      var holdMs = crossfadeDelayMs + (fv.durationSec ? fv.durationSec * 1000 : 8000) + breathingBufferMs;
-      cursor += holdMs;
-    });
+    cursor += channelRackSequenceMs();
   }
 
   queueHeader("rollout", "station 9 / learn");
@@ -1524,9 +1534,15 @@ const THEATER_JS = `
   // bill is pure evidence-column narration dropped straight on the timeline.
   at(cursor, function () {
     var stillsCount = DATA.variants.filter(function (v) { return v.imgURI; }).length;
-    var videosCount = DATA.featuredVideos.length;
+    var renderedVideos = [];
+    DATA.rollouts.forEach(function (draft) {
+      draft.channels.forEach(function (ch) {
+        if (ch.nativeFormat === "video" && ch.videoRelSrc) renderedVideos.push(ch);
+      });
+    });
+    var videosCount = renderedVideos.length;
     var winnersCount = DATA.variants.filter(function (v) { return v.decision && v.decision.verdict === "SCALE"; }).length;
-    var videoSeconds = Math.round(DATA.featuredVideos.reduce(function (a, fv) { return a + (fv.durationSec || 0); }, 0));
+    var videoSeconds = Math.round(renderedVideos.reduce(function (a, ch) { return a + (ch.durationSec || 0); }, 0));
     var items = [
       { to: 1, label: "cultural moment in" },
       { to: DATA.variants.length, label: "bets placed" },
