@@ -1,0 +1,13 @@
+{
+  "name": "growth-machine",
+  "description": "The Growth Book's execution body. Runs any moment through a ten-station pipeline, wave after wave, no API key beyond the subscription already running the agent.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Nora He",
+    "email": "norahe0304@gmail.com"
+  },
+  "homepage": "https://github.com/norahe0304-art/the-growth-machine",
+  "repository": "https://github.com/norahe0304-art/the-growth-machine",
+  "keywords": ["growth-marketing", "creative-testing", "growth-machine", "asset-x-new-element"],
+  "skills": ["./skill"]
+}

@@ -1,0 +1,27 @@
+{
+  "_meta": {
+    "howToUse": "Ten phrasings that should cause an agent with this skill installed to invoke growth-machine, and ten phrasings that sound adjacent but should not. Use this to grade the skill's frontmatter `description` (skill/SKILL.md) for trigger precision: feed each query to a fresh agent that has the skill available and check whether it reaches for growth-machine or not, against the `should_trigger` flag. A false negative on a should_trigger query means the description is under-triggering (real users asking for this will not get it). A false positive on a should_trigger:false query means the description is over-triggering (the skill fires on unrelated marketing or generic creative requests, wasting the agent's ten-station pipeline on something that did not ask for it). `reason` explains the judgment call for each query."
+  },
+  "queries": [
+    {"query": "run the growth machine on the olympics opening ceremony", "should_trigger": true, "reason": "names the skill directly"},
+    {"query": "let's run a wave for our new product launch moment", "should_trigger": true, "reason": "core trigger phrase \"run a wave\""},
+    {"query": "/growth-machine the super bowl halftime show", "should_trigger": true, "reason": "slash-command trigger"},
+    {"query": "take this moment and run it through asset x new element", "should_trigger": true, "reason": "invokes the formula by name"},
+    {"query": "start a new growth machine wave on mercury retrograde", "should_trigger": true, "reason": "combines both core trigger phrases"},
+    {"query": "here's a trending topic, give me 3 creative variants and a test plan for it", "should_trigger": true, "reason": "describes the pipeline's actual output shape without naming it, matches the description's \"pastes a moment and asks for creative variants plus a test plan\" clause"},
+    {"query": "continue the wedding moment, run the next wave", "should_trigger": true, "reason": "continuing-a-moment flow, learn last"},
+    {"query": "I want the ten-station pipeline: insight, brief, naming, plan, produce, judge, simulate, decide, rollout, learn, on this news event", "should_trigger": true, "reason": "names the station list verbatim"},
+    {"query": "give this moment the SCALE/KILL/ITERATE treatment", "should_trigger": true, "reason": "names the machine-made verdict the skill is known for"},
+    {"query": "growth machine wave 3 on the same topic as last time", "should_trigger": true, "reason": "core trigger phrase plus continuation"},
+    {"query": "what's a good growth marketing strategy for a B2B SaaS company", "should_trigger": false, "reason": "general strategy question, no moment, no request for variants/test plan; belongs to 30x-growth-marketing-panel or growth-engine, not this skill"},
+    {"query": "can you write me some ad copy for this product", "should_trigger": false, "reason": "single ad-copy request with no moment and no ten-station pipeline ask; belongs to ad-creative or copywriting skills"},
+    {"query": "audit our Meta Ads account for wasted spend", "should_trigger": false, "reason": "a real-account audit task, not a simulated wave; belongs to ads-meta"},
+    {"query": "how do I grow my machine learning startup's user base", "should_trigger": false, "reason": "\"machine\" appears but as part of \"machine learning\", not the skill name; no moment, no pipeline ask"},
+    {"query": "generate a product photo for our new sneaker drop", "should_trigger": false, "reason": "single-image generation request, no moment framing, no ten-station ask; belongs to ai-image-generation or ads-photoshoot"},
+    {"query": "what should our pricing strategy be for this feature", "should_trigger": false, "reason": "pricing question, unrelated to creative variants or moments"},
+    {"query": "run the numbers on our Q3 budget allocation across channels", "should_trigger": false, "reason": "\"run\" appears but this is a budget/bidding audit, not a growth-machine wave; belongs to ads-budget"},
+    {"query": "build me a growth loop for referrals", "should_trigger": false, "reason": "\"growth\" appears but this is a referral-program design ask with no moment or asset x new element framing; belongs to referral-program"},
+    {"query": "simulate what happens if we raise our prices 10 percent", "should_trigger": false, "reason": "\"simulate\" appears but this is a pricing/finance simulation, not the machine's response-curve station"},
+    {"query": "judge whether this landing page converts well", "should_trigger": false, "reason": "\"judge\" appears but this is a CRO review of a real page, not the machine's asset-scoring station; belongs to page-cro or onboarding-cro"}
+  ]
+}

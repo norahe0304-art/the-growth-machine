@@ -1,0 +1,137 @@
+{
+  "_meta": {
+    "howToUse": "Three end-to-end wave scenarios for grading a growth-machine run (skill mode or Codex CLI mode) against the actual contracts in src/types.ts, without touching src/. Feed one scenario's `prompt` to the agent exactly as a user would ('run the growth machine on <prompt>, wave 1'), let it run stations 1 through 9, then check the resulting waves/wave-NN/readout.json against that scenario's `expected_behavior`. Every field name below matches a real interface in src/types.ts (Variant, NamedAsset, JudgeResult, Decision, RolloutDraft): a grading script or a human reviewer can diff readout.json's actual shape against expected_behavior field by field. `angleType_focus` names which of the three angleTypes (moment/evergreen/ugc-loop) this scenario's moment most naturally pulls toward, but every wave still must produce exactly one variant of each angleType regardless of scenario, that rule is in expected_behavior.variants on all three scenarios identically. This file does not grade creative quality (that is what station 6, judge, and the onBrief/shareable scoring anchors in skill/SKILL.md are for), it grades structural conformance: right counts, right shapes, right conditionals."
+  },
+  "scenarios": [
+    {
+      "id": "moment-scenario",
+      "angleType_focus": "moment",
+      "prompt": "run the growth machine on the world cup final, wave 1",
+      "expected_behavior": {
+        "variants": {
+          "count": 3,
+          "one_per_angleType": ["moment", "evergreen", "ugc-loop"],
+          "required_fields": ["id", "asset", "assetKind", "newElement", "angle", "angleType", "workingTitle"],
+          "assetKind_values": ["thing", "interaction"]
+        },
+        "namedAssets": {
+          "count": 6,
+          "rule": "one still and one motion NamedAsset per variant (3 variants x 2 formats)",
+          "name_shape": "CHANNEL_OBJ_FUNNEL_TEMP_FORMAT_HOOK_MOMENT_PERSONA_VER, nine underscore-joined segments",
+          "determinism": "same moment + variant + format + waveNumber must always produce the same name"
+        },
+        "produced": {
+          "count": 6,
+          "rule": "motion assets always carry assetPath: null and a 3-entry motionScript array; still assets carry assetPath set once real generation runs (or null if codex was unavailable, in which case the prompt is handed to the user instead of failing the wave)"
+        },
+        "judged": {
+          "count": 6,
+          "score_schema": {"onBrief": "1|2|3", "legible": "1|2|3", "shareable": "1|2|3", "brandFit": "1|2|3", "notes": "string"},
+          "rule": "any dimension scoring 1 is a fail; a failed asset gets at most one regenerate-and-rescore retry, never more"
+        },
+        "simulated": {
+          "count": 3,
+          "rule": "still assets only, motion never enters the simulated curve; seed is a hash of the asset name so reruns are identical"
+        },
+        "decided": {
+          "count": 3,
+          "verdict_values": ["SCALE", "KILL", "ITERATE"],
+          "rule": "checked against plan.preRegisteredThresholds, never recomputed"
+        },
+        "rollouts": {
+          "rule": "exactly one RolloutDraft per SCALE verdict, zero RolloutDraft objects when nothing scaled; KILL and ITERATE assets never produce a RolloutDraft",
+          "channels_per_draft": "3 to 4",
+          "postKit_required_on_every_channel": true,
+          "participationKit_rule": "non-null only when the SCALE'd variant's angleType is ugc-loop, null for every other angleType"
+        }
+      }
+    },
+    {
+      "id": "evergreen-scenario",
+      "angleType_focus": "evergreen",
+      "prompt": "run the growth machine on back to school season, wave 1",
+      "expected_behavior": {
+        "variants": {
+          "count": 3,
+          "one_per_angleType": ["moment", "evergreen", "ugc-loop"],
+          "required_fields": ["id", "asset", "assetKind", "newElement", "angle", "angleType", "workingTitle"],
+          "assetKind_values": ["thing", "interaction"]
+        },
+        "namedAssets": {
+          "count": 6,
+          "rule": "one still and one motion NamedAsset per variant (3 variants x 2 formats)",
+          "name_shape": "CHANNEL_OBJ_FUNNEL_TEMP_FORMAT_HOOK_MOMENT_PERSONA_VER, nine underscore-joined segments",
+          "determinism": "same moment + variant + format + waveNumber must always produce the same name"
+        },
+        "produced": {
+          "count": 6,
+          "rule": "motion assets always carry assetPath: null and a 3-entry motionScript array; still assets carry assetPath set once real generation runs (or null if codex was unavailable, in which case the prompt is handed to the user instead of failing the wave)"
+        },
+        "judged": {
+          "count": 6,
+          "score_schema": {"onBrief": "1|2|3", "legible": "1|2|3", "shareable": "1|2|3", "brandFit": "1|2|3", "notes": "string"},
+          "rule": "any dimension scoring 1 is a fail; a failed asset gets at most one regenerate-and-rescore retry, never more"
+        },
+        "simulated": {
+          "count": 3,
+          "rule": "still assets only, motion never enters the simulated curve; seed is a hash of the asset name so reruns are identical"
+        },
+        "decided": {
+          "count": 3,
+          "verdict_values": ["SCALE", "KILL", "ITERATE"],
+          "rule": "checked against plan.preRegisteredThresholds, never recomputed"
+        },
+        "rollouts": {
+          "rule": "exactly one RolloutDraft per SCALE verdict, zero RolloutDraft objects when nothing scaled; KILL and ITERATE assets never produce a RolloutDraft",
+          "channels_per_draft": "3 to 4",
+          "postKit_required_on_every_channel": true,
+          "participationKit_rule": "non-null only when the SCALE'd variant's angleType is ugc-loop, null for every other angleType"
+        }
+      }
+    },
+    {
+      "id": "ugc-loop-scenario",
+      "angleType_focus": "ugc-loop",
+      "prompt": "run the growth machine on the mercury retrograde chat-screenshot trend, wave 1",
+      "expected_behavior": {
+        "variants": {
+          "count": 3,
+          "one_per_angleType": ["moment", "evergreen", "ugc-loop"],
+          "required_fields": ["id", "asset", "assetKind", "newElement", "angle", "angleType", "workingTitle"],
+          "assetKind_values": ["thing", "interaction"]
+        },
+        "namedAssets": {
+          "count": 6,
+          "rule": "one still and one motion NamedAsset per variant (3 variants x 2 formats)",
+          "name_shape": "CHANNEL_OBJ_FUNNEL_TEMP_FORMAT_HOOK_MOMENT_PERSONA_VER, nine underscore-joined segments",
+          "determinism": "same moment + variant + format + waveNumber must always produce the same name"
+        },
+        "produced": {
+          "count": 6,
+          "rule": "motion assets always carry assetPath: null and a 3-entry motionScript array; still assets carry assetPath set once real generation runs (or null if codex was unavailable, in which case the prompt is handed to the user instead of failing the wave)"
+        },
+        "judged": {
+          "count": 6,
+          "score_schema": {"onBrief": "1|2|3", "legible": "1|2|3", "shareable": "1|2|3", "brandFit": "1|2|3", "notes": "string"},
+          "rule": "any dimension scoring 1 is a fail; a failed asset gets at most one regenerate-and-rescore retry, never more"
+        },
+        "simulated": {
+          "count": 3,
+          "rule": "still assets only, motion never enters the simulated curve; seed is a hash of the asset name so reruns are identical"
+        },
+        "decided": {
+          "count": 3,
+          "verdict_values": ["SCALE", "KILL", "ITERATE"],
+          "rule": "checked against plan.preRegisteredThresholds, never recomputed"
+        },
+        "rollouts": {
+          "rule": "exactly one RolloutDraft per SCALE verdict, zero RolloutDraft objects when nothing scaled; KILL and ITERATE assets never produce a RolloutDraft",
+          "channels_per_draft": "3 to 4",
+          "postKit_required_on_every_channel": true,
+          "participationKit_rule": "non-null only when the SCALE'd variant's angleType is ugc-loop, null for every other angleType",
+          "note": "this scenario is the one most likely to exercise the participationKit branch, since its moment naturally pulls a ugc-loop variant toward SCALE, but the same rule applies regardless of which variant actually scales"
+        }
+      }
+    }
+  ]
+}

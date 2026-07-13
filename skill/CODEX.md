@@ -18,6 +18,18 @@
 [PROTOCOL]: update this header on change, then check CLAUDE.md
 -->
 
+**Station index** — jump straight to a station without reading top to bottom:
+1. [Station 1, insight](#station-1-insight)
+2. [Station 2, brief](#station-2-brief)
+3. [Station 3, naming](#station-3-naming-scripted)
+4. [Station 4, plan](#station-4-plan-scripted)
+5. [Station 5, produce](#station-5-produce-codex-exec-for-image-copymotion-are-also-codex-exec-calls-here)
+6. [Station 6, judge](#station-6-judge)
+7. [Station 7, simulate](#station-7-simulate-scripted)
+8. [Station 8, decide](#station-8-decide-scripted)
+8b. [Station 8b, rollout](#station-8b-rollout-codex-exec-only-for-scale-verdicts) (SCALE-only; real video steps live in `skill/references/rollout-video.md`)
+9. [Station 9, learn](#station-9-learn-scripted)
+
 Same machine, same ten-station pipeline (insight, brief, naming, plan, produce, judge,
 simulate, decide, rollout as station 8b conditional on a SCALE verdict, learn), same ten
 files in `src/`. The only thing that changes from `SKILL.md` is how the LLM stations get called:
@@ -43,6 +55,22 @@ station below calls for it.
 Prompts always go through stdin, never through a shell argument, a detached/background
 `codex exec` reads an empty stdin if the prompt is passed as an argument instead
 (the same judgment call `30x-covers`' command skeleton already made).
+
+## Gotchas
+
+- Never set `OPENAI_API_KEY`, keep `plan`'s rationale sentence on its mock path.
+- One retry ceiling pipeline-wide: a failed still, judge dimension, or rollout image gets
+  exactly one retry, then ship (or null out) and move on.
+- Never fake motion with `zoompan`. A video channel is real image-to-video generation;
+  ffmpeg only assembles.
+- A `ugc-loop` concept gets a real `ParticipationKit`, never a faked UGC image; an
+  AI-generated `ugc-still` still needs `illustrativeLabel: "template preview, illustrative"`.
+- Rollout output bans the em dash and en dash anywhere.
+- `assetName`'s `CHANNEL` segment is a deterministic swap, not a model decision.
+- Thresholds are preregistered in `src/stages/plan.ts`, never recomputed at decide time.
+- Motion assets never render and never enter the simulated curve.
+- Theater is post-hoc, not a pipeline station, produces nothing the pipeline consumes.
+- cwd must be the repo root before any call.
 
 ## Station 1, insight
 
@@ -220,6 +248,13 @@ Output strict JSON, nothing outside it:
 PROMPT
 ```
 
+Scoring anchors for `onBrief`/`shareable` (the two most subjective dimensions), same as
+`SKILL.md`'s station 6: `onBrief` 1 asset and newElement never fuse, 2 both present but
+stitched-on, 3 fuse into one inseparable line (wave 5's `..._THER_MERCUR_PEOP_V05`,
+"your chat history"). `shareable` 1 accurate but inert, 2 one relatable beat (wave 4's
+`..._THEC_THEWED_ANYO_V04`, "your parents' wedding photo"), 3 a ready-made caption for the
+viewer's own post (wave 1's measured SCALE winner `..._GRAF_THEWOR_ANAU_V01`, "your selfie").
+
 Any dimension scoring `1` is a fail, `brandFit` included. On a fail, regenerate that one
 asset once (rerun its produce step), score the regenerated version, and stop regardless of
 the second result, at most one retry. Build a `JudgeResult`: `{variantId, format, score,
@@ -345,51 +380,13 @@ exec` call with the error list appended to the prompt, revalidate, at most one r
 ceiling the judge station enforces.
 
 **Produce the channel cut.** Once a draft validates, produce every channel's real
-deliverable, following `nativeFormat`:
+deliverable, following `nativeFormat`: one `codex exec` image call for `ugc-still`/`still`/
+`surface`, or real image-to-video generation (the `libtv-skill`) plus ffmpeg assembly
+(crop/drawtext/trim only, it never originates motion) for `video`. Full step-by-step
+contract for both, including the exact prompts, commands, and self-checks, lives in
+`skill/references/rollout-video.md`, read it before producing any channel cut.
 
-- `ugc-still`, `still`, `surface`: run one `codex exec` call per channel. Apply the same
-  brand-pack and reference rules station 5 sets: fold `design.md`'s matching prompt fragment
-  into the adapted image prompt, splice in `references/meta.md`'s UGC syntax for a
-  `ugc-still` channel:
-
-  ```bash
-  codex exec --skip-git-repo-check - <<PROMPT
-  Generate an image with your image generation tool and save it to
-  waves/wave-{NN}/assets/rollout/{assetName}.png :
-  {brief.generationPrompts.image} Adapt for the channel's native format: {assetSpec}.
-  Use the winning concept image at waves/wave-{NN}/assets/{winning NamedAsset.name}.png as
-  the visual anchor, same subject, same graft. No text of any kind baked into the image, any
-  hook line ships as a caption or a drawtext overlay, never rendered into the pixels. Format
-  treatment by nativeFormat: ugc-still, a 1:1 still that reads as shot on a phone, candid
-  light, creator aesthetic, not retouched, not staged; still, a 16:9 editorial still with the
-  graft visible, no hook text baked in; surface, a 1:1 crop safe inside a circular mask.
-  PROMPT
-  ```
-
-  `Read` the resulting PNG and self-check: same subject and graft as the winning concept
-  image, correct ratio and format treatment for that channel, no garbled text, no watermark,
-  no baked-in text of any kind. On a failure retry the prompt once; if it still fails, ship
-  it anyway, set `assetPath` to `null`, and note the defect to the user, same one-retry
-  ceiling the judge station enforces. Set `assetPath` to the PNG path once it exists.
-
-- `video`: two real steps, never a fake-motion shortcut. **Step 1**, run the `libtv-skill`
-  off the winning concept still (`upload_file.py` the still, `create_session.py` with a
-  one-sentence natural-motion description passed through untouched, poll `query_session.py`
-  every 8 seconds, `download_results.py` once a video URL appears in an assistant message).
-  If `LIBTV_ACCESS_KEY` is unset or the service errors, do not fall back to `zoompan` or any
-  other pan-and-zoom trick, leave `assetPath` and `videoDurationSec` as `null` and note the
-  blocker to the user. **Step 2**, ffmpeg assembly only: crop the raw i2v output to 9:16 if
-  needed, composite `channelCopy` as a `drawtext` overlay, trim to the target duration, and
-  extract a no-text frame from the raw i2v output into `coverPath` (never a drawtext-baked
-  frame). Self-check by extracting 2 to 3 frames from the assembled mp4 and `Read`-ing them:
-  legible text, no garbled characters, no anatomy warping or ghosting from the i2v pass. Set
-  `assetPath` to the assembled mp4 and `videoDurationSec` to its real duration once both
-  steps succeed; otherwise leave both `null` and keep `coverPath` pointing at whatever
-  no-text cover exists.
-
-Fill each channel's `postKit.file` with the produced path (`assetPath` once set, or the
-planned filename while still `null`). Collect one `RolloutDraft` per `SCALE` verdict into
-`readout.rollouts`.
+Collect one `RolloutDraft` per `SCALE` verdict into `readout.rollouts`.
 
 ## Report, assemble and render (scripted)
 

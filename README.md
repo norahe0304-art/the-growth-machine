@@ -61,7 +61,16 @@ open this repo and say something like "run the growth machine on the world cup f
 agent reads `skill/SKILL.md`, reasons through insight, brief, and judge itself, and calls
 `scripts/machine.mjs` for naming, plan, simulate, decide, report, and learn. See
 `skill/SKILL.md` for the full ten station contract, and `skill/CODEX.md` for the Codex CLI
-equivalent, driven through `codex exec` instead of a single reasoning session.
+equivalent, driven through `codex exec` instead of a single reasoning session. Run
+`./install.sh --check` any time for a go/no-go readiness table (node version, codex CLI
+auth, `LIBTV_ACCESS_KEY`).
+
+Design decision: `install.sh` only symlinks `skill/` itself, `scripts/`, `references/`, and
+`brand/` deliberately stay unsymlinked at the repo root as the single source of truth.
+`SKILL.md` already instructs the agent to set cwd to the repo root before calling anything,
+so every deterministic-stage call and every reference/brand read resolves against the real
+repo, not against wherever `skill/` happens to be symlinked. This can always change to a
+physical copy or an additional symlink later; it is not moving today.
 
 ### CLI headless mode (optional, needs OPENAI_API_KEY)
 
@@ -302,3 +311,20 @@ path is written and typechecked but has not been run against a live OpenAI accou
 environment. Skill mode's `codex exec` image call depends on `codex` being installed and
 authenticated on the machine running the agent. When it is not, the machine hands the image
 prompt to the user instead of failing the wave.
+
+Two things below are deliberately not built, not backlog:
+
+No bandit-style dynamic budget reallocation. `decide` checks a still asset's simulated or
+measured curve against thresholds that were written into `plan.json` before any data
+existed, and never moves them. A bandit that shifts traffic toward whichever arm is
+currently ahead would let the system move its own goalposts mid-flight, the exact thing
+preregistration exists to prevent. The machine's job is to prove out a decision made in
+advance, not to chase the leading arm in real time.
+
+No holdout-based incremental lift comparison. Measuring true incrementality needs a
+held-out control group against real spend data flowing back in, and this machine does not
+buy media, `measure` only ingests engagement metrics a human pastes in by hand (see "Honest
+boundary" above). A holdout only earns its keep once the pipeline is wired to a real ad
+account with real spend to hold out from; until then a holdout arm here would just be an
+unfunded control group producing noise. Revisit this once `measure`'s input source is a
+live spend feed instead of a metrics file.

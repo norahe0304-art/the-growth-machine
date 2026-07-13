@@ -1,0 +1,15 @@
+{
+  "name": "the-growth-machine",
+  "owner": {
+    "name": "Nora He",
+    "email": "norahe0304@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "growth-machine",
+      "source": "./",
+      "description": "The Growth Book's execution body. Runs any moment through a ten-station pipeline, wave after wave, no API key beyond the subscription already running the agent.",
+      "version": "0.1.0"
+    }
+  ]
+}
