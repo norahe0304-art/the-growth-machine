@@ -1,0 +1,22 @@
+{
+  "variantId": "v3",
+  "workingTitle": "The Excuse Note",
+  "audience": "friend groups already tagging each other about mercury",
+  "insight": "blaming the retrograde is a shared ritual, and a document makes the ritual sendable",
+  "assetXElement": "blaming mercury retrograde x an official looking excuse note you can send",
+  "formats": [
+    "still",
+    "motion"
+  ],
+  "successMetric": "tag chain length per seeded note",
+  "referenceSet": {
+    "source": "references/tiktok.md",
+    "status": "starter-unverified",
+    "note": "pass it on chain format, the artifact names its next recipient"
+  },
+  "generationPrompts": {
+    "image": "An official looking excuse note card, formal typography reading OFFICIAL RETROGRADE EXCUSE with a blank line for a name and a wax style seal, held between two fingers against a kitchen backdrop, phone camera realism, natural light. No logos, no watermarks. 16:9.",
+    "motion": "[for ChatCut] three shot script: shot 1 the excuse note fills in a friend's name; shot 2 it sends and the friend reacts; shot 3 the note regenerates with a blank name and the hook line lands, 6 seconds total",
+    "copy": "Write one hook line, 20 words or fewer, granting official permission to blame the planet, deadpan tone, no exclamation marks"
+  }
+}

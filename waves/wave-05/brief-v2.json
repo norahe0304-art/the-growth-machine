@@ -1,0 +1,22 @@
+{
+  "variantId": "v2",
+  "workingTitle": "The Way You Text",
+  "audience": "people who half believe the retrograde and fully believe their own texting is chaos",
+  "insight": "retrograde season makes communication the topic, and chat memory is the one archive that can describe yours truthfully",
+  "assetXElement": "your chat history x a reading of how you actually communicate",
+  "formats": [
+    "still",
+    "motion"
+  ],
+  "successMetric": "7 day share rate of the reading card",
+  "referenceSet": {
+    "source": "references/meta.md",
+    "status": "starter-unverified",
+    "note": "self insight card format, personal data rendered back to the person; entertainment framing"
+  },
+  "generationPrompts": {
+    "image": "A elegant reading card laid on linen, titled THE WAY YOU TEXT, with a few short observed lines and a small constellation motif, soft morning light, editorial photography, generous negative space, subtle grain. No logos, no watermarks. 16:9.",
+    "motion": "[for ChatCut] three shot script: shot 1 a chat thread scrolling; shot 2 lines lift off the thread and settle into the reading card; shot 3 the card tilts to camera and the hook line lands, 6 seconds total",
+    "copy": "Write one hook line, 20 words or fewer, about being read accurately for once, restrained tone, no exclamation marks"
+  }
+}

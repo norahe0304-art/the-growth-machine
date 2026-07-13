@@ -1,0 +1,22 @@
+{
+  "variantId": "v1",
+  "workingTitle": "The Damage Report",
+  "audience": "people already joking that mercury broke their week",
+  "insight": "the blame is ambient and communal, and nobody has receipts; a report built from your own drafts makes the joke personal",
+  "assetXElement": "your drafts and typos x an official retrograde damage report",
+  "formats": [
+    "still",
+    "motion"
+  ],
+  "successMetric": "generation to share rate within the retrograde window",
+  "referenceSet": {
+    "source": "references/cross-channel.md",
+    "status": "starter-unverified",
+    "note": "official document parody format, personal receipts as the punchline; entertainment framing, no health or finance advice"
+  },
+  "generationPrompts": {
+    "image": "An official looking document titled RETROGRADE DAMAGE REPORT on a desk, stamped and annotated, listing comic entries like unsent drafts and autocorrect incidents, warm lamp light, paper texture, editorial photography, subtle grain. No logos, no watermarks. 16:9.",
+    "motion": "[for ChatCut] three shot script: shot 1 a phone with a chaotic drafts folder; shot 2 the damage report prints line by line; shot 3 the stamp lands and the hook line appears, 6 seconds total",
+    "copy": "Write one hook line, 20 words or fewer, deadpan tone about finally having paperwork for the chaos, no exclamation marks"
+  }
+}

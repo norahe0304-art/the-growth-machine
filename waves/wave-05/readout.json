@@ -1,0 +1,612 @@
+{
+  "moment": "mercury retrograde",
+  "waveNumber": 5,
+  "variants": [
+    {
+      "id": "v1",
+      "asset": "your drafts and typos",
+      "assetKind": "thing",
+      "newElement": "an official retrograde damage report",
+      "angle": "everyone blames mercury for the week's chaos and this issues the paperwork with your own receipts",
+      "angleType": "moment",
+      "workingTitle": "The Damage Report"
+    },
+    {
+      "id": "v2",
+      "asset": "your chat history",
+      "assetKind": "thing",
+      "newElement": "a reading of how you actually communicate",
+      "angle": "the retrograde panic points everyone at their own texting and memory can actually answer",
+      "angleType": "evergreen",
+      "workingTitle": "The Way You Text"
+    },
+    {
+      "id": "v3",
+      "asset": "blaming mercury retrograde",
+      "assetKind": "interaction",
+      "newElement": "an official looking excuse note you can send",
+      "angle": "the blame ritual everyone already performs gets a document and a tag chain",
+      "angleType": "ugc-loop",
+      "workingTitle": "The Excuse Note"
+    }
+  ],
+  "briefs": [
+    {
+      "variantId": "v1",
+      "workingTitle": "The Damage Report",
+      "audience": "people already joking that mercury broke their week",
+      "insight": "the blame is ambient and communal, and nobody has receipts; a report built from your own drafts makes the joke personal",
+      "assetXElement": "your drafts and typos x an official retrograde damage report",
+      "formats": [
+        "still",
+        "motion"
+      ],
+      "successMetric": "generation to share rate within the retrograde window",
+      "referenceSet": {
+        "source": "references/cross-channel.md",
+        "status": "starter-unverified",
+        "note": "official document parody format, personal receipts as the punchline; entertainment framing, no health or finance advice"
+      },
+      "generationPrompts": {
+        "image": "An official looking document titled RETROGRADE DAMAGE REPORT on a desk, stamped and annotated, listing comic entries like unsent drafts and autocorrect incidents, warm lamp light, paper texture, editorial photography, subtle grain. No logos, no watermarks. 16:9.",
+        "motion": "[for ChatCut] three shot script: shot 1 a phone with a chaotic drafts folder; shot 2 the damage report prints line by line; shot 3 the stamp lands and the hook line appears, 6 seconds total",
+        "copy": "Write one hook line, 20 words or fewer, deadpan tone about finally having paperwork for the chaos, no exclamation marks"
+      }
+    },
+    {
+      "variantId": "v2",
+      "workingTitle": "The Way You Text",
+      "audience": "people who half believe the retrograde and fully believe their own texting is chaos",
+      "insight": "retrograde season makes communication the topic, and chat memory is the one archive that can describe yours truthfully",
+      "assetXElement": "your chat history x a reading of how you actually communicate",
+      "formats": [
+        "still",
+        "motion"
+      ],
+      "successMetric": "7 day share rate of the reading card",
+      "referenceSet": {
+        "source": "references/meta.md",
+        "status": "starter-unverified",
+        "note": "self insight card format, personal data rendered back to the person; entertainment framing"
+      },
+      "generationPrompts": {
+        "image": "A elegant reading card laid on linen, titled THE WAY YOU TEXT, with a few short observed lines and a small constellation motif, soft morning light, editorial photography, generous negative space, subtle grain. No logos, no watermarks. 16:9.",
+        "motion": "[for ChatCut] three shot script: shot 1 a chat thread scrolling; shot 2 lines lift off the thread and settle into the reading card; shot 3 the card tilts to camera and the hook line lands, 6 seconds total",
+        "copy": "Write one hook line, 20 words or fewer, about being read accurately for once, restrained tone, no exclamation marks"
+      }
+    },
+    {
+      "variantId": "v3",
+      "workingTitle": "The Excuse Note",
+      "audience": "friend groups already tagging each other about mercury",
+      "insight": "blaming the retrograde is a shared ritual, and a document makes the ritual sendable",
+      "assetXElement": "blaming mercury retrograde x an official looking excuse note you can send",
+      "formats": [
+        "still",
+        "motion"
+      ],
+      "successMetric": "tag chain length per seeded note",
+      "referenceSet": {
+        "source": "references/tiktok.md",
+        "status": "starter-unverified",
+        "note": "pass it on chain format, the artifact names its next recipient"
+      },
+      "generationPrompts": {
+        "image": "An official looking excuse note card, formal typography reading OFFICIAL RETROGRADE EXCUSE with a blank line for a name and a wax style seal, held between two fingers against a kitchen backdrop, phone camera realism, natural light. No logos, no watermarks. 16:9.",
+        "motion": "[for ChatCut] three shot script: shot 1 the excuse note fills in a friend's name; shot 2 it sends and the friend reacts; shot 3 the note regenerates with a blank name and the hook line lands, 6 seconds total",
+        "copy": "Write one hook line, 20 words or fewer, granting official permission to blame the planet, deadpan tone, no exclamation marks"
+      }
+    }
+  ],
+  "namedAssets": [
+    {
+      "variantId": "v1",
+      "format": "still",
+      "name": "WEB_CONV_TOF_HOT_STIL_EVER_MERCUR_PEOP_V05",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "CONV",
+        "FUNNEL": "TOF",
+        "TEMP": "HOT",
+        "FORMAT": "STIL",
+        "HOOK": "EVER",
+        "MOMENT": "MERCUR",
+        "PERSONA": "PEOP",
+        "VER": "V05"
+      }
+    },
+    {
+      "variantId": "v1",
+      "format": "motion",
+      "name": "WEB_CONV_TOF_HOT_MOTN_EVER_MERCUR_PEOP_V05",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "CONV",
+        "FUNNEL": "TOF",
+        "TEMP": "HOT",
+        "FORMAT": "MOTN",
+        "HOOK": "EVER",
+        "MOMENT": "MERCUR",
+        "PERSONA": "PEOP",
+        "VER": "V05"
+      }
+    },
+    {
+      "variantId": "v2",
+      "format": "still",
+      "name": "WEB_CONV_MOF_EVG_STIL_THER_MERCUR_PEOP_V05",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "CONV",
+        "FUNNEL": "MOF",
+        "TEMP": "EVG",
+        "FORMAT": "STIL",
+        "HOOK": "THER",
+        "MOMENT": "MERCUR",
+        "PERSONA": "PEOP",
+        "VER": "V05"
+      }
+    },
+    {
+      "variantId": "v2",
+      "format": "motion",
+      "name": "WEB_CONV_MOF_EVG_MOTN_THER_MERCUR_PEOP_V05",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "CONV",
+        "FUNNEL": "MOF",
+        "TEMP": "EVG",
+        "FORMAT": "MOTN",
+        "HOOK": "THER",
+        "MOMENT": "MERCUR",
+        "PERSONA": "PEOP",
+        "VER": "V05"
+      }
+    },
+    {
+      "variantId": "v3",
+      "format": "still",
+      "name": "WEB_ENGT_BOF_LOOP_STIL_THEB_MERCUR_FRIE_V05",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "ENGT",
+        "FUNNEL": "BOF",
+        "TEMP": "LOOP",
+        "FORMAT": "STIL",
+        "HOOK": "THEB",
+        "MOMENT": "MERCUR",
+        "PERSONA": "FRIE",
+        "VER": "V05"
+      }
+    },
+    {
+      "variantId": "v3",
+      "format": "motion",
+      "name": "WEB_ENGT_BOF_LOOP_MOTN_THEB_MERCUR_FRIE_V05",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "ENGT",
+        "FUNNEL": "BOF",
+        "TEMP": "LOOP",
+        "FORMAT": "MOTN",
+        "HOOK": "THEB",
+        "MOMENT": "MERCUR",
+        "PERSONA": "FRIE",
+        "VER": "V05"
+      }
+    }
+  ],
+  "plan": {
+    "moment": "mercury retrograde",
+    "waveNumber": 5,
+    "arms": [
+      {
+        "variantId": "v1",
+        "format": "still",
+        "name": "WEB_CONV_TOF_HOT_STIL_EVER_MERCUR_PEOP_V05",
+        "trafficSplitPct": 33.33,
+        "budgetIllustrative": 500
+      },
+      {
+        "variantId": "v2",
+        "format": "still",
+        "name": "WEB_CONV_MOF_EVG_STIL_THER_MERCUR_PEOP_V05",
+        "trafficSplitPct": 33.33,
+        "budgetIllustrative": 250
+      },
+      {
+        "variantId": "v3",
+        "format": "still",
+        "name": "WEB_ENGT_BOF_LOOP_STIL_THEB_MERCUR_FRIE_V05",
+        "trafficSplitPct": 33.33,
+        "budgetIllustrative": 350
+      }
+    ],
+    "preRegisteredThresholds": {
+      "moment": {
+        "scaleAt": 0.045,
+        "killAt": 0.015,
+        "fatigueSlope": -0.004
+      },
+      "evergreen": {
+        "scaleAt": 0.035,
+        "killAt": 0.012,
+        "fatigueSlope": -0.0015
+      },
+      "ugc-loop": {
+        "scaleAt": 0.05,
+        "killAt": 0.018,
+        "fatigueSlope": -0.002
+      }
+    },
+    "engagementThresholds": {
+      "moment": {
+        "scaleAt": 0.08,
+        "killAt": 0.02,
+        "fatigueSlope": -0.01
+      },
+      "evergreen": {
+        "scaleAt": 0.06,
+        "killAt": 0.015,
+        "fatigueSlope": -0.004
+      },
+      "ugc-loop": {
+        "scaleAt": 0.1,
+        "killAt": 0.025,
+        "fatigueSlope": -0.006
+      }
+    },
+    "dates": {
+      "start": "2026-07-13",
+      "end": "2026-08-03",
+      "days": 21
+    },
+    "rationale": "Wave 5 splits traffic evenly across three variants for \"mercury retrograde\"; the 21-day observation window covers the full fatigue-curve inflection point"
+  },
+  "produced": [
+    {
+      "variantId": "v1",
+      "format": "still",
+      "name": "WEB_CONV_TOF_HOT_STIL_EVER_MERCUR_PEOP_V05",
+      "assetPath": "waves/wave-05/assets/WEB_CONV_TOF_HOT_STIL_EVER_MERCUR_PEOP_V05.png",
+      "copy": "The week filed its own paperwork.",
+      "motionScript": null,
+      "imageModelUsed": "codex-exec",
+      "regeneratedCount": 0
+    },
+    {
+      "variantId": "v1",
+      "format": "motion",
+      "name": "WEB_CONV_TOF_HOT_MOTN_EVER_MERCUR_PEOP_V05",
+      "assetPath": null,
+      "copy": "Every unsent draft, officially accounted for.",
+      "motionScript": [
+        "Shot 1: a phone with a chaotic drafts folder",
+        "Shot 2: the damage report prints line by line",
+        "Shot 3: the stamp lands and the hook line appears"
+      ],
+      "imageModelUsed": null,
+      "regeneratedCount": 0
+    },
+    {
+      "variantId": "v2",
+      "format": "still",
+      "name": "WEB_CONV_MOF_EVG_STIL_THER_MERCUR_PEOP_V05",
+      "assetPath": "waves/wave-05/assets/WEB_CONV_MOF_EVG_STIL_THER_MERCUR_PEOP_V05.png",
+      "copy": "Read accurately for once.",
+      "motionScript": null,
+      "imageModelUsed": "codex-exec",
+      "regeneratedCount": 0
+    },
+    {
+      "variantId": "v2",
+      "format": "motion",
+      "name": "WEB_CONV_MOF_EVG_MOTN_THER_MERCUR_PEOP_V05",
+      "assetPath": null,
+      "copy": "Your texts knew you first.",
+      "motionScript": [
+        "Shot 1: a chat thread scrolling",
+        "Shot 2: lines lift off the thread and settle into the reading card",
+        "Shot 3: the card tilts to camera and the hook line lands"
+      ],
+      "imageModelUsed": null,
+      "regeneratedCount": 0
+    },
+    {
+      "variantId": "v3",
+      "format": "still",
+      "name": "WEB_ENGT_BOF_LOOP_STIL_THEB_MERCUR_FRIE_V05",
+      "assetPath": "waves/wave-05/assets/WEB_ENGT_BOF_LOOP_STIL_THEB_MERCUR_FRIE_V05.png",
+      "copy": "Official permission to blame the planet.",
+      "motionScript": null,
+      "imageModelUsed": "codex-exec",
+      "regeneratedCount": 0
+    },
+    {
+      "variantId": "v3",
+      "format": "motion",
+      "name": "WEB_ENGT_BOF_LOOP_MOTN_THEB_MERCUR_FRIE_V05",
+      "assetPath": null,
+      "copy": "Fill in a name. Pass it on.",
+      "motionScript": [
+        "Shot 1: the excuse note fills in a friend's name",
+        "Shot 2: it sends and the friend reacts",
+        "Shot 3: the note regenerates with a blank name and the hook line lands"
+      ],
+      "imageModelUsed": null,
+      "regeneratedCount": 0
+    }
+  ],
+  "judged": [
+    {
+      "variantId": "v1",
+      "format": "still",
+      "score": {
+        "onBrief": 3,
+        "legible": 3,
+        "shareable": 3,
+        "brandFit": 3
+      },
+      "passed": true,
+      "regenerated": false,
+      "notes": "Prop document with real comic specificity, draft prison and circle bacon; deadpan register matches Monday precedent."
+    },
+    {
+      "variantId": "v1",
+      "format": "motion",
+      "score": {
+        "onBrief": 3,
+        "legible": 3,
+        "shareable": 3,
+        "brandFit": 3
+      },
+      "passed": true,
+      "regenerated": false,
+      "notes": "Prop document with real comic specificity, draft prison and circle bacon; deadpan register matches Monday precedent."
+    },
+    {
+      "variantId": "v2",
+      "format": "still",
+      "score": {
+        "onBrief": 3,
+        "legible": 3,
+        "shareable": 3,
+        "brandFit": 3
+      },
+      "passed": true,
+      "regenerated": false,
+      "notes": "Three observed lines land as true; restraint carries it, the card sells its own screenshot."
+    },
+    {
+      "variantId": "v2",
+      "format": "motion",
+      "score": {
+        "onBrief": 3,
+        "legible": 3,
+        "shareable": 3,
+        "brandFit": 3
+      },
+      "passed": true,
+      "regenerated": false,
+      "notes": "Three observed lines land as true; restraint carries it, the card sells its own screenshot."
+    },
+    {
+      "variantId": "v3",
+      "format": "still",
+      "score": {
+        "onBrief": 3,
+        "legible": 3,
+        "shareable": 3,
+        "brandFit": 3
+      },
+      "passed": true,
+      "regenerated": false,
+      "notes": "Wax seal against phone realism makes the ritual sendable; blank name line is the chain mechanic made visible."
+    },
+    {
+      "variantId": "v3",
+      "format": "motion",
+      "score": {
+        "onBrief": 3,
+        "legible": 3,
+        "shareable": 3,
+        "brandFit": 3
+      },
+      "passed": true,
+      "regenerated": false,
+      "notes": "Wax seal against phone realism makes the ritual sendable; blank name line is the chain mechanic made visible."
+    }
+  ],
+  "simulated": [
+    {
+      "variantId": "v1",
+      "format": "still",
+      "angleType": "moment",
+      "days": 21,
+      "predictedCTR": [
+        0.02187983510177582,
+        0.03809652016405016,
+        0.06084509459789842,
+        0.04693115492082308,
+        0.03964409202968203,
+        0.03238845233157004,
+        0.02406629857810282,
+        0.019408203778797713,
+        0.014079462429747147,
+        0.0117597951690107,
+        0.009269625159419731,
+        0.009894446038183957,
+        0.006114204654373222,
+        0.0044409269862177815,
+        0.004683469301262663,
+        0.00300990598866688,
+        0.0010692218521998551,
+        0.0005095898280090539,
+        0.00018705987687457908,
+        0.0013341417288607845,
+        0
+      ],
+      "shareRate": [
+        0.009444896100042385,
+        0.017933913141535595,
+        0.026973874918418003,
+        0.021703696459718064,
+        0.016929142200433272,
+        0.014792291011537128,
+        0.010069931343180433,
+        0.009729857374638762,
+        0.006252764456081463,
+        0.005571044585749481,
+        0.0033066773311348956,
+        0.003911190615900929,
+        0.002553792065059018,
+        0.0010198609042861842,
+        0.002114863576911017,
+        0.0012464697652988736,
+        0.0005600769872113866,
+        0.0003873876646517119,
+        0.0005722788796076893,
+        0.0014913895083960812,
+        0.0008122263485565782
+      ],
+      "seed": "1833680781"
+    },
+    {
+      "variantId": "v2",
+      "format": "still",
+      "angleType": "evergreen",
+      "days": 21,
+      "predictedCTR": [
+        0.02385203969173347,
+        0.025955717494150633,
+        0.02533838841826151,
+        0.027975643733784385,
+        0.02840751308959006,
+        0.028884875874488857,
+        0.031182753104871962,
+        0.03273254129737245,
+        0.03182455450297344,
+        0.03383138114519203,
+        0.03231517595317457,
+        0.035023098505394396,
+        0.03492119707279798,
+        0.034118001180408364,
+        0.03463518408396205,
+        0.035327513491453334,
+        0.03862901643525653,
+        0.038357234878404645,
+        0.039271272446711,
+        0.03834945804242536,
+        0.03752726708073169
+      ],
+      "shareRate": [
+        0.005167359499894617,
+        0.005828187808719932,
+        0.00720475810241061,
+        0.00662401206006478,
+        0.006919847533134815,
+        0.006547588372483678,
+        0.008553828468585127,
+        0.007328051842003134,
+        0.008954724979123592,
+        0.007644352867099853,
+        0.008035856587542826,
+        0.009172181996357127,
+        0.008427281496862313,
+        0.008073725120789797,
+        0.007952653762160145,
+        0.009202513844170075,
+        0.008738906961055082,
+        0.010152034315265394,
+        0.010798910339300615,
+        0.008667066157303116,
+        0.008555775959277525
+      ],
+      "seed": "1302882603"
+    },
+    {
+      "variantId": "v3",
+      "format": "still",
+      "angleType": "ugc-loop",
+      "days": 21,
+      "predictedCTR": [
+        0.0226025355681777,
+        0.021257099460810423,
+        0.021135616121813652,
+        0.022619795573875306,
+        0.023379007008858022,
+        0.02213534741848707,
+        0.023015410719439387,
+        0.02560037567000836,
+        0.02681355757825076,
+        0.02836447097919881,
+        0.02737176269199699,
+        0.025888174625113603,
+        0.028832625695504245,
+        0.026738335846923287,
+        0.034955507809296245,
+        0.03512354711443185,
+        0.03416320646647363,
+        0.035600459841080005,
+        0.0339245696766302,
+        0.03411475070100277,
+        0.03634741641860455
+      ],
+      "shareRate": [
+        0.019631046565435826,
+        0.01994053507614881,
+        0.01832919269092381,
+        0.020979892082698643,
+        0.020333988678734746,
+        0.01940220448449254,
+        0.021656508858688178,
+        0.022462275962624696,
+        0.02332679187441244,
+        0.025343591070640832,
+        0.025036824443470683,
+        0.02241697138668969,
+        0.026146611030679192,
+        0.02479275381537154,
+        0.031792681027296925,
+        0.031046639360580587,
+        0.030265097282361236,
+        0.03270858696429058,
+        0.030389407296385618,
+        0.03008185170935466,
+        0.033323678232915696
+      ],
+      "seed": "1883297641"
+    }
+  ],
+  "decided": [
+    {
+      "variantId": "v1",
+      "format": "still",
+      "verdict": "KILL",
+      "reason": "last-3-day average CTR 0.0005 fell below the preregistered killAt 0.015: verdict: kill",
+      "finalCTR": 0.0005070672019117879,
+      "slope": -0.0006530035142401949,
+      "source": "simulated"
+    },
+    {
+      "variantId": "v2",
+      "format": "still",
+      "verdict": "SCALE",
+      "reason": "last-3-day average CTR 0.0384 reached the preregistered scaleAt 0.035: verdict: scale",
+      "finalCTR": 0.03838266585662268,
+      "slope": 0.0005486569322752652,
+      "source": "simulated"
+    },
+    {
+      "variantId": "v3",
+      "format": "still",
+      "verdict": "ITERATE",
+      "reason": "last-3-day average CTR 0.0348 sits between killAt and scaleAt, slope has not tripped the fatigue threshold: verdict: iterate",
+      "finalCTR": 0.03479557893207917,
+      "slope": 0.00006855343611511819,
+      "source": "simulated"
+    }
+  ],
+  "measured": [],
+  "injectedLearnings": "Winning traits from wave 4: thing asset \"your parents' wedding photo\" + angleType=evergreen + HOOK=THEC. Prioritize reusing these asset shapes and angleType combinations in new variants."
+}
