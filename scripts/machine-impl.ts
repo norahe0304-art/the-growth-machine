@@ -1,16 +1,16 @@
 /**
  * [INPUT]: depends on src/stages/naming.js, src/stages/plan.js, src/stages/simulate.js,
  *   src/stages/decide.js, src/stages/rollout.js, src/stages/learn.js, src/lib/fs-utils.js,
- *   src/lib/report.js, src/types.js
+ *   src/lib/report.js, src/lib/theater.js, src/lib/theater-live.js, src/types.js
  * [OUTPUT]: exports pure stage functions (nameStage/simulateStage/decideStage/
  *   rolloutValidateStage) and fs-effecting stage functions (planStage/reportStage/
- *   learnCommit/learnGet/learnLast) for tests to import directly; running this file (via tsx)
- *   also dispatches a stdin-JSON-in / stdout-JSON-out CLI
+ *   theaterStage/theaterLiveStage/learnCommit/learnGet/learnLast) for tests to import
+ *   directly; running this file (via tsx) also dispatches a stdin-JSON-in / stdout-JSON-out CLI
  * [POS]: the real logic behind scripts/machine.mjs — the skill layer's deterministic half. An
  *   agent (Claude Code / Codex) running the growth-machine skill calls the scripted stations
- *   (naming/plan/simulate/decide/rollout-validate/report/learn) through this file; insight/
- *   brief/judge/produce/rollout-authoring stay LLM-native and live in the skill's prompt
- *   instructions, not here — this file only carries rollout's pure validator
+ *   (naming/plan/simulate/decide/rollout-validate/report/theater/theater-live/learn) through
+ *   this file; insight/brief/judge/produce/rollout-authoring stay LLM-native and live in the
+ *   skill's prompt instructions, not here — this file only carries rollout's pure validator
  * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */
 import path from "node:path";
@@ -24,6 +24,8 @@ import { validateRolloutDraft } from "../src/stages/rollout.js";
 import { runLearn, getInjectedLearnings, getLastRunState } from "../src/stages/learn.js";
 import { waveDir, writeJSON, readJSONL, LIBRARY_PATH } from "../src/lib/fs-utils.js";
 import { renderReport } from "../src/lib/report.js";
+import { renderTheater } from "../src/lib/theater.js";
+import { renderTheaterLive } from "../src/lib/theater-live.js";
 import type {
   Decision,
   LearningEntry,
@@ -144,6 +146,42 @@ export async function reportStage(
 }
 
 // ============================================================
+// theater — the showing station. Sibling to reportStage, same input shape,
+// same "persist to waves/wave-NN/" posture, but renders theater.html (the
+// 100-130 second split-screen replay) instead of report.html. Does not
+// re-persist readout.json; report is the station that owns that write, run
+// theater after report in a normal wave so readout.json is already on disk.
+// ============================================================
+export interface TheaterInput {
+  readout: WaveReadout;
+  libraryEntries?: LearningEntry[];
+}
+
+export async function theaterStage(input: TheaterInput): Promise<{ theaterPath: string }> {
+  const dir = waveDir(input.readout.waveNumber);
+  const libraryEntries = input.libraryEntries ?? (await readJSONL<LearningEntry>(LIBRARY_PATH));
+  const html = await renderTheater(input.readout, libraryEntries);
+  const theaterPath = path.join(dir, "theater.html");
+  await writeFile(theaterPath, html, "utf-8");
+  return { theaterPath };
+}
+
+// ============================================================
+// theater-live — the watching-it-happen twin. No stdin, no readout: this
+// can be generated the moment a wave starts (before brief-v1.json even
+// exists) since it carries no baked data of its own, it polls its own
+// directory. Takes the wave number as a bare CLI arg, not stdin JSON,
+// because there is nothing to pipe in yet.
+// ============================================================
+export async function theaterLiveStage(waveNumber: number): Promise<{ livePath: string }> {
+  const dir = waveDir(waveNumber);
+  const html = renderTheaterLive(waveNumber);
+  const livePath = path.join(dir, "live.html");
+  await writeFile(livePath, html, "utf-8");
+  return { livePath };
+}
+
+// ============================================================
 // station 9 — learn. Three sub-verbs: commit (append library.jsonl, the
 // normal end-of-wave path), get (read injected learnings for the next
 // wave's insight/brief prompts — the agent calls this before it starts
@@ -196,6 +234,8 @@ function printUsage(): void {
   decide            stdin DecideInput        -> Decision[]
   rollout-validate  stdin RolloutDraft       -> {ok:true} | {ok:false, errors:string[]}
   report            stdin ReportInput        -> {readoutPath, reportPath} (writes both files)
+  theater           stdin TheaterInput       -> {theaterPath} (writes theater.html)
+  theater-live <N>  no stdin, wave number    -> {livePath} (writes live.html, no readout needed)
   learn commit      stdin LearnCommitInput   -> LearningEntry (appends library.jsonl)
   learn get         (no stdin)               -> {injectedLearnings}
   learn last        (no stdin)               -> {moment, lastWave} | null`
@@ -223,6 +263,19 @@ async function main(): Promise<void> {
     case "report":
       printJSON(await reportStage(await readStdinJSON<ReportInput>()));
       break;
+    case "theater":
+      printJSON(await theaterStage(await readStdinJSON<TheaterInput>()));
+      break;
+    case "theater-live": {
+      const waveNumber = Number(sub);
+      if (!Number.isFinite(waveNumber)) {
+        console.error("[machine] theater-live requires a wave number: machine.mjs theater-live <N>");
+        process.exitCode = 1;
+        break;
+      }
+      printJSON(await theaterLiveStage(waveNumber));
+      break;
+    }
     case "learn":
       if (sub === "get") printJSON(await learnGet());
       else if (sub === "last") printJSON(await learnLast());
