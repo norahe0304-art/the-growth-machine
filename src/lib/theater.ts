@@ -1,11 +1,13 @@
 /**
- * [INPUT]: depends on node:fs/promises to read image assets, on types.ts's WaveReadout and all its
- *   sub-types, plus optional LearningEntry[] for the closing library beat
+ * [INPUT]: depends on node:fs/promises to read image assets, on node:child_process (execFile,
+ *   promisified) to shell out to the system ffprobe for real rendered-video durations, on
+ *   types.ts's WaveReadout and all its sub-types, plus optional LearningEntry[] for the closing
+ *   library beat
  * [OUTPUT]: exports renderTheater(readout, libraryEntries?) -> Promise<string>, a self-contained
  *   theater.html string; also exports THEATER_CSS (the split-screen visual system) for
  *   theater-live.ts to share, so the live feed and the replay wear the same skin
  * [POS]: the showing layer of the ten-station pipeline, sibling to report.ts inside lib/. report.ts
- *   is the static record of a wave; theater.ts is a 100-130 second split-screen replay of the exact
+ *   is the static record of a wave; theater.ts is a 100-145 second split-screen replay of the exact
  *   same record: THE WORK (left, a live activity log, station by station, every line a real fact
  *   pulled from WaveReadout) drives THE EVIDENCE (right, a stack of auditable cards, evidence flowing
  *   one direction only -- down, never scrolled back up to an older card to watch it change: variant
@@ -13,22 +15,34 @@
  *   three-curve race with verdict stamps, the winning still (the cut, held static forever, no video
  *   tag ever added to it), every rollout channel chip (a video-native channel's chip carries its own
  *   hidden <video> from first render, showing only its still cover until this asset's own crossfade
- *   fires), and finally the money shot -- a brand new card appended to the bottom of the stack, only
- *   after station 8b's second approval gate has actually cleared real video-generation spend and the
- *   render itself has happened, where the hero still crossfades into its real rendered video. The
- *   still-to-video timing mirrors the real pipeline's causality on purpose: skill/SKILL.md gates
- *   video behind that second approval, so the replay never shows rendered motion -- hero or any
- *   channel chip -- before the log line that approves it. Every media-stage box (hero, money shot,
- *   channel chips, produced stills) caps at 60vh so a 9:16 render or portrait still never runs a card
- *   off the bottom of the recording viewport (scripts/record-theater.mjs's fixed 1280x800). Nothing
- *   on either side is invented. Ships alongside scripts/record-theater.mjs, which
- *   drives a real Chromium tab through it and captures the replay to mp4, and alongside
- *   theater-live.ts, the same show fed by a wave still in progress instead of a finished readout
- *   (theater-live.ts imports THEATER_CSS from here, so the 60vh media caps apply to live.html too;
- *   its own addCard() already only ever appends to the bottom, no scroll-jump bug to fix there).
+ *   fires), and finally the featured tiktok cuts -- one brand new card per rolled-out video channel
+ *   (DATA.featuredVideos, built off every rollout draft that shipped a real rendered mp4, not just
+ *   the SCALE-verdict hero), each appended to the bottom of the stack in sequence, only after
+ *   station 8b's second approval gate has actually cleared real video-generation spend and the
+ *   render itself has happened. The narrative these cards sell is the deliverable, not the spend:
+ *   the full-screen approval-gate overlay reads "format follows the channel: <channel> ships video"
+ *   (skill/SKILL.md's own nativeFormat contract line, restated as the payoff instead of the cost),
+ *   while THE WORK log line beside it keeps the literal spend fact ("N videos pending real
+ *   generation spend: ...") -- causality is unchanged, only which half of the truth gets the
+ *   spotlight. Each featured card holds for its own real ffprobe'd duration (durationSec) plus a
+ *   crossfade/breathing buffer, un-stretched by PACE (same posture as the insight approval gate's
+ *   gateHold), so a video is never cut off and two videos never play in the same beat -- one card's
+ *   hold fully elapses before the next queueAction fires. Still-to-video timing mirrors the real
+ *   pipeline's causality on purpose: skill/SKILL.md gates video behind that second approval, so the
+ *   replay never shows rendered motion -- hero, any channel chip, or any featured card -- before the
+ *   log line that approves it. Every media-stage box (hero, featured video, channel chips, produced
+ *   stills) caps at 60vh so a 9:16 render or portrait still never runs a card off the bottom of the
+ *   recording viewport (scripts/record-theater.mjs's fixed 1280x800). Nothing on either side is
+ *   invented. Ships alongside scripts/record-theater.mjs, which drives a real Chromium tab through
+ *   it and captures the replay to mp4, and alongside theater-live.ts, the same show fed by a wave
+ *   still in progress instead of a finished readout (theater-live.ts imports THEATER_CSS from here,
+ *   so the 60vh media caps apply to live.html too; its own addCard() already only ever appends to
+ *   the bottom, no scroll-jump bug to fix there).
  * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */
 import { readFile } from "node:fs/promises";
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
 import path from "node:path";
 import type {
   Decision,
@@ -38,6 +52,8 @@ import type {
   Variant,
   WaveReadout,
 } from "../types.js";
+
+const execFileAsync = promisify(execFile);
 
 function escapeHTML(s: string): string {
   return s
@@ -54,6 +70,29 @@ async function assetDataURI(assetPath: string | null): Promise<string | null> {
   try {
     const buf = await readFile(assetPath);
     return `data:${mime};base64,${buf.toString("base64")}`;
+  } catch {
+    return null;
+  }
+}
+
+// Real rendered-video runtime, shelled out to the system ffprobe (same
+// shell-out posture scripts/record-theater.mjs already takes with ffmpeg).
+// Used to size each featured-video card's on-screen hold to the asset's
+// actual duration instead of a guessed constant -- readout.json's own
+// videoDurationSec field is the pre-end-card content length, not the final
+// mp4's real runtime once a brand end card / transition has been appended
+// (see waves/wave-04/STATE.md), so this reads the file, not the readout.
+async function probeDurationSec(assetPath: string | null): Promise<number | null> {
+  if (!assetPath) return null;
+  try {
+    const { stdout } = await execFileAsync("ffprobe", [
+      "-v", "error",
+      "-show_entries", "format=duration",
+      "-of", "default=noprint_wrappers=1:nokey=1",
+      assetPath,
+    ]);
+    const n = parseFloat(stdout.trim());
+    return Number.isFinite(n) ? n : null;
   } catch {
     return null;
   }
@@ -139,6 +178,7 @@ interface TheaterChannelPayload {
   nativeFormat: string;
   coverURI: string | null;
   videoRelSrc: string | null;
+  durationSec: number | null;
   channelCopy: string;
   kpi: string;
   kpiThresholdNote: string;
@@ -164,6 +204,22 @@ interface TheaterHero {
   productionNote: string | null;
 }
 
+// One card per rolled-out video channel that actually rendered (real mp4 on
+// disk, not the SCALE-verdict hero alone) -- see the L3 header for why this
+// exists alongside TheaterHero rather than replacing it. workingTitle and
+// channelCopy both come straight off the matching rollout draft/channel in
+// readout.json, never invented here.
+interface TheaterFeaturedVideo {
+  variantId: string;
+  workingTitle: string;
+  channel: string;
+  videoRelSrc: string;
+  coverURI: string | null;
+  channelCopy: string;
+  durationSec: number | null;
+  productionNote: string | null;
+}
+
 interface TheaterData {
   moment: string;
   waveNumber: number;
@@ -175,6 +231,7 @@ interface TheaterData {
   rationale: string;
   rollouts: TheaterRolloutPayload[];
   hero: TheaterHero;
+  featuredVideos: TheaterFeaturedVideo[];
   libraryBefore: { wave: number; winners: string[] }[];
   libraryNewLine: { wave: number; winners: string[] };
   installCmd: string;
@@ -234,12 +291,14 @@ async function buildRolloutPayload(waveDirRel: string, readout: WaveReadout, dra
       const isVideo = ch.nativeFormat === "video";
       const coverURI = isVideo ? await assetDataURI(ch.coverPath) : await assetDataURI(ch.assetPath);
       const videoRelSrc = isVideo && ch.assetPath ? path.relative(waveDirRel, ch.assetPath) : null;
+      const durationSec = isVideo && ch.assetPath ? await probeDurationSec(ch.assetPath) : null;
       return {
         channel: ch.channel,
         role: ch.role,
         nativeFormat: ch.nativeFormat,
         coverURI,
         videoRelSrc,
+        durationSec,
         channelCopy: ch.channelCopy,
         kpi: ch.kpi,
         kpiThresholdNote: ch.kpiThresholdNote,
@@ -256,6 +315,32 @@ async function buildRolloutPayload(waveDirRel: string, readout: WaveReadout, dra
     productionNote: readString(draft, "productionNote"),
     operatorNote: readString(draft, "operatorNote"),
   };
+}
+
+// Every rollout draft that shipped a real rendered video channel gets its
+// own featured card -- not just the SCALE-verdict hero. Order follows
+// readout.rollouts (the same order the real pipeline produced them in), so
+// the replay's sequence is a fact, not a curation choice. workingTitle and
+// channelCopy are read straight off the already-built rollout payload
+// (itself sourced from readout.json's variants[] and rollouts[].channels[]),
+// nothing here is authored.
+function buildFeaturedVideos(rollouts: TheaterRolloutPayload[]): TheaterFeaturedVideo[] {
+  const featured: TheaterFeaturedVideo[] = [];
+  for (const draft of rollouts) {
+    const videoChannel = draft.channels.find((ch) => ch.nativeFormat === "video" && ch.videoRelSrc);
+    if (!videoChannel || !videoChannel.videoRelSrc) continue;
+    featured.push({
+      variantId: draft.variantId,
+      workingTitle: draft.workingTitle,
+      channel: videoChannel.channel,
+      videoRelSrc: videoChannel.videoRelSrc,
+      coverURI: videoChannel.coverURI,
+      channelCopy: videoChannel.channelCopy,
+      durationSec: videoChannel.durationSec,
+      productionNote: videoChannel.productionNote,
+    });
+  }
+  return featured;
 }
 
 async function buildHero(waveDirRel: string, readout: WaveReadout): Promise<TheaterHero> {
@@ -286,6 +371,7 @@ export async function renderTheater(readout: WaveReadout, libraryEntries?: Learn
   const variants = await Promise.all(readout.variants.map((v) => buildVariantPayload(readout, v)));
   const rollouts = await Promise.all(readout.rollouts.map((d) => buildRolloutPayload(waveDirRel, readout, d)));
   const hero = await buildHero(waveDirRel, readout);
+  const featuredVideos = buildFeaturedVideos(rollouts);
 
   const namedAssets = readout.namedAssets.map((n) => ({ name: n.name, format: n.format, segments: n.segments }));
 
@@ -311,6 +397,7 @@ export async function renderTheater(readout: WaveReadout, libraryEntries?: Learn
     rationale: readout.plan.rationale,
     rollouts,
     hero,
+    featuredVideos,
     libraryBefore,
     libraryNewLine: { wave: readout.waveNumber, winners: thisWaveWinners },
     installCmd: "./install.sh",
@@ -1052,10 +1139,22 @@ const THEATER_JS = `
       .filter(Boolean)
       .join(" / ") || "backend not recorded in this readout";
     var spendHold = 2000;
+    // THE WORK keeps the literal spend fact (station 8b's real gate is
+    // paid API spend, that is true and stays on the record) -- but the
+    // full-screen overlay itself is where the audience's eyes actually
+    // are, and the show it sells there is the deliverable, not the
+    // invoice: skill/SKILL.md's own contract line ("format follows the
+    // channel: tiktok -> video, ...") restated as what's about to land,
+    // not what it costs. gateChannels is deduped so a wave with several
+    // video-native channels still reads as one sentence, not a list.
+    var gateChannelNames = videoChannels
+      .map(function (ch) { return ch.channel; })
+      .filter(function (name, i, arr) { return arr.indexOf(name) === i; });
+    var gateText = "format follows the channel: " + gateChannelNames.join(" + ") + " ships video";
     queueAction(
       videoChannels.length + " video" + (videoChannels.length > 1 ? "s" : "") + " pending real generation spend: " + backends,
       function () {
-        runApprovalGate("video generation awaiting approval, real spend", spendHold);
+        runApprovalGate(gateText, spendHold);
       }
     );
     cursor += spendHold;
@@ -1083,32 +1182,42 @@ const THEATER_JS = `
       });
     });
 
-    // ============= THE MONEY SHOT: a brand new card =============
+    // ============= THE FEATURED CUTS: one brand new card per shipped video =============
     // Appended to the bottom of the evidence stack, only now -- after the
     // approval-gate log line and the render action that followed it have
     // both already printed. This is the causality skill/SKILL.md station 8b
     // describes: video generation spends real money and sits behind its own
-    // approval gate, separate from the still's. The mp4 lands last, as the
-    // payoff of that approval, not before it. Unlike the old version of
-    // this beat, it does NOT reuse or scroll back up to the hero card built
-    // in THE CUT (that card stays static forever, see the note there) --
-    // it's a fresh card, so the natural downward scroll addCard() already
-    // performs for every new card is all the motion this beat needs.
-    // Information flows one direction: down.
-    if (DATA.hero.videoRelSrc) {
-      queueAction("still becomes motion: " + DATA.hero.workingTitle + " image-to-video render, the money shot", function () {
-        var c = el("article", "evidence-card hero-card money-shot-card");
-        c.innerHTML = '<div class="evidence-eyebrow">the money shot</div>' +
+    // approval gate, separate from the still's. The mp4s land last, as the
+    // payoff of that approval, not before it. These cards do NOT reuse or
+    // scroll back up to the hero card built in THE CUT (that card stays
+    // static forever, see the note there) -- each is a fresh card, so the
+    // natural downward scroll addCard() already performs for every new card
+    // is all the motion this beat needs. Information flows one direction:
+    // down. DATA.featuredVideos carries every rollout draft that actually
+    // shipped a rendered video, not just the SCALE-verdict hero -- an
+    // operator-promoted ITERATE arm (see draft.operatorNote upstream) gets
+    // the same spotlight its mp4 earned. Cards fire strictly in sequence:
+    // each queueAction only fires once the previous card's own hold has
+    // fully elapsed (cursor advances by that hold before the next
+    // queueAction is even queued), so two videos never share a beat and
+    // the second one's complete arc is never cut short for time.
+    DATA.featuredVideos.forEach(function (fv, fvIndex) {
+      var ordinal = (fvIndex + 1) + "/" + DATA.featuredVideos.length;
+      var eyebrow = "the " + fv.channel + " cut · " + ordinal;
+      var mediaId = "featured" + fvIndex;
+      queueAction(eyebrow + ": " + fv.workingTitle + " image-to-video render ships in full", function () {
+        var c = el("article", "evidence-card hero-card featured-video-card");
+        c.innerHTML = '<div class="evidence-eyebrow">' + esc(eyebrow) + '</div>' +
           '<div class="hero-media">' +
-          (DATA.hero.imgURI ? '<img id="moneyShotImg" class="breathe" src="' + DATA.hero.imgURI + '" alt="' + esc(DATA.hero.workingTitle) + '" />' : "") +
-          '<video id="moneyShotVideo" muted loop playsinline src="' + esc(DATA.hero.videoRelSrc) + '"></video>' +
-          '<div class="shimmer" id="moneyShotShimmer"></div>' +
+          (fv.coverURI ? '<img id="' + mediaId + 'Img" class="breathe" src="' + fv.coverURI + '" alt="' + esc(fv.workingTitle) + '" />' : "") +
+          '<video id="' + mediaId + 'Video" muted loop playsinline src="' + esc(fv.videoRelSrc) + '"></video>' +
+          '<div class="shimmer" id="' + mediaId + 'Shimmer"></div>' +
           "</div>" +
-          '<div class="hero-caption"><div class="evidence-title">' + esc(DATA.hero.workingTitle) + '</div><p class="evidence-caption">' + esc(DATA.hero.copy) + "</p></div>";
-        addCard(c, DATA.hero.productionNote || "the rendered money shot, image-to-video render, real generation call");
-        var img = document.getElementById("moneyShotImg");
-        var video = document.getElementById("moneyShotVideo");
-        var shimmer = document.getElementById("moneyShotShimmer");
+          '<div class="hero-caption"><div class="evidence-title">' + esc(fv.workingTitle) + '</div><p class="evidence-caption">' + esc(fv.channelCopy) + "</p></div>";
+        addCard(c, fv.productionNote || "the rendered " + fv.channel + " cut, image-to-video render, real generation call");
+        var img = document.getElementById(mediaId + "Img");
+        var video = document.getElementById(mediaId + "Video");
+        var shimmer = document.getElementById(mediaId + "Shimmer");
         if (img && video && shimmer) {
           setTimeout(function () {
             shimmer.classList.add("sweep");
@@ -1120,13 +1229,19 @@ const THEATER_JS = `
           }, 400);
         }
       });
-      // Give the crossfade and the looping render room to actually be
-      // seen before the learn station starts appending cards underneath
-      // it. Paired with THE CUT's own reduced hold above, this adds back
-      // up to the same 7000*PACE the money shot always got, just moved to
-      // where the video itself is real now.
-      cursor += 4200 * PACE;
-    }
+      // Hold un-stretched by PACE (same posture as the insight gate's
+      // gateHold above): this is the card's own real runtime, not
+      // content-driven pacing. crossfadeDelayMs (900ms: 400ms shimmer +
+      // 500ms play) plus the asset's real ffprobe'd duration plus a
+      // breathing buffer, so the card is never advanced past while its
+      // video is still mid-play. Falls back to 8000ms only if ffprobe
+      // could not read the file (never happens for the two wave-04
+      // assets this beat currently carries, both probed clean).
+      var crossfadeDelayMs = 900;
+      var breathingBufferMs = 2000;
+      var holdMs = crossfadeDelayMs + (fv.durationSec ? fv.durationSec * 1000 : 8000) + breathingBufferMs;
+      cursor += holdMs;
+    });
   }
 
   queueHeader("rollout", "station 9 / learn");
