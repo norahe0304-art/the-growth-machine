@@ -39,6 +39,20 @@ export interface GenerationPrompts {
   copy: string; // a copy-generation prompt
 }
 
+// ReferenceEntry: one pulled-in source card entry backing a brief's
+// generationPrompts, skill-mode and Codex-CLI-mode station 2 reads
+// references/<channel>.md (or references/cross-channel.md) before writing
+// the prompt and names what it pulled here. status is "live" when a real
+// pull succeeded, "starter-unverified" when it fell back to that file's
+// starter rules section. Was skill-mode-only, written directly into
+// brief-v{N}.json; now a first-class optional field on the compiled Brief
+// so CLI-mode readers (report.ts, rollout-validate, etc.) share one shape.
+export interface ReferenceEntry {
+  source: string; // the references/*.md file consulted
+  entry: string; // the specific card entry or starter rule pulled
+  status: "live" | "starter-unverified";
+}
+
 export interface Brief {
   variantId: string;
   workingTitle: string;
@@ -48,6 +62,7 @@ export interface Brief {
   formats: Array<"still" | "motion">;
   successMetric: string;
   generationPrompts: GenerationPrompts;
+  referenceSet?: ReferenceEntry[]; // optional: CLI-mode briefs never set this, older waves predate it entirely
 }
 
 // ============================================================
@@ -110,12 +125,18 @@ export interface ProducedAsset {
 }
 
 // ============================================================
-// Judge: three-point self-check
+// Judge: three-point self-check, plus an optional fourth brand-fit
+// dimension. brandFit was a skill-mode and Codex-CLI-mode addition scored
+// against brand/<pack>/brand.md's restraint/register/rights checks (default
+// 2 when no brand pack is configured); now wired into the CLI judge station
+// too (see stages/judge.ts), so it is optional here rather than required —
+// readout.json written before this field existed still deserializes cleanly.
 // ============================================================
 export interface JudgeScore {
   onBrief: 1 | 2 | 3;
   legible: 1 | 2 | 3;
   shareable: 1 | 2 | 3;
+  brandFit?: 1 | 2 | 3;
 }
 
 export interface JudgeResult {

@@ -259,9 +259,9 @@ Any dimension scoring `1` is a fail, `brandFit` included. On a fail, regenerate 
 asset once (rerun its produce step), score the regenerated version, and stop regardless of
 the second result, at most one retry. Build a `JudgeResult`: `{variantId, format, score,
 passed, regenerated, notes}`, where `score` carries all four dimensions above including
-`brandFit`. `brandFit` is a Codex-CLI-mode and skill-mode addition written directly into
-the JSON. The compiled `JudgeScore` type in `src/types.ts` still carries only the original
-three dimensions, this lane does not touch `src/`.
+`brandFit`. `brandFit` is a first-class optional field on the compiled `JudgeScore` type in
+`src/types.ts`; the headless CLI judge scores it too when `BRAND_PACK` is set, so every mode
+carries the same score shape.
 
 ## Station 7, simulate (scripted)
 

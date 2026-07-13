@@ -1,7 +1,7 @@
 /**
  * [INPUT]: depends on node:fs/promises to read image assets, on types.ts's WaveReadout and all its sub-types, plus optional LearningEntry[] for the library summary block
  * [OUTPUT]: exports renderReport(readout, libraryEntries?) -> Promise<string>, a self-contained report.html string
- * [POS]: the terminal presentation layer of the ten-station pipeline, outside stages/ (it doesn't participate in decisions): paints a WaveReadout into an editorial layout, with a predicted-vs-measured overlay once measure.ts has run and a channel playbook, each row carrying its own rendered channel cut and finished channelCopy, once rollout.ts has run
+ * [POS]: the terminal presentation layer of the ten-station pipeline, outside stages/ (it doesn't participate in decisions): paints a WaveReadout into an editorial layout, with a predicted-vs-measured overlay once measure.ts has run and a channel playbook, each row carrying its own rendered channel cut and finished channelCopy, once rollout.ts has run; the judge block renders three score rows always, a fourth brandFit row only when score.brandFit is present, so pre-brandFit waves re-render unchanged
  * [PROTOCOL]: update this header on change, then check CLAUDE.md
  */
 import { readFile } from "node:fs/promises";
@@ -106,6 +106,24 @@ function judgeBadge(judge: JudgeResult | undefined): string {
   return `<span class="badge ${cls}">judge ${label}${regen}</span>`;
 }
 
+// Three rows always (onBrief/legible/shareable); a fourth brandFit row only
+// when the score actually carries it -- older waves, and any run with no
+// brand pack configured, render three rows and stay exactly as they always
+// have. See src/stages/judge.ts for where brandFit comes from.
+function judgeScoreRows(judge: JudgeResult | undefined, label: string): string {
+  if (!judge) return "";
+  const rows: Array<[string, number]> = [
+    ["on brief", judge.score.onBrief],
+    ["legible", judge.score.legible],
+    ["shareable", judge.score.shareable],
+  ];
+  if (judge.score.brandFit != null) rows.push(["brand fit", judge.score.brandFit]);
+  return `<div class="judge-scores">
+    <div class="judge-scores-label">${escapeHTML(label)} judge scores</div>
+    ${rows.map(([key, val]) => `<div class="judge-score-row"><span class="judge-score-key">${escapeHTML(key)}</span><span class="judge-score-val">${val}</span></div>`).join("")}
+  </div>`;
+}
+
 async function renderVariantCard(params: {
   variant: Variant;
   brief: Brief;
@@ -168,6 +186,8 @@ async function renderVariantCard(params: {
         <div class="badges">
           ${judgeBadge(stillJudge)} ${judgeBadge(motionJudge)} ${stillDecision ? verdictBadge(stillDecision.verdict) : ""} ${sourceBadge(stillDecision?.source)}
         </div>
+        ${judgeScoreRows(stillJudge, "still")}
+        ${judgeScoreRows(motionJudge, "motion")}
       </div>
     </div>
 
@@ -428,6 +448,11 @@ export async function renderReport(readout: WaveReadout, libraryEntries?: Learni
   .badge-fail { border-color: #a85c5c; color: #8a3f3f; }
   .badge-measured { border-color: #c2410c; color: #c2410c; }
   .badge-simulated { border-color: #8a8779; color: #8a8779; }
+  .judge-scores { margin-top: 10px; }
+  .judge-scores-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; color: #8a8779; margin-bottom: 2px; }
+  .judge-score-row { display: flex; gap: 10px; font-size: 12px; padding: 1px 0; }
+  .judge-score-key { min-width: 90px; color: #8a8779; }
+  .judge-score-val { font-weight: 600; }
   .prompts { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin: 20px 0; }
   .prompt-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: #8a8779; margin-bottom: 6px; }
   .prompt-block pre {

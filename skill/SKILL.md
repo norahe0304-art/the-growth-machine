@@ -209,10 +209,9 @@ most important deliverable, it must be ready to run as-is, not a summary:
 Write one `brief-v{N}.json` per variant to `waves/wave-{NN}/brief-v{N}.json` (zero-padded
 wave number, matching `waveDirName`, e.g. `waves/wave-01/brief-v1.json`). Use the `Brief`
 shape plus `referenceSet`: `{variantId, workingTitle, audience, insight, assetXElement,
-formats, successMetric, referenceSet, generationPrompts}`. `referenceSet` is a
-skill-mode and Codex-CLI-mode addition written directly into the JSON file, the compiled
-`Brief` type in `src/types.ts` still carries only the original fields, this lane does not
-touch `src/`.
+formats, successMetric, referenceSet, generationPrompts}`. `referenceSet` is a first-class
+optional field on the compiled `Brief` type in `src/types.ts` (`ReferenceEntry[]`), the same
+shape in skill mode, Codex CLI mode, and headless CLI mode.
 
 ## Station 3, naming (scripted, deterministic, no LLM)
 
@@ -317,11 +316,10 @@ one asset once (rerun the produce step for it, new copy, or a retried `codex exe
 stills), then score the regenerated version and stop regardless of the second result, at
 most one retry, same rule `runJudge` enforces. Build a `JudgeResult` per asset: `{variantId,
 format, score, passed, regenerated, notes}`, where `score` carries all four dimensions
-above including `brandFit`. `brandFit` is a skill-mode and Codex-CLI-mode addition written
-directly into the JSON the agent produces. The compiled `JudgeScore` type in `src/types.ts`
-still carries only the original three dimensions, this lane does not touch `src/`, so the
-skill and CLI headless modes carry different score shapes until a later lane wires
-`brandFit` into the compiled type.
+above including `brandFit`. `brandFit` is a first-class optional field on the compiled
+`JudgeScore` type in `src/types.ts`, and the CLI judge station scores it under the same
+rules when a brand pack is configured (`BRAND_PACK`), defaulting to `2` without one — skill
+mode, Codex CLI mode, and headless CLI mode all carry the same score shape.
 
 ## Station 7, simulate (scripted, seeded, deterministic)
 

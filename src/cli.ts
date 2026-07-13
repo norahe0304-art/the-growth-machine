@@ -22,6 +22,7 @@ env vars:
   OPENAI_API_KEY   missing -> forced mock
   MODEL            default gpt-5.4
   IMAGE_MODEL      default gpt-image-2, falls back to gpt-image-1 on a 404/unknown-model error
+  BRAND_PACK       optional brand/<pack> name (e.g. "openai"); unset -> judge's brandFit dimension defaults to 2
 `);
 }
 
