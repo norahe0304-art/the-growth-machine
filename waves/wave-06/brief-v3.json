@@ -1,0 +1,24 @@
+{
+  "variantId": "v3",
+  "workingTitle": "Decode This Text",
+  "audience": "people who screenshot a baffling text and send it to a friend asking what it means",
+  "insight": "decoding a confusing text is already a private two-person ritual, and retrograde is the permission slip to do it in public and hand the format on",
+  "assetXElement": "the screenshot of a confusing text you send a friend x a shared retrograde translation card you lay over it and pass on",
+  "formats": [
+    "still",
+    "motion"
+  ],
+  "successMetric": "downstream remixes per seed post in the first 7 days",
+  "referenceSet": [
+    {
+      "source": "references/cross-channel.md",
+      "entry": "Hook pattern 9, the question-you-are-thinking: voice the reader's likely objection as the hook itself, then answer it",
+      "status": "starter-unverified"
+    }
+  ],
+  "generationPrompts": {
+    "image": "Authentic phone-camera still, natural handheld framing, real lighting imperfections, no studio retouching and no added graphic polish. A hand holds a phone showing a screenshotted text thread with one baffling message, and a simple hand-added translation card is overlaid just beneath that message decoding it plainly. Casual and real, feed-native. No logos, no watermarks. 16:9.",
+    "motion": "[for ChatCut] three shot script: shot 1 establishes a thumb screenshotting a confusing text in everyday context; shot 2 introduces the new element as contrast, a translation card slides under the message and decodes it plainly; shot 3 lands the hook, the phone turns to camera with the hook line and a prompt to decode your own, 6 seconds total.",
+    "copy": "Write one hook line, 16 words or fewer, casual and spoken like a real person, inviting the viewer to decode their own text, no exclamation marks, no em dash."
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "variantId": "v1",
+  "workingTitle": "Group Chat Incident Report",
+  "audience": "people who blame retrograde for a week of crossed wires in their group chat",
+  "insight": "at peak retrograde the group chat is where every misfire lands, and rendering that week back as one deadpan incident report travels further than complaining about it",
+  "assetXElement": "your group chat x an auto-generated retrograde incident report of this week's crossed wires",
+  "formats": [
+    "still",
+    "motion"
+  ],
+  "successMetric": "peak-week share rate of the incident report card",
+  "referenceSet": [
+    {
+      "source": "references/cross-channel.md",
+      "entry": "Hook pattern 1, the number claim: lead with a specific odd number of incidents instead of a round one so it reads as measured rather than invented",
+      "status": "starter-unverified"
+    }
+  ],
+  "generationPrompts": {
+    "image": "Editorial tech cover with a defocused photographic background: a saturated deep-blue color core melting into shadow toward the edges, visible depth of field, subtle film grain, no flat fills. Centered in generous negative space, a single clean report card floats in space titled RETROGRADE INCIDENT REPORT, with three short redacted-looking log lines and a small timestamp. Add crisp white functional line strokes for one small constellation in the corner only, minimal and purposeful, no decorative flourishes. No logos, no watermarks. 16:9.",
+    "motion": "[for ChatCut] three shot script: shot 1 establishes a group chat scrolling fast with overlapping notifications in everyday chaos; shot 2 introduces the new element as contrast, the notifications collapse and reorganize into tidy numbered log lines; shot 3 lands the hook, the report card tilts to camera and the hook line locks in as on-screen copy, 6 seconds total.",
+    "copy": "Write one hook line, 18 words or fewer, deadpan, framing the week's group chat chaos as a calmly filed report, no exclamation marks, no em dash."
+  }
+}

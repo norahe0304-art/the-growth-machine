@@ -1,0 +1,24 @@
+{
+  "variantId": "v2",
+  "workingTitle": "Your Repair Move",
+  "audience": "people who half believe the retrograde and know their conversations always go sideways",
+  "insight": "retrograde makes miscommunication the topic, but your chat history holds the one durable thing that never changes, how you personally repair a conversation after it breaks",
+  "assetXElement": "your chat history x a reading of your repair move, the thing you always do to fix a conversation that went sideways",
+  "formats": [
+    "still",
+    "motion"
+  ],
+  "successMetric": "7 day share rate of the repair-move reading card",
+  "referenceSet": [
+    {
+      "source": "references/cross-channel.md",
+      "entry": "Hook pattern 3, the identity callout: name the exact person in second person before saying what it is",
+      "status": "starter-unverified"
+    }
+  ],
+  "generationPrompts": {
+    "image": "Pure white background, generous negative space, no gradient and no photography. One reading card titled YOUR REPAIR MOVE set in large restrained editorial type, with three short observed lines beneath it. One thin single-line drawing of two chat bubbles reconnecting is the only graphic element. Subtle film grain over the white. No logos, no watermarks. 16:9.",
+    "motion": "[for ChatCut] three shot script: shot 1 establishes a chat history scrolling through a rough patch of messages in everyday context; shot 2 introduces the new element as contrast, one recurring repair pattern highlights and lifts out of the thread; shot 3 lands the hook, the pattern settles onto the reading card and the hook line locks in as on-screen copy, 6 seconds total.",
+    "copy": "Write one hook line, 20 words or fewer, restrained tone, second person, about being shown the one way you always fix things, no exclamation marks, no em dash."
+  }
+}

@@ -1,0 +1,726 @@
+{
+  "moment": "mercury retrograde",
+  "waveNumber": 6,
+  "variants": [
+    {
+      "id": "v1",
+      "asset": "your group chat",
+      "assetKind": "thing",
+      "newElement": "an auto-generated retrograde incident report of this week's crossed wires",
+      "angle": "at peak retrograde week the group chat collects every mixed signal, so the product renders that week's chaos back as one deadpan filed report",
+      "angleType": "moment",
+      "workingTitle": "Group Chat Incident Report"
+    },
+    {
+      "id": "v2",
+      "asset": "your chat history",
+      "assetKind": "thing",
+      "newElement": "a reading of your repair move, the thing you always do to fix a conversation that went sideways",
+      "angle": "retrograde breaks conversations and your chat history is the only record of how you personally put them back together, a durable trait true in any season",
+      "angleType": "evergreen",
+      "workingTitle": "Your Repair Move"
+    },
+    {
+      "id": "v3",
+      "asset": "the screenshot of a confusing text you send a friend to decode",
+      "assetKind": "interaction",
+      "newElement": "a shared retrograde translation card you lay over the screenshot, then pass the format on",
+      "angle": "decoding a baffling text is already a private two-person ritual, and retrograde turns it into a public loop where each person decodes their own and hands the template on",
+      "angleType": "ugc-loop",
+      "workingTitle": "Decode This Text"
+    }
+  ],
+  "briefs": [
+    {
+      "variantId": "v1",
+      "workingTitle": "Group Chat Incident Report",
+      "audience": "people who blame retrograde for a week of crossed wires in their group chat",
+      "insight": "at peak retrograde the group chat is where every misfire lands, and rendering that week back as one deadpan incident report travels further than complaining about it",
+      "assetXElement": "your group chat x an auto-generated retrograde incident report of this week's crossed wires",
+      "formats": [
+        "still",
+        "motion"
+      ],
+      "successMetric": "peak-week share rate of the incident report card",
+      "referenceSet": [
+        {
+          "source": "references/cross-channel.md",
+          "entry": "Hook pattern 1, the number claim: lead with a specific odd number of incidents instead of a round one so it reads as measured rather than invented",
+          "status": "starter-unverified"
+        }
+      ],
+      "generationPrompts": {
+        "image": "Editorial tech cover with a defocused photographic background: a saturated deep-blue color core melting into shadow toward the edges, visible depth of field, subtle film grain, no flat fills. Centered in generous negative space, a single clean report card floats in space titled RETROGRADE INCIDENT REPORT, with three short redacted-looking log lines and a small timestamp. Add crisp white functional line strokes for one small constellation in the corner only, minimal and purposeful, no decorative flourishes. No logos, no watermarks. 16:9.",
+        "motion": "[for ChatCut] three shot script: shot 1 establishes a group chat scrolling fast with overlapping notifications in everyday chaos; shot 2 introduces the new element as contrast, the notifications collapse and reorganize into tidy numbered log lines; shot 3 lands the hook, the report card tilts to camera and the hook line locks in as on-screen copy, 6 seconds total.",
+        "copy": "Write one hook line, 18 words or fewer, deadpan, framing the week's group chat chaos as a calmly filed report, no exclamation marks, no em dash."
+      }
+    },
+    {
+      "variantId": "v2",
+      "workingTitle": "Your Repair Move",
+      "audience": "people who half believe the retrograde and know their conversations always go sideways",
+      "insight": "retrograde makes miscommunication the topic, but your chat history holds the one durable thing that never changes, how you personally repair a conversation after it breaks",
+      "assetXElement": "your chat history x a reading of your repair move, the thing you always do to fix a conversation that went sideways",
+      "formats": [
+        "still",
+        "motion"
+      ],
+      "successMetric": "7 day share rate of the repair-move reading card",
+      "referenceSet": [
+        {
+          "source": "references/cross-channel.md",
+          "entry": "Hook pattern 3, the identity callout: name the exact person in second person before saying what it is",
+          "status": "starter-unverified"
+        }
+      ],
+      "generationPrompts": {
+        "image": "Pure white background, generous negative space, no gradient and no photography. One reading card titled YOUR REPAIR MOVE set in large restrained editorial type, with three short observed lines beneath it. One thin single-line drawing of two chat bubbles reconnecting is the only graphic element. Subtle film grain over the white. No logos, no watermarks. 16:9.",
+        "motion": "[for ChatCut] three shot script: shot 1 establishes a chat history scrolling through a rough patch of messages in everyday context; shot 2 introduces the new element as contrast, one recurring repair pattern highlights and lifts out of the thread; shot 3 lands the hook, the pattern settles onto the reading card and the hook line locks in as on-screen copy, 6 seconds total.",
+        "copy": "Write one hook line, 20 words or fewer, restrained tone, second person, about being shown the one way you always fix things, no exclamation marks, no em dash."
+      }
+    },
+    {
+      "variantId": "v3",
+      "workingTitle": "Decode This Text",
+      "audience": "people who screenshot a baffling text and send it to a friend asking what it means",
+      "insight": "decoding a confusing text is already a private two-person ritual, and retrograde is the permission slip to do it in public and hand the format on",
+      "assetXElement": "the screenshot of a confusing text you send a friend x a shared retrograde translation card you lay over it and pass on",
+      "formats": [
+        "still",
+        "motion"
+      ],
+      "successMetric": "downstream remixes per seed post in the first 7 days",
+      "referenceSet": [
+        {
+          "source": "references/cross-channel.md",
+          "entry": "Hook pattern 9, the question-you-are-thinking: voice the reader's likely objection as the hook itself, then answer it",
+          "status": "starter-unverified"
+        }
+      ],
+      "generationPrompts": {
+        "image": "Authentic phone-camera still, natural handheld framing, real lighting imperfections, no studio retouching and no added graphic polish. A hand holds a phone showing a screenshotted text thread with one baffling message, and a simple hand-added translation card is overlaid just beneath that message decoding it plainly. Casual and real, feed-native. No logos, no watermarks. 16:9.",
+        "motion": "[for ChatCut] three shot script: shot 1 establishes a thumb screenshotting a confusing text in everyday context; shot 2 introduces the new element as contrast, a translation card slides under the message and decodes it plainly; shot 3 lands the hook, the phone turns to camera with the hook line and a prompt to decode your own, 6 seconds total.",
+        "copy": "Write one hook line, 16 words or fewer, casual and spoken like a real person, inviting the viewer to decode their own text, no exclamation marks, no em dash."
+      }
+    }
+  ],
+  "namedAssets": [
+    {
+      "variantId": "v1",
+      "format": "still",
+      "name": "WEB_CONV_TOF_HOT_STIL_ATPE_MERCUR_PEOP_V06",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "CONV",
+        "FUNNEL": "TOF",
+        "TEMP": "HOT",
+        "FORMAT": "STIL",
+        "HOOK": "ATPE",
+        "MOMENT": "MERCUR",
+        "PERSONA": "PEOP",
+        "VER": "V06"
+      }
+    },
+    {
+      "variantId": "v1",
+      "format": "motion",
+      "name": "WEB_CONV_TOF_HOT_MOTN_ATPE_MERCUR_PEOP_V06",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "CONV",
+        "FUNNEL": "TOF",
+        "TEMP": "HOT",
+        "FORMAT": "MOTN",
+        "HOOK": "ATPE",
+        "MOMENT": "MERCUR",
+        "PERSONA": "PEOP",
+        "VER": "V06"
+      }
+    },
+    {
+      "variantId": "v2",
+      "format": "still",
+      "name": "WEB_CONV_MOF_EVG_STIL_RETR_MERCUR_PEOP_V06",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "CONV",
+        "FUNNEL": "MOF",
+        "TEMP": "EVG",
+        "FORMAT": "STIL",
+        "HOOK": "RETR",
+        "MOMENT": "MERCUR",
+        "PERSONA": "PEOP",
+        "VER": "V06"
+      }
+    },
+    {
+      "variantId": "v2",
+      "format": "motion",
+      "name": "WEB_CONV_MOF_EVG_MOTN_RETR_MERCUR_PEOP_V06",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "CONV",
+        "FUNNEL": "MOF",
+        "TEMP": "EVG",
+        "FORMAT": "MOTN",
+        "HOOK": "RETR",
+        "MOMENT": "MERCUR",
+        "PERSONA": "PEOP",
+        "VER": "V06"
+      }
+    },
+    {
+      "variantId": "v3",
+      "format": "still",
+      "name": "WEB_ENGT_BOF_LOOP_STIL_DECO_MERCUR_PEOP_V06",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "ENGT",
+        "FUNNEL": "BOF",
+        "TEMP": "LOOP",
+        "FORMAT": "STIL",
+        "HOOK": "DECO",
+        "MOMENT": "MERCUR",
+        "PERSONA": "PEOP",
+        "VER": "V06"
+      }
+    },
+    {
+      "variantId": "v3",
+      "format": "motion",
+      "name": "WEB_ENGT_BOF_LOOP_MOTN_DECO_MERCUR_PEOP_V06",
+      "segments": {
+        "CHANNEL": "WEB",
+        "OBJ": "ENGT",
+        "FUNNEL": "BOF",
+        "TEMP": "LOOP",
+        "FORMAT": "MOTN",
+        "HOOK": "DECO",
+        "MOMENT": "MERCUR",
+        "PERSONA": "PEOP",
+        "VER": "V06"
+      }
+    }
+  ],
+  "plan": {
+    "moment": "mercury retrograde",
+    "waveNumber": 6,
+    "arms": [
+      {
+        "variantId": "v1",
+        "format": "still",
+        "name": "WEB_CONV_TOF_HOT_STIL_ATPE_MERCUR_PEOP_V06",
+        "trafficSplitPct": 33.33,
+        "budgetIllustrative": 500
+      },
+      {
+        "variantId": "v2",
+        "format": "still",
+        "name": "WEB_CONV_MOF_EVG_STIL_RETR_MERCUR_PEOP_V06",
+        "trafficSplitPct": 33.33,
+        "budgetIllustrative": 250
+      },
+      {
+        "variantId": "v3",
+        "format": "still",
+        "name": "WEB_ENGT_BOF_LOOP_STIL_DECO_MERCUR_PEOP_V06",
+        "trafficSplitPct": 33.33,
+        "budgetIllustrative": 350
+      }
+    ],
+    "preRegisteredThresholds": {
+      "moment": {
+        "scaleAt": 0.045,
+        "killAt": 0.015,
+        "fatigueSlope": -0.004
+      },
+      "evergreen": {
+        "scaleAt": 0.035,
+        "killAt": 0.012,
+        "fatigueSlope": -0.0015
+      },
+      "ugc-loop": {
+        "scaleAt": 0.05,
+        "killAt": 0.018,
+        "fatigueSlope": -0.002
+      }
+    },
+    "engagementThresholds": {
+      "moment": {
+        "scaleAt": 0.08,
+        "killAt": 0.02,
+        "fatigueSlope": -0.01
+      },
+      "evergreen": {
+        "scaleAt": 0.06,
+        "killAt": 0.015,
+        "fatigueSlope": -0.004
+      },
+      "ugc-loop": {
+        "scaleAt": 0.1,
+        "killAt": 0.025,
+        "fatigueSlope": -0.006
+      }
+    },
+    "dates": {
+      "start": "2026-07-13",
+      "end": "2026-08-03",
+      "days": 21
+    },
+    "rationale": "Wave 6 splits traffic evenly across three variants for \"mercury retrograde\"; the 21-day observation window covers the full fatigue-curve inflection point"
+  },
+  "produced": [
+    {
+      "variantId": "v1",
+      "format": "still",
+      "name": "WEB_CONV_TOF_HOT_STIL_ATPE_MERCUR_PEOP_V06",
+      "assetPath": "waves/wave-06/assets/WEB_CONV_TOF_HOT_STIL_ATPE_MERCUR_PEOP_V06.png",
+      "copy": "Mercury retrograde week, seven crossed wires, four unread replies, one plan quietly rescheduled. Report filed.",
+      "motionScript": null,
+      "imageModelUsed": "codex-exec",
+      "regeneratedCount": 0
+    },
+    {
+      "variantId": "v1",
+      "format": "motion",
+      "name": "WEB_CONV_TOF_HOT_MOTN_ATPE_MERCUR_PEOP_V06",
+      "assetPath": null,
+      "copy": "Mercury retrograde week, seven crossed wires, four unread replies, one plan quietly rescheduled. Report filed.",
+      "motionScript": [
+        "Shot 1: a group chat scrolls fast with overlapping notification banners piling up in everyday retrograde-week chaos.",
+        "Shot 2: the banners collapse and reorganize into three tidy numbered incident log lines with a timestamp.",
+        "Shot 3: the report card tilts to camera and the hook line locks in as on-screen copy, hold the frame."
+      ],
+      "imageModelUsed": null,
+      "regeneratedCount": 0
+    },
+    {
+      "variantId": "v2",
+      "format": "still",
+      "name": "WEB_CONV_MOF_EVG_STIL_RETR_MERCUR_PEOP_V06",
+      "assetPath": "waves/wave-06/assets/WEB_CONV_MOF_EVG_STIL_RETR_MERCUR_PEOP_V06.png",
+      "copy": "Every conversation you broke this season, you fixed the same quiet way. Your chat history already knew.",
+      "motionScript": null,
+      "imageModelUsed": "codex-exec",
+      "regeneratedCount": 1
+    },
+    {
+      "variantId": "v2",
+      "format": "motion",
+      "name": "WEB_CONV_MOF_EVG_MOTN_RETR_MERCUR_PEOP_V06",
+      "assetPath": null,
+      "copy": "Every conversation you broke this season, you fixed the same quiet way. Your chat history already knew.",
+      "motionScript": [
+        "Shot 1: a chat history scrolls through a rough patch of clipped sideways messages in everyday context.",
+        "Shot 2: one recurring repair message highlights and lifts out of the thread as the single durable pattern.",
+        "Shot 3: the pattern settles onto the YOUR REPAIR MOVE reading card and the hook line locks in as on-screen copy."
+      ],
+      "imageModelUsed": null,
+      "regeneratedCount": 0
+    },
+    {
+      "variantId": "v3",
+      "format": "still",
+      "name": "WEB_ENGT_BOF_LOOP_STIL_DECO_MERCUR_PEOP_V06",
+      "assetPath": "waves/wave-06/assets/WEB_ENGT_BOF_LOOP_STIL_DECO_MERCUR_PEOP_V06.png",
+      "copy": "You already screenshot the weird ones to ask a friend. Retrograde says decode yours out loud.",
+      "motionScript": null,
+      "imageModelUsed": "codex-exec",
+      "regeneratedCount": 0
+    },
+    {
+      "variantId": "v3",
+      "format": "motion",
+      "name": "WEB_ENGT_BOF_LOOP_MOTN_DECO_MERCUR_PEOP_V06",
+      "assetPath": null,
+      "copy": "You already screenshot the weird ones to ask a friend. Retrograde says decode yours out loud.",
+      "motionScript": [
+        "Shot 1: a thumb screenshots a baffling text in everyday context, the confusing message centered.",
+        "Shot 2: a translation card slides under the message and decodes it plainly as the new element.",
+        "Shot 3: the phone turns to camera with the hook line and a prompt to decode your own text, hold the frame."
+      ],
+      "imageModelUsed": null,
+      "regeneratedCount": 0
+    }
+  ],
+  "judged": [
+    {
+      "variantId": "v1",
+      "format": "still",
+      "score": {
+        "onBrief": 2,
+        "legible": 3,
+        "shareable": 2,
+        "brandFit": 3
+      },
+      "passed": true,
+      "regenerated": false,
+      "notes": "Dark gradient register nailed, the RETROGRADE INCIDENT REPORT card reads instantly and the deadpan copy fuses the group chat week into the report. onBrief 2 because the group chat asset is carried by the copy while the image shows only the report output, so it reads slightly stitched rather than one graft. Rights and register clean, no logo."
+    },
+    {
+      "variantId": "v1",
+      "format": "motion",
+      "score": {
+        "onBrief": 2,
+        "legible": 3,
+        "shareable": 2,
+        "brandFit": 3
+      },
+      "passed": true,
+      "regenerated": false,
+      "notes": "Three-shot storyboard follows the establish/contrast/land logic and the reorganize-into-log-lines beat is legible. Same onBrief 2 as the still, the group chat and the report read as two beats stitched, not one graft."
+    },
+    {
+      "variantId": "v2",
+      "format": "still",
+      "score": {
+        "onBrief": 3,
+        "legible": 3,
+        "shareable": 3,
+        "brandFit": 3
+      },
+      "passed": true,
+      "regenerated": false,
+      "notes": "The defender. Chat history and the repair-move reading fuse into a single card, the three observed lines are the graft. Hands the viewer a ready-made identity caption (YOU RETURN WITH CARE). Paper-white register, restrained, rights clean. Perfect on all four. First codex call timed out, the retry produced this clean pass."
+    },
+    {
+      "variantId": "v2",
+      "format": "motion",
+      "score": {
+        "onBrief": 3,
+        "legible": 3,
+        "shareable": 2,
+        "brandFit": 3
+      },
+      "passed": true,
+      "regenerated": false,
+      "notes": "Storyboard lands the durable-pattern lift cleanly. shareable 2 because motion loses the instant screenshot-and-repost mechanic the still has, still a strong reveal."
+    },
+    {
+      "variantId": "v3",
+      "format": "still",
+      "score": {
+        "onBrief": 3,
+        "legible": 3,
+        "shareable": 3,
+        "brandFit": 3
+      },
+      "passed": true,
+      "regenerated": false,
+      "notes": "The challenger. The baffling double-negative text plus the hand-added Plainly translation card is exactly the interaction-plus-newElement graft in one candid phone image. UGC register is explicitly licensed by design.md and IG precedent. Ready-made template a viewer wants to copy. Rights clean."
+    },
+    {
+      "variantId": "v3",
+      "format": "motion",
+      "score": {
+        "onBrief": 3,
+        "legible": 3,
+        "shareable": 3,
+        "brandFit": 3
+      },
+      "passed": true,
+      "regenerated": false,
+      "notes": "Storyboard carries the decode-and-pass-on loop, the shot 3 invite to decode your own is the compounding hook. Strong on all four."
+    }
+  ],
+  "simulated": [
+    {
+      "variantId": "v1",
+      "format": "still",
+      "angleType": "moment",
+      "days": 21,
+      "predictedCTR": [
+        0.020779211092740293,
+        0.03957509553525596,
+        0.0582500638468191,
+        0.046895591571099265,
+        0.03914678807256245,
+        0.03282875634081389,
+        0.02301785335892879,
+        0.020788446614528028,
+        0.01407016269607113,
+        0.014286598686724843,
+        0.00897324540044333,
+        0.00934070400382319,
+        0.008449290871523314,
+        0.0071706778718459456,
+        0.006026601991789208,
+        0.0037339471339617844,
+        0.004133070678302767,
+        0.0026824830224907842,
+        0.0019112129019503725,
+        0.0022284827934778225,
+        0.002550205304879446
+      ],
+      "shareRate": [
+        0.009883962253574281,
+        0.01789970012917183,
+        0.026747179485717785,
+        0.02190434260247277,
+        0.017352099802297162,
+        0.015320794305174317,
+        0.00955262126408641,
+        0.00946879081307396,
+        0.007016796137453316,
+        0.007260806866630886,
+        0.0037773478041051274,
+        0.005200621948604609,
+        0.0028086337240908264,
+        0.003990245104156935,
+        0.0020982741437233984,
+        0.0012895064222187404,
+        0.0016637279866065632,
+        0.0008290639520047507,
+        0.0011218865526156842,
+        0.001566475304066829,
+        0.0006882197461427
+      ],
+      "seed": "3763896224"
+    },
+    {
+      "variantId": "v2",
+      "format": "still",
+      "angleType": "evergreen",
+      "days": 21,
+      "predictedCTR": [
+        0.023849217512386195,
+        0.02329195632356965,
+        0.026993858146895273,
+        0.028605187392130322,
+        0.030410444874428497,
+        0.030922267653501836,
+        0.03230733892337129,
+        0.0330546916199811,
+        0.03179036618490714,
+        0.03309743299640501,
+        0.03234459936604146,
+        0.03569511147617721,
+        0.03336730303634848,
+        0.036592227345971236,
+        0.035890897598945704,
+        0.03645635591698597,
+        0.037846954059338495,
+        0.03815621001639834,
+        0.03641571067714357,
+        0.03957076207072034,
+        0.03722808304335922
+      ],
+      "shareRate": [
+        0.0068341417556447666,
+        0.0056559507705732275,
+        0.007367570657153751,
+        0.00647745262232791,
+        0.008032699320493338,
+        0.00829156859928911,
+        0.007619292611760758,
+        0.007420274136074823,
+        0.008605880517747745,
+        0.009009979226923944,
+        0.008703263705559681,
+        0.007980051973907708,
+        0.008959766554229323,
+        0.008470211631312462,
+        0.008390060626177392,
+        0.008464060974004144,
+        0.009628127619744818,
+        0.009029083760440029,
+        0.009526979637968449,
+        0.010521567250342406,
+        0.009790093181421981
+      ],
+      "seed": "2018347174"
+    },
+    {
+      "variantId": "v3",
+      "format": "still",
+      "angleType": "ugc-loop",
+      "days": 21,
+      "predictedCTR": [
+        0.023104539548978207,
+        0.02280123995244503,
+        0.021084538292139767,
+        0.02053737785015255,
+        0.021366363540291786,
+        0.02389875760953873,
+        0.02351199765410274,
+        0.02777578191868961,
+        0.027661246002092958,
+        0.02869310575854033,
+        0.027621020426414906,
+        0.029987438543140888,
+        0.029874999607354402,
+        0.027806525193527342,
+        0.03776658830169589,
+        0.03558984129346908,
+        0.03909736206039787,
+        0.03697333640541882,
+        0.03574941267382354,
+        0.03830052663322538,
+        0.035858821382112806
+      ],
+      "shareRate": [
+        0.02094875205280259,
+        0.02094044800605625,
+        0.019822624725382775,
+        0.01805171292666346,
+        0.01911296747624874,
+        0.02152918524928391,
+        0.020413772865012284,
+        0.02465219701813534,
+        0.024430097986254843,
+        0.02525685412162915,
+        0.02423361821571365,
+        0.027888062734678386,
+        0.027089129555374382,
+        0.025551869309376928,
+        0.033624958357203756,
+        0.03255186338740215,
+        0.03538130717127398,
+        0.03297102566779406,
+        0.03267783193074913,
+        0.03465563196091727,
+        0.03279211078173295
+      ],
+      "seed": "1132575586"
+    }
+  ],
+  "decided": [
+    {
+      "variantId": "v1",
+      "format": "still",
+      "verdict": "KILL",
+      "reason": "last-3-day average CTR 0.0022 fell below the preregistered killAt 0.015: verdict: kill",
+      "finalCTR": 0.002229967000102547,
+      "slope": -0.0005593563042160573,
+      "source": "simulated"
+    },
+    {
+      "variantId": "v2",
+      "format": "still",
+      "verdict": "SCALE",
+      "reason": "last-3-day average CTR 0.0377 reached the preregistered scaleAt 0.035: verdict: scale",
+      "finalCTR": 0.03773818526374104,
+      "slope": 0.00031461161637551325,
+      "source": "simulated"
+    },
+    {
+      "variantId": "v3",
+      "format": "still",
+      "verdict": "ITERATE",
+      "reason": "last-3-day average CTR 0.0366 sits between killAt and scaleAt, slope has not tripped the fatigue threshold: verdict: iterate",
+      "finalCTR": 0.03663625356305391,
+      "slope": -0.00013035283806467742,
+      "source": "simulated"
+    }
+  ],
+  "measured": [],
+  "rollouts": [
+    {
+      "variantId": "v2",
+      "name": "WEB_CONV_MOF_EVG_STIL_RETR_MERCUR_PEOP_V06",
+      "channels": [
+        {
+          "channel": "x",
+          "role": "discovery",
+          "nativeFormat": "still",
+          "assetName": "XTW_CONV_MOF_EVG_STIL_RETR_MERCUR_PEOP_V06",
+          "assetPath": "waves/wave-06/assets/rollout/XTW_CONV_MOF_EVG_STIL_RETR_MERCUR_PEOP_V06.png",
+          "coverPath": null,
+          "videoDurationSec": null,
+          "illustrativeLabel": null,
+          "channelCopy": "Retrograde did not change how you argue. It just reminded you that you always come back the same way.",
+          "channelScript": null,
+          "assetSpec": "A 16:9 editorial still of the reading card with the graft visible, the hook ships as post text and is never baked into the image, tuned so the first observed line reads at a glance in a fast feed.",
+          "executionSteps": [
+            "Post the reading card as a single image with one dry line above it.",
+            "Time the post to the first full retrograde week when miscommunication is already the feed topic.",
+            "Reply once to the top quote with a second observed line to extend the thread.",
+            "Pin the post for the length of the retrograde window."
+          ],
+          "kpi": "reach a 3.5 percent link click rate on the post within 7 days",
+          "kpiThresholdNote": "This 3.5 percent target maps to the evergreen scaleAt of 0.035 preregistered in the plan, so the channel earns SCALE only if it clears the same bar the concept did.",
+          "postKit": {
+            "file": "waves/wave-06/assets/rollout/XTW_CONV_MOF_EVG_STIL_RETR_MERCUR_PEOP_V06.png",
+            "caption": "Retrograde did not change how you argue. It just reminded you that you always come back the same way. Your chat history already had the pattern written down.",
+            "hashtags": [
+              "#mercuryretrograde",
+              "#texting",
+              "#communication",
+              "#chathistory"
+            ],
+            "altText": "A pure white editorial reading card titled Your Repair Move with three short observed lines beneath it and a thin line drawing of two chat bubbles reconnecting.",
+            "postingNote": "Post during the first full retrograde week, tag no one, pin it for the length of the window."
+          }
+        },
+        {
+          "channel": "instagram",
+          "role": "amplification",
+          "nativeFormat": "ugc-still",
+          "assetName": "IG_CONV_MOF_EVG_STIL_RETR_MERCUR_PEOP_V06",
+          "assetPath": "waves/wave-06/assets/rollout/IG_CONV_MOF_EVG_STIL_RETR_MERCUR_PEOP_V06.png",
+          "coverPath": null,
+          "videoDurationSec": null,
+          "illustrativeLabel": null,
+          "channelCopy": "You have one move you always make when a conversation breaks. Here is mine.",
+          "channelScript": null,
+          "assetSpec": "A 1:1 still that reads as shot on a phone, the reading card lit like a real screenshot, the hook ships as the caption with no text baked into the image.",
+          "executionSteps": [
+            "Reshoot the reading card as a candid phone still and post it to the main grid.",
+            "Open the caption with the same observed line the card ends on.",
+            "Add a story sticker inviting followers to name their own repair move.",
+            "Reshare the strongest follower reply to stories within 48 hours."
+          ],
+          "kpi": "hit a 6 percent save plus share rate on the post within 7 days",
+          "kpiThresholdNote": "The 6 percent save plus share target reads against the evergreen engagement scaleAt of 0.06 in the plan, the engagement mirror of the concept level click bar.",
+          "postKit": {
+            "file": "waves/wave-06/assets/rollout/IG_CONV_MOF_EVG_STIL_RETR_MERCUR_PEOP_V06.png",
+            "caption": "You have one move you always make when a conversation breaks. Mine is that I go quiet, then I name the thing I missed, then I come back. Yours is in your chat history if you look.",
+            "hashtags": [
+              "#mercuryretrograde",
+              "#relationships",
+              "#texting",
+              "#selfawareness",
+              "#communication"
+            ],
+            "altText": "A candid phone photo of a white reading card titled Your Repair Move showing three short lines about how a person repairs a conversation.",
+            "postingNote": "Post while the retrograde trend is still climbing, pair with a story poll, reshare the best reply within two days."
+          }
+        },
+        {
+          "channel": "in-app profile surface",
+          "role": "retention",
+          "nativeFormat": "surface",
+          "assetName": "APP_CONV_MOF_EVG_STIL_RETR_MERCUR_PEOP_V06",
+          "assetPath": "waves/wave-06/assets/rollout/APP_CONV_MOF_EVG_STIL_RETR_MERCUR_PEOP_V06.png",
+          "coverPath": null,
+          "videoDurationSec": null,
+          "illustrativeLabel": null,
+          "channelCopy": "See the one way you always fix a conversation. Tap to read yours.",
+          "channelScript": null,
+          "assetSpec": "A 1:1 crop safe inside a circular profile mask, the reading reduced to its title and one line, the hook ships as an in product prompt and is never baked into the image.",
+          "executionSteps": [
+            "Offer the reading as a one tap card on the profile surface after a long chat session.",
+            "Let the user reveal their repair move and save it to their profile.",
+            "Add a share button that exports the card as a still for any outside channel.",
+            "Resurface an updated reading each season so the card stays a reason to return."
+          ],
+          "kpi": "reach 30 percent tap through from the profile prompt to a generated reading in the first 21 days",
+          "kpiThresholdNote": "This retention read is checked against the same 21 day observation window the plan preregistered, tap through standing in for the durable reach the evergreen curve rewards.",
+          "postKit": {
+            "file": "waves/wave-06/assets/rollout/APP_CONV_MOF_EVG_STIL_RETR_MERCUR_PEOP_V06.png",
+            "caption": "See the one way you always fix a conversation. Tap to read yours, then save it to your profile.",
+            "hashtags": [
+              "#chatgpt",
+              "#retrograde",
+              "#profile"
+            ],
+            "altText": "A circular profile card showing the title Your Repair Move above a single short line, sized to sit inside a round avatar mask.",
+            "postingNote": "Surface the card after a long session, let the user save the reading, refresh it each season."
+          }
+        }
+      ],
+      "participationKit": null
+    }
+  ],
+  "injectedLearnings": "Winning traits from wave 5: thing asset \"your chat history\" + angleType=evergreen + HOOK=THER. Prioritize reusing these asset shapes and angleType combinations in new variants."
+}
