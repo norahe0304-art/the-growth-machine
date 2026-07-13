@@ -7,24 +7,35 @@
  *   theater.html string; also exports THEATER_CSS (the split-screen visual system) for
  *   theater-live.ts to share, so the live feed and the replay wear the same skin
  * [POS]: the showing layer of the ten-station pipeline, sibling to report.ts inside lib/. report.ts
- *   is the static record of a wave; theater.ts is a 100-145 second split-screen replay of the exact
- *   same record: THE WORK (left, a live activity log, station by station, every line a real fact
- *   pulled from WaveReadout) drives THE EVIDENCE (right, a stack of auditable cards, evidence flowing
- *   one direction only -- down, never scrolled back up to an older card to watch it change: variant
- *   cards, the nine-segment name, the threshold table, the produced stills, judge scores, a
- *   three-curve race with verdict stamps, the winning still (the cut, held static forever, no video
- *   tag ever added to it), every rollout channel chip (a video-native channel's chip carries its own
- *   hidden <video> from first render, showing only its still cover until this asset's own crossfade
- *   fires), and finally the featured tiktok cuts -- one brand new card per rolled-out video channel
- *   (DATA.featuredVideos, built off every rollout draft that shipped a real rendered mp4, not just
- *   the SCALE-verdict hero), each appended to the bottom of the stack in sequence, only after
- *   station 8b's second approval gate has actually cleared real video-generation spend and the
- *   render itself has happened. The narrative these cards sell is the deliverable, not the spend:
- *   the full-screen approval-gate overlay reads "format follows the channel: <channel> ships video"
- *   (skill/SKILL.md's own nativeFormat contract line, restated as the payoff instead of the cost),
- *   while THE WORK log line beside it keeps the literal spend fact ("N videos pending real
- *   generation spend: ...") -- causality is unchanged, only which half of the truth gets the
- *   spotlight. Each featured card holds for its own real ffprobe'd duration (durationSec) plus a
+ *   is the static record of a wave; theater.ts is a ~150 second split-screen replay of the exact
+ *   same record: THE WORK (left, a live typewriter activity log, station by station, every line a
+ *   real fact pulled from WaveReadout -- this column is untouched by the evidence redesign) drives
+ *   THE EVIDENCE (right, a tiered, borderless stack, evidence flowing one direction only -- down,
+ *   never scrolled back up to an older card to watch it change). The right column is organised by
+ *   three tiers (公理一): Tier 1 verdicts (the input, the proposals triptych, the race, the winner,
+ *   the featured cuts, the closing bill), Tier 2 process shelves (the produce still shelf, the
+ *   per-draft channel-cut shelves), Tier 3 footnotes (the nine-segment name, the threshold table,
+ *   the library rows). No card borders; hierarchy is size, whitespace and alignment, hairline only
+ *   inside tables and the money-shot stage. The narrative is spoken by in-flow chapter headers --
+ *   oversized serif lines with big air, scrolling past as part of the stream (NOT full-screen
+ *   white-out overlays: the earlier approval-gate takeover language was retired on taste grounds).
+ *   Both human approvals (station 1 concepts, station 8b video spend) now live only as THE WORK log
+ *   lines; causality is preserved by timeline order alone -- nothing produced or rendered is queued
+ *   before the log line that approved it. The three produced stills land as a shelf of thumbnails
+ *   with each judge verdict stamped onto its own corner (no separate scorecards). The race draws its
+ *   preregistered thresholds as dashed rules on the chart and presses each verdict stamp down at its
+ *   curve's terminal point; the SCALE finalCTR counts up as an oversized figure. The winning still
+ *   is the cut, held static forever (no video tag ever added to it). Rollout channel cuts stand in
+ *   per-draft shelves (a video-native channel's cell carries its own hidden <video> from first
+ *   render, showing only its still cover until this asset's own crossfade fires); the featured
+ *   tiktok cuts are one brand new Tier-1 card per rolled-out video channel (DATA.featuredVideos,
+ *   built off every rollout draft that shipped a real rendered mp4, not just the SCALE-verdict hero),
+ *   each wearing a small corner tag ("THE TIKTOK CUT · N/M") and appended to the bottom of the stack
+ *   in sequence, only after station 8b's approval log line has cleared real video-generation spend
+ *   and the render itself has happened. A closing Tier-1 bill card tallies the wave's whole output
+ *   (moment / bets / named assets / stills / videos / winner / seconds of video) in counted-up
+ *   figures, every one derivable from readout, before the install hook. Each featured card holds for
+ *   its own real ffprobe'd duration (durationSec) plus a
  *   crossfade/breathing buffer, un-stretched by PACE (same posture as the insight approval gate's
  *   gateHold), so a video is never cut off and two videos never play in the same beat -- one card's
  *   hold fully elapses before the next queueAction fires. Still-to-video timing mirrors the real
@@ -460,10 +471,6 @@ ${THEATER_CSS}
         <p class="lightbox-hint">press space or click to resume</p>
       </div>
     </div>
-
-    <div class="approval-gate" id="approvalGate">
-      <div class="approval-gate-text">awaiting operator approval</div>
-    </div>
   </div>
 
 <script>
@@ -531,23 +538,70 @@ body { font-family: var(--font-sans); font-weight: 300; line-height: 1.5; overfl
    sliver instead of leaving it at its natural content size and letting the
    panel scroll. Every card keeps its real height; the panel scrolls. */
 .evidence-stack > * { flex-shrink: 0; }
+
+/* ------------------------------------------------------------------
+   Tiered evidence, no card chrome. 公理一: hierarchy is carried by size,
+   whitespace and alignment -- not by borders. A box drawn around every
+   fact is the AI-layout birthmark; it is gone. Hairline survives only
+   inside a real data table and around the money-shot media stage.
+   Entrance (北极星2): sink from just above and settle with a gentle
+   physical overshoot -- a thing landing, not a fade materialising.
+   ------------------------------------------------------------------ */
 .evidence-card {
-  border: 1px solid var(--hairline); padding: 16px 18px; opacity: 0; transform: translateY(-14px);
-  transition: opacity 0.45s ease, transform 0.45s ease, border-color 0.5s ease; cursor: default;
+  padding: 4px 2px; opacity: 0; transform: translateY(-18px);
+  transition: opacity 0.5s ease, transform 0.62s cubic-bezier(0.2, 1.15, 0.32, 1);
+  cursor: default;
 }
 .evidence-card.in { opacity: 1; transform: translateY(0); }
-.evidence-card.pulse { animation: pulseCard 1s ease; }
 .evidence-card[data-evidence] { cursor: pointer; }
-@keyframes pulseCard { 0% { border-color: var(--ink); } 100% { border-color: var(--hairline); } }
-.evidence-title { font-family: var(--font-display); font-weight: 400; font-size: 20px; margin: 0 0 8px; }
-.evidence-eyebrow { font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); margin-bottom: 6px; }
+
+/* Tier 1 -- the verdicts. Full width, generous air above, the display
+   face doing the talking: proposals triptych, the race, the winner,
+   the featured cuts, the bill. */
+.tier1 { padding: 26px 2px 18px; }
+/* Tier 3 -- the footnotes. Small, muted, tucked right under the beat it
+   annotates: name lineage, thresholds, library rows. */
+.tier3 { padding: 4px 2px 14px; }
+.tier3 .evidence-eyebrow { margin-bottom: 4px; }
+
+.evidence-title { font-family: var(--font-display); font-weight: 400; font-size: 20px; margin: 0 0 8px; line-height: 1.15; }
+.tier1 .evidence-title { font-size: 27px; }
+.evidence-eyebrow { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); margin-bottom: 8px; }
 .evidence-caption { font-size: 12px; line-height: 1.5; color: var(--muted); }
 .evidence-name { font-family: var(--font-mono); font-size: 11px; color: var(--ink); word-break: break-all; }
+
+/* ------------------------------------------------------------------
+   Chapter header, in the flow (公理二, revised): the narrative spoken as
+   an oversized serif line with big air above and below, scrolling past
+   as part of the evidence stream -- no full-screen takeover, no white-out
+   pause. This is how a zero-context marketer follows the story: moment in
+   -> three bets -> machine grades itself -> race -> it kills its own ->
+   winner ships -> library smarter. */
+.chapter { padding: 40px 2px 30px; }
+.chapter-line { font-family: var(--font-display); font-weight: 400; font-size: 30px; line-height: 1.28; color: var(--ink); max-width: 15em; margin: 0; }
+.chapter-index { display: block; font-family: var(--font-sans); font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.16em; color: var(--muted); margin-bottom: 14px; }
 
 /* insight cards */
 .variant-row { display: flex; gap: 8px; font-size: 14px; margin: 4px 0; }
 .variant-row b { font-weight: 400; }
 .angle-badge { display: inline-block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; border: 1px solid currentColor; padding: 2px 7px; margin-top: 8px; }
+
+/* ------------------------------------------------------------------
+   Triptych (公理三): three proposals side by side, one entrance each as
+   its own log line types, all landing in the same row. Equal columns,
+   a single hairline rule between them, no boxes. */
+.triptych { display: flex; gap: 0; align-items: stretch; }
+.triptych-cell { flex: 1 1 0; padding: 0 18px; opacity: 0; transform: translateY(-14px); transition: opacity 0.5s ease, transform 0.55s cubic-bezier(0.2, 1.15, 0.32, 1); }
+.triptych-cell.in { opacity: 1; transform: translateY(0); }
+.triptych-cell + .triptych-cell { border-left: 1px solid var(--hairline); }
+.triptych-cell:first-child { padding-left: 2px; }
+.triptych-cell:last-child { padding-right: 2px; }
+.triptych-num { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+.triptych-title { font-family: var(--font-display); font-size: 21px; line-height: 1.12; margin: 0 0 10px; }
+.triptych-formula { font-size: 12px; line-height: 1.45; margin-bottom: 4px; }
+.triptych-formula b { font-weight: 400; }
+.triptych-formula .x { color: var(--muted); padding: 0 3px; }
+.triptych-angle { display: inline-block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; border: 1px solid currentColor; padding: 2px 7px; margin-top: 10px; }
 
 /* naming */
 .name-segments { font-family: var(--font-mono); font-size: 13px; line-height: 2; word-break: break-all; }
@@ -561,28 +615,78 @@ body { font-family: var(--font-sans); font-weight: 300; line-height: 1.5; overfl
 .plan-table th { text-align: left; text-transform: uppercase; letter-spacing: 0.04em; font-size: 10px; color: var(--muted); padding: 6px 8px; border-bottom: 1px solid var(--ink); }
 .plan-table td { padding: 8px; border-bottom: 1px solid var(--hairline); }
 
-/* produce -- max-height caps every still to a fraction of the viewport so a
-   9:16 portrait render never runs the card (media + caption) off the
-   bottom of one screen; see waves/wave-04/STATE.md for the taste-gate
-   screenshots that set 60vh. */
+/* produce (公理一 Tier 2): the three stills land on one shelf as
+   thumbnails, not three stacked full cards. Each judge verdict is stamped
+   straight onto its own thumbnail's corner (公理一: 不再单独成卡) instead
+   of opening a separate scorecard. max-height still caps the shelf so no
+   render runs the card off one screen (60vh contract, waves/wave-04/STATE.md).
+   .produce-media survives for theater-live.ts, which shows one still per
+   file with no shelf. */
 .produce-media { display: flex; align-items: center; justify-content: center; max-height: 60vh; overflow: hidden; background: #f4f3f0; }
-.produce-media img { max-width: 100%; max-height: 60vh; width: auto; height: auto; object-fit: contain; display: block; filter: blur(14px); opacity: 0.35; transition: filter 1.1s ease, opacity 1.1s ease; border: 1px solid var(--hairline); }
+.produce-media img { max-width: 100%; max-height: 60vh; width: auto; height: auto; object-fit: contain; display: block; filter: blur(14px); opacity: 0.35; transition: filter 1.1s ease, opacity 1.1s ease; }
 .produce-media img.clear { filter: blur(0); opacity: 1; }
 .produce-copy { font-size: 13px; font-style: italic; margin-top: 10px; min-height: 1.6em; }
 
-/* judge */
+.produce-shelf { display: flex; gap: 12px; align-items: flex-start; }
+.produce-thumb { flex: 1 1 0; opacity: 0; transform: translateY(-14px); transition: opacity 0.5s ease, transform 0.55s cubic-bezier(0.2, 1.15, 0.32, 1); }
+.produce-thumb.in { opacity: 1; transform: translateY(0); }
+.produce-frame { position: relative; height: 24vh; background: #f4f3f0; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.produce-frame img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; filter: blur(12px); opacity: 0.4; transition: filter 1s ease, opacity 1s ease; }
+.produce-frame img.clear { filter: blur(0); opacity: 1; }
+.produce-thumb-copy { font-size: 11px; font-style: italic; color: var(--muted); margin-top: 7px; line-height: 1.4; }
+
+/* the customs stamp: the judge verdict pressed into the still's corner,
+   a small deliberate rotation, slamming down to rest (北极星2). */
+.judge-stamp {
+  position: absolute; top: 8px; right: 8px; z-index: 2;
+  font-family: var(--font-mono); font-size: 10px; font-weight: 500; letter-spacing: 0.04em;
+  padding: 3px 7px; border: 1.5px solid #3f5c3f; color: #3f5c3f; background: rgba(255,255,255,0.82);
+  transform: rotate(-7deg) scale(1.6); opacity: 0;
+  transition: transform 0.26s cubic-bezier(0.3, 1.4, 0.4, 1), opacity 0.2s ease;
+}
+.judge-stamp.in { opacity: 1; transform: rotate(-7deg) scale(1); }
+.judge-stamp.fail { border-color: #8a3f3f; color: #8a3f3f; }
+.judge-score { font-size: 10px; color: var(--muted); margin-top: 5px; letter-spacing: 0.02em; }
+
+/* judge -- retained for theater-live.ts, which still renders per-still
+   scorecards in poll mode; the replay stamps instead. */
 .judge-dim { display: flex; justify-content: space-between; font-size: 12px; padding: 3px 0; border-bottom: 1px solid var(--hairline); }
 .judge-pass { display: inline-block; margin-top: 8px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; border: 1px solid #4a6b4a; color: #3f5c3f; padding: 2px 7px; }
 .judge-pass.fail { border-color: #8a3f3f; color: #8a3f3f; }
 
-/* the race */
-.race-card svg { display: block; width: 100%; height: 220px; }
+/* the race (公理三, Tier 1): full-width plot. Thresholds are drawn onto
+   the chart itself as faint dashed rules with a right-edge label (公理三:
+   删除独立阈值卡), and each verdict stamp presses down at its own curve's
+   terminal point, not in a separate list below. */
+.race-plot { position: relative; width: 100%; }
+.race-card svg { display: block; width: 100%; height: 300px; }
 .race-card .curve-path { fill: none; stroke-width: 2.5; }
-.race-tag { font-size: 11px; font-family: var(--font-mono); }
+.race-card .threshold-line { stroke-width: 1; stroke-dasharray: 4 4; opacity: 0.5; }
+.race-card .threshold-label { font-family: var(--font-mono); font-size: 9px; }
+.curve-stamp {
+  position: absolute; z-index: 3; transform: translate(-50%, -50%) rotate(-6deg) scale(1.7);
+  font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase;
+  border: 1.5px solid currentColor; padding: 3px 8px; background: rgba(255,255,255,0.9);
+  opacity: 0; transition: transform 0.28s cubic-bezier(0.3, 1.4, 0.4, 1), opacity 0.22s ease; white-space: nowrap;
+}
+.curve-stamp.in { opacity: 1; transform: translate(-50%, -50%) rotate(-6deg) scale(1); }
+.curve-stamp.scale { color: #2f6b3f; }
+.curve-stamp.kill { color: #8a3f3f; opacity: 0; }
+.curve-stamp.kill.in { opacity: 0.85; }
+.curve-stamp.iterate { color: #6b6b63; }
+
+/* the winning number, counted up on the SCALE verdict (公理四: 数字主角). */
+.race-verdict { margin-top: 22px; display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+.race-bignum { font-family: var(--font-display); font-size: 62px; line-height: 0.9; color: #2f6b3f; }
+.race-bignum-note { font-size: 12px; color: var(--muted); line-height: 1.5; max-width: 20em; }
+.race-bignum-note b { color: var(--ink); font-weight: 500; }
+
+/* race-stamps / race-stamp / race-reason retained for theater-live.ts,
+   which lists verdict chips in a flex row under the chart in poll mode. */
 .race-stamps { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
 .race-stamp { border: 2px solid currentColor; padding: 4px 10px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0; transform: scale(0.6); transition: opacity 0.3s ease, transform 0.3s ease; }
 .race-stamp.in { opacity: 1; transform: scale(1); }
-.race-stamp.scale { color: #2f6b3f; box-shadow: 0 0 0 3px rgba(47,107,63,0.12); }
+.race-stamp.scale { color: #2f6b3f; }
 .race-stamp.kill { color: #8a3f3f; }
 .race-stamp.iterate { color: #6b6b63; }
 .race-reason { font-size: 11px; color: var(--muted); margin-top: 4px; }
@@ -626,9 +730,42 @@ body { font-family: var(--font-sans); font-weight: 300; line-height: 1.5; overfl
 .rollout-role { font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
 .rollout-copy { font-size: 12px; font-style: italic; margin-top: 4px; }
 .rollout-kpi { font-size: 11px; color: var(--muted); margin-top: 6px; }
+
+/* rollout shelf (公理三, Tier 2): the channel cuts stand side by side as a
+   shelf, one cell per channel (channel name + role), the way a channel
+   manager would see the lineup. A video-native channel keeps its
+   still-cover cell here (skill/SKILL.md 8b: ship every cut first, video as
+   its still cover) and crossfades to video in place after the spend log
+   line; the full-size play is the featured cut below. */
+.rollout-shelf { display: flex; gap: 14px; align-items: flex-start; flex-wrap: wrap; }
+.rollout-cell { flex: 1 1 30%; min-width: 150px; opacity: 0; transform: translateY(-14px); transition: opacity 0.5s ease, transform 0.55s cubic-bezier(0.2, 1.15, 0.32, 1); }
+.rollout-cell.in { opacity: 1; transform: translateY(0); }
+.rollout-cell .rollout-chip-media { height: 22vh; background: #f4f3f0; }
+.rollout-cell .rollout-meta { padding-top: 7px; }
+.rollout-cell .rollout-copy { font-size: 11px; }
+.rollout-cell .rollout-kpi { font-size: 10px; }
+
+/* featured cut tag (公理二 revised): no pre-pause, just a small badge
+   pressed into the video card's own corner, riding in with the card. */
+.featured-tag {
+  position: absolute; top: 10px; left: 10px; z-index: 3;
+  font-family: var(--font-mono); font-size: 10px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 4px 9px; background: rgba(26,26,26,0.82); color: #fff;
+}
 .cta-tag { display: inline-block; margin-top: 6px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; border: 1px solid var(--muted); padding: 2px 7px; color: var(--muted); }
 .cta-tag.cta-full { border-color: var(--ink); color: var(--ink); }
 .cta-tag.cta-soft { border-color: #8a7a4a; color: #8a7a4a; }
+
+/* the bill (北极星2b, Tier 1): the whole wave's output, counted in real
+   numbers, in the flow. This is the payoff beat -- all this work, done for
+   you. Big Playfair figures counted up, wide air, no chrome. Every figure
+   is countable from readout; nothing here is authored. */
+.bill-card { padding: 34px 2px 20px; }
+.bill-lead { font-family: var(--font-display); font-size: 25px; line-height: 1.2; margin: 0 0 22px; }
+.bill-grid { display: flex; flex-wrap: wrap; gap: 26px 40px; }
+.bill-item { min-width: 84px; }
+.bill-num { font-family: var(--font-display); font-size: 48px; line-height: 0.9; color: var(--ink); }
+.bill-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); margin-top: 7px; max-width: 10em; }
 
 /* closing */
 .closing-card .install-line { font-family: var(--font-mono); font-size: 13px; background: #f7f6f3; border: 1px solid var(--hairline); padding: 8px 10px; margin: 8px 0; }
@@ -801,6 +938,39 @@ const THEATER_JS = `
     return card;
   }
 
+  // ---- in-flow chapter header: the narrative spoken as one oversized
+  // serif line, big air above and below, scrolling past as part of the
+  // stream (公理二 revised: no full-screen white-out). Queued on the
+  // timeline so it lands between stations, then held briefly so the eye
+  // reads it before the next card sinks in. ----
+  function queueChapter(index, line) {
+    at(cursor, function () {
+      var c = el("article", "evidence-card chapter");
+      c.innerHTML = '<span class="chapter-index">' + esc(index) + '</span>' +
+        '<p class="chapter-line">' + esc(line) + '</p>';
+      addCard(c);
+    });
+    cursor += 1700 * PACE;
+  }
+
+  // ---- count a number up to its target, ease-out, pause-aware (same
+  // setTimeout+PAUSED posture as typewriter). fmt turns the running value
+  // into its on-screen string. 数字数上去 (北极星2). ----
+  function countUp(target, to, ms, fmt) {
+    if (!target) return;
+    var startT = null;
+    var dur = ms / SPEED;
+    (function tick(now) {
+      if (PAUSED) { setTimeout(function () { tick(performance.now()); }, 60); return; }
+      if (startT === null) startT = now;
+      var p = Math.min(1, (now - startT) / dur);
+      var eased = 1 - Math.pow(1 - p, 3);
+      target.textContent = fmt(to * eased);
+      if (p < 1) setTimeout(function () { tick(performance.now()); }, 32);
+      else target.textContent = fmt(to);
+    })(performance.now());
+  }
+
   // ---- stage + progress dots ----
   var STAGE_KEYS = ["open", "insight", "naming", "plan", "produce", "judge", "race", "cut", "rollout"];
   var currentStage = null;
@@ -819,24 +989,34 @@ const THEATER_JS = `
   // ================= OPEN =================
   queueHeader("open", "$ growth-machine wave " + String(DATA.waveNumber).padStart(2, "0"));
   // The mission card: audience sees the brief before it sees anyone work
-  // it. moment and rationale are both real fields already on the wave
-  // (readout.moment, plan.rationale), nothing here is invented for effect.
+  // it. The first thing on screen is the INPUT (作战包修订二): one cultural
+  // moment, in plain language, big. Not backend lineage -- a zero-context
+  // marketer has to grasp "this is what went in" in one glance. The caption
+  // used to echo plan.rationale verbatim ("Wave 4 splits traffic evenly...");
+  // advisor called that explanation-tone copy-paste. It is now a synthesized
+  // declarative sentence built from the same underlying real fields
+  // (variants.length, plan.dates.days, plan.preRegisteredThresholds having
+  // existed since the plan stage, before simulate/decide ever ran) --
+  // nothing invented, just no longer a raw JSON-string dump.
   queueAction("mission: " + DATA.moment, function () {
-    var c = el("article", "evidence-card");
-    c.innerHTML = '<div class="evidence-eyebrow">the brief</div>' +
+    var c = el("article", "evidence-card tier1");
+    // 陈述句军规(advisor 覆盖判决): 完整主谓宾句子,禁断句蹦跳/戏剧化拟人/镜像结构。
+    // 数字取自真数据(variants.length / planDays),非编造。
+    var openingCaption = DATA.variants.length + " variants will run a simulated " + DATA.planDays +
+      " day test. The pass and kill lines were locked before any data came in.";
+    c.innerHTML = '<div class="evidence-eyebrow">the input &middot; one cultural moment goes in</div>' +
       '<div class="evidence-title">' + esc(DATA.moment) + '</div>' +
-      '<p class="evidence-caption">' + esc(DATA.rationale) + '</p>';
-    addCard(c, "readout.moment + plan.rationale");
+      '<p class="evidence-caption">' + esc(openingCaption) + '</p>';
+    addCard(c, "readout.moment + variants.length + plan.dates.days + plan.preRegisteredThresholds");
   });
   cursor += 2500;
+  // injectedLearnings is backend lineage, not door-facing. It stays in THE
+  // WORK log line here (the log is untouched) and returns as a Tier-3
+  // footnote at the LEARN beat -- it never gets a card competing with the
+  // input at the open, and the words "carry/winner traits" leave the
+  // narrative surface entirely.
   if (DATA.injectedLearnings) {
-    queueAction("carrying forward: " + DATA.injectedLearnings, function () {
-      addCard((function () {
-        var c = el("div", "evidence-card");
-        c.innerHTML = '<div class="evidence-eyebrow">carried forward</div><p class="evidence-caption">' + esc(DATA.injectedLearnings) + "</p>";
-        return c;
-      })(), "injectedLearnings, read from library.jsonl before station 1");
-    });
+    queueAction("carrying forward: " + DATA.injectedLearnings);
   }
   cursor += 400 * PACE;
 
@@ -844,17 +1024,27 @@ const THEATER_JS = `
   queueHeader("insight", "station 1 / insight");
   queueAction("reading brand/openai/brand.md");
   queueAction("reading brand/openai/history.md");
+  queueChapter("Act I", "The machine drafts " + DATA.variants.length + " creative bets from one cultural moment.");
+  // The three proposals land side by side (公理三: 并列关系用并列版式), one
+  // column sinking in as its own log line finishes typing, all sharing one
+  // row -- workingTitle in serif, the asset x element formula, the angle
+  // badge. Not three stacked bordered cards.
+  var proposalRow = null;
   DATA.variants.forEach(function (v, i) {
     queueAction(v.id + " formula: " + v.asset + " x " + v.newElement + " -> " + v.angleType, function () {
-      var c = el("article", "evidence-card");
-      c.style.color = v.angleColor;
-      c.innerHTML =
-        '<div class="evidence-eyebrow" style="color:' + v.angleColor + '">PROPOSAL ' + String(i + 1).padStart(2, "0") + "</div>" +
-        '<div class="evidence-title">' + esc(v.workingTitle) + "</div>" +
-        '<div class="variant-row"><b>' + esc(v.asset) + "</b> x <b>" + esc(v.newElement) + "</b></div>" +
-        '<p class="evidence-caption">' + esc(v.angle) + "</p>" +
-        '<span class="angle-badge">' + esc(v.angleType) + "</span>";
-      addCard(c, "insight: " + v.angle);
+      if (!proposalRow) {
+        proposalRow = el("article", "evidence-card tier1 triptych");
+        addCard(proposalRow, "the three proposals, insight station, one per angleType");
+      }
+      var cell = el("div", "triptych-cell");
+      cell.innerHTML =
+        '<div class="triptych-num" style="color:' + v.angleColor + '">Bet ' + String(i + 1).padStart(2, "0") + '</div>' +
+        '<div class="triptych-title">' + esc(v.workingTitle) + '</div>' +
+        '<p class="triptych-formula"><b>' + esc(v.asset) + '</b><span class="x">&times;</span><b>' + esc(v.newElement) + '</b></p>' +
+        '<span class="triptych-angle" style="color:' + v.angleColor + '">' + esc(v.angleType) + '</span>';
+      proposalRow.appendChild(cell);
+      requestAnimationFrame(function () { cell.classList.add("in"); });
+      proposalRow.scrollIntoView({ block: "start" });
     });
     if (v.referenceSet) {
       queueAction("consulting " + v.referenceSet.source + " (" + v.referenceSet.status + ")");
@@ -866,27 +1056,17 @@ const THEATER_JS = `
   // The pipeline stops here for real: three proposals do not walk
   // themselves into production. skill/SKILL.md station 1 requires an
   // operator to approve or replace them before brief/produce ever runs.
-  // This beat performs that pause instead of skipping past it.
+  // The approval is real, but it lives in THE WORK log now -- the taste
+  // verdict retired the full-screen white-out gate. Causality is kept by
+  // timeline order alone: every produce log line and card below is queued
+  // strictly after this pair, so nothing produced ever appears before the
+  // approval that gated it. A short real-time hold marks the pause without
+  // clearing the screen.
   cursor += 400 * PACE;
-  // A real 2.5s hold, deliberately NOT stretched by PACE: PACE inflates
-  // content-driven pacing so the replay lands in the 100-130s band, but
-  // this pause is an authored real-time beat (spec: hold 2 to 3s), not
-  // content length, so it stays fixed regardless of how PACE is tuned.
-  var gateHold = 2500;
-  queueAction("awaiting operator approval", function () {
-    runApprovalGate("awaiting operator approval", gateHold);
-  });
-  cursor += gateHold;
+  queueAction("awaiting operator approval");
+  cursor += 1500;
   queueAction("operator approved, production begins");
   cursor += 300 * PACE;
-
-  function runApprovalGate(text, holdMs, onShow) {
-    var gate = document.getElementById("approvalGate");
-    gate.querySelector(".approval-gate-text").textContent = text;
-    gate.classList.add("show");
-    if (onShow) onShow();
-    setTimeout(function () { gate.classList.remove("show"); }, holdMs / SPEED);
-  }
 
   // ================= NAMING =================
   queueHeader("naming", "station 3 / naming");
@@ -909,9 +1089,9 @@ const THEATER_JS = `
     queueAction("naming " + na.format + ": " + na.name, function () {
       if (!primaryDone) {
         primaryDone = true;
-        var c = el("article", "evidence-card");
+        var c = el("article", "evidence-card tier3");
         var segs = na.name.split("_");
-        c.innerHTML = '<div class="evidence-eyebrow">nine-segment name</div><div class="name-segments" id="primarySegments"></div><div class="name-list" id="restNames"></div>';
+        c.innerHTML = '<div class="evidence-eyebrow">nine-segment name &middot; deterministic, no LLM</div><div class="name-segments" id="primarySegments"></div><div class="name-list" id="restNames"></div>';
         addCard(c, "CHANNEL_OBJ_FUNNEL_TEMP_FORMAT_HOOK_MOMENT_PERSONA_VER, deterministic, no LLM, src/taxonomy.ts");
         var segWrap = c.querySelector("#primarySegments");
         segs.forEach(function (s, i) {
@@ -935,7 +1115,7 @@ const THEATER_JS = `
   queueAction("observation window: " + DATA.planDays + " days");
   var angleKeys = Object.keys(DATA.thresholds);
   queueAction("thresholds locked: " + angleKeys.map(function (a) { return a + " scaleAt " + DATA.thresholds[a].scaleAt; }).join(", "), function () {
-    var c = el("article", "evidence-card");
+    var c = el("article", "evidence-card tier3");
     var rows = angleKeys.map(function (a) {
       var t = DATA.thresholds[a];
       return "<tr><td>" + a + "</td><td>" + (t.scaleAt * 100).toFixed(2) + "%</td><td>" + (t.killAt * 100).toFixed(2) + "%</td><td>" + t.fatigueSlope.toFixed(4) + "</td></tr>";
@@ -947,19 +1127,32 @@ const THEATER_JS = `
   // ================= PRODUCE =================
   queueHeader("produce", "station 5 / produce");
   queueAction("economics: stills via codex exec, subscription, no per-token bill; video generation gated behind operator approval");
+  queueChapter("Act II", "The machine produces each bet as a finished asset, then scores its own output.");
+  // The three stills land on one shelf as thumbnails (公理一 Tier 2), each
+  // sinking in on its own "generating" log line; its hook copy types under
+  // it. The judge verdict is stamped onto each thumbnail's corner later
+  // (see JUDGE) rather than opening a scorecard of its own.
+  var produceShelf = null;
   DATA.variants.forEach(function (v) {
     queueAction("generating " + v.stillName + " via codex exec", function () {
-      var c = el("article", "evidence-card produce-card");
-      var mediaHTML = v.imgURI
-        ? '<div class="produce-media"><img id="img-' + v.id + '" src="' + v.imgURI + '" alt="' + esc(v.stillName) + '" /></div>'
-        : '<div class="evidence-caption">no still rendered</div>';
-      c.innerHTML = mediaHTML + '<div class="produce-copy" id="copy-' + v.id + '"></div>';
-      addCard(c, "produced.assetPath, real codex exec image call, wave " + DATA.waveNumber);
+      if (!produceShelf) {
+        produceShelf = el("article", "evidence-card produce-shelf");
+        addCard(produceShelf, "produced.assetPath, real codex exec image calls, wave " + DATA.waveNumber);
+      }
+      var thumb = el("div", "produce-thumb");
+      thumb.id = "thumb-" + v.id;
+      var frameHTML = v.imgURI
+        ? '<div class="produce-frame"><img id="img-' + v.id + '" src="' + v.imgURI + '" alt="' + esc(v.stillName) + '" /></div>'
+        : '<div class="produce-frame"><span class="evidence-caption">no still</span></div>';
+      thumb.innerHTML = frameHTML + '<div class="produce-thumb-copy" id="copy-' + v.id + '"></div>';
+      produceShelf.appendChild(thumb);
+      requestAnimationFrame(function () { thumb.classList.add("in"); });
+      produceShelf.scrollIntoView({ block: "start" });
       setTimeout(function () { var img = document.getElementById("img-" + v.id); if (img) img.classList.add("clear"); }, 250);
     });
     queueAction("copy: " + v.copy, function () {
       var target = document.getElementById("copy-" + v.id);
-      if (target) typewriter(target, v.copy, 1400);
+      if (target) typewriter(target, v.copy, 1200);
     });
   });
 
@@ -971,12 +1164,23 @@ const THEATER_JS = `
       ? v.id + " judge: onBrief " + j.onBrief + ", legible " + j.legible + ", shareable " + j.shareable + (j.brandFit != null ? ", brandFit " + j.brandFit : "") + " -> " + (j.passed ? "PASS" : "FAIL")
       : v.id + " judge: no score recorded";
     queueAction(line, function () {
-      var c = el("article", "evidence-card");
-      var dims = j ? [["on brief", j.onBrief], ["legible", j.legible], ["shareable", j.shareable]].concat(j.brandFit != null ? [["brand fit", j.brandFit]] : []) : [];
-      c.innerHTML = '<div class="evidence-eyebrow">' + esc(v.workingTitle) + "</div>" +
-        dims.map(function (d) { return '<div class="judge-dim"><span>' + d[0] + "</span><span>" + d[1] + " / 3</span></div>"; }).join("") +
-        '<span class="judge-pass' + (j && !j.passed ? " fail" : "") + '">' + (j && j.passed ? "PASS" : "FAIL") + "</span>";
-      addCard(c, j ? j.notes : "no judge record for this asset");
+      // Stamp the verdict onto this still's own thumbnail corner (公理一:
+      // 不再单独成卡), a customs-stamp press-down, not a fresh scorecard.
+      var frame = document.querySelector("#thumb-" + v.id + " .produce-frame");
+      if (frame) {
+        var stamp = el("div", "judge-stamp" + (j && !j.passed ? " fail" : ""), j ? (j.passed ? "PASS" : "FAIL") : "NO SCORE");
+        frame.appendChild(stamp);
+        requestAnimationFrame(function () { stamp.classList.add("in"); });
+      }
+      var thumb = document.getElementById("thumb-" + v.id);
+      if (thumb) {
+        if (j) {
+          var scoreLine = el("div", "judge-score", "on-brief " + j.onBrief + " &middot; legible " + j.legible + " &middot; shareable " + j.shareable + (j.brandFit != null ? " &middot; brand " + j.brandFit : ""));
+          thumb.appendChild(scoreLine);
+        }
+        thumb.setAttribute("data-evidence", "1");
+        thumb.dataset.evidenceNote = j ? j.notes : "no judge record for this asset";
+      }
     });
   });
 
@@ -985,26 +1189,53 @@ const THEATER_JS = `
   DATA.variants.forEach(function (v) {
     if (v.curve) queueAction(v.id + " seed " + v.curve.seed + " -> " + DATA.planDays + "-day predicted CTR curve");
   });
-  var raceCardHolder = { card: null, paths: {} };
+  var killCount = DATA.variants.filter(function (v) { return v.decision && v.decision.verdict === "KILL"; }).length;
+  queueChapter("Act III", "A " + DATA.planDays + " day simulation tests each bet against thresholds that were locked in advance, and " + (killCount > 0 ? "it kills the bets that miss them." : "it picks a winner."));
+  var raceCardHolder = { card: null, plot: null, terminals: {}, vb: { w: 680, h: 260 } };
   queueAction("drawing the response curves", function () {
-    var c = el("article", "evidence-card race-card");
-    var w = 640, h = 220;
+    var c = el("article", "evidence-card tier1 race-card");
+    // Plot area sits left of a label gutter; thresholds are ruled onto the
+    // chart itself (公理三: 删除独立阈值卡) and verdict stamps press down at
+    // each curve's own terminal point, not in a list below.
+    var vbW = 680, vbH = 260, plotW = 604, padTop = 16, padBot = 22;
     var all = [];
     DATA.variants.forEach(function (v) { if (v.curve) all = all.concat(v.curve.predictedCTR); });
+    // Fold the thresholds into the y-scale so their rules sit on the same
+    // axis as the curves.
+    DATA.variants.forEach(function (v) {
+      var t = DATA.thresholds[v.angleType];
+      if (t) { all.push(t.scaleAt); all.push(t.killAt); }
+    });
     var max = Math.max.apply(null, all.concat([0.0001]));
-    function toY(val) { return h - (val / max) * (h - 20) - 10; }
+    function toY(val) { return vbH - padBot - (val / max) * (vbH - padTop - padBot); }
+    var thresholdParts = [];
+    var seenLevels = {};
+    DATA.variants.forEach(function (v) {
+      var t = DATA.thresholds[v.angleType];
+      if (!t) return;
+      [["scale", t.scaleAt], ["kill", t.killAt]].forEach(function (lv) {
+        var key = lv[0] + ":" + lv[1].toFixed(4);
+        if (seenLevels[key]) return;
+        seenLevels[key] = true;
+        var y = toY(lv[1]).toFixed(1);
+        thresholdParts.push('<line class="threshold-line" x1="0" y1="' + y + '" x2="' + plotW + '" y2="' + y + '" stroke="' + v.angleColor + '"/>' +
+          '<text class="threshold-label" x="' + (plotW + 6) + '" y="' + (Number(y) + 3).toFixed(1) + '" fill="' + v.angleColor + '">' + lv[0] + " " + (lv[1] * 100).toFixed(1) + '%</text>');
+      });
+    });
     var svgParts = [];
     DATA.variants.forEach(function (v) {
       if (!v.curve) return;
-      var stepX = w / (v.curve.predictedCTR.length - 1);
+      var stepX = plotW / (v.curve.predictedCTR.length - 1);
       var pts = v.curve.predictedCTR.map(function (val, i) { return (i * stepX).toFixed(1) + "," + toY(val).toFixed(1); }).join(" ");
       svgParts.push('<polyline class="curve-path" data-vid="' + v.id + '" points="' + pts + '" stroke="' + v.angleColor + '"/>');
+      var last = v.curve.predictedCTR[v.curve.predictedCTR.length - 1];
+      raceCardHolder.terminals[v.id] = { leftPct: (plotW / vbW) * 100, topPct: (toY(last) / vbH) * 100 };
     });
-    c.innerHTML = '<div class="evidence-eyebrow">the race, predicted CTR, ' + DATA.planDays + ' days</div>' +
-      '<svg viewBox="0 0 ' + w + ' ' + h + '">' + svgParts.join("") + "</svg>" +
-      '<div class="race-stamps" id="raceStamps"></div>';
-    addCard(c, "simulated.predictedCTR, three deterministic response models seeded off each asset name");
+    c.innerHTML = '<div class="evidence-eyebrow">the race &middot; predicted CTR over ' + DATA.planDays + ' days</div>' +
+      '<div class="race-plot" id="racePlot"><svg viewBox="0 0 ' + vbW + ' ' + vbH + '">' + thresholdParts.join("") + svgParts.join("") + "</svg></div>";
+    addCard(c, "simulated.predictedCTR, three deterministic response models seeded off each asset name; thresholds from plan.json");
     raceCardHolder.card = c;
+    raceCardHolder.plot = c.querySelector("#racePlot");
     c.querySelectorAll(".curve-path").forEach(function (p) {
       var len = p.getTotalLength ? p.getTotalLength() : 800;
       p.style.strokeDasharray = len;
@@ -1019,20 +1250,29 @@ const THEATER_JS = `
     var d = v.decision;
     if (!d) return;
     queueAction(v.id + " " + d.verdict + ": " + d.reason, function () {
-      var stampsWrap = raceCardHolder.card ? raceCardHolder.card.querySelector("#raceStamps") : null;
-      if (!stampsWrap) return;
-      var stamp = el("div", "race-stamp " + d.verdict.toLowerCase(), esc(d.verdict) + " " + esc(v.workingTitle));
-      stampsWrap.appendChild(stamp);
-      requestAnimationFrame(function () { stamp.classList.add("in"); });
-      if (raceCardHolder.card) {
-        var path = raceCardHolder.card.querySelector('.curve-path[data-vid="' + v.id + '"]');
-        if (path) {
-          if (d.verdict === "KILL") path.style.opacity = "0.3";
-          if (d.verdict === "SCALE") { path.style.filter = "drop-shadow(0 0 4px " + v.angleColor + ")"; path.style.strokeWidth = "4"; }
-        }
+      if (!raceCardHolder.plot) return;
+      // Press the verdict stamp down at this curve's terminal point.
+      var term = raceCardHolder.terminals[v.id];
+      if (term) {
+        var stamp = el("div", "curve-stamp " + d.verdict.toLowerCase(), esc(d.verdict));
+        stamp.style.left = term.leftPct.toFixed(2) + "%";
+        stamp.style.top = term.topPct.toFixed(2) + "%";
+        raceCardHolder.plot.appendChild(stamp);
+        requestAnimationFrame(function () { stamp.classList.add("in"); });
       }
-      var reason = el("div", "race-reason", esc(d.reason));
-      stampsWrap.parentElement.appendChild(reason);
+      var path = raceCardHolder.card.querySelector('.curve-path[data-vid="' + v.id + '"]');
+      if (path) {
+        if (d.verdict === "KILL") path.style.opacity = "0.28";
+        if (d.verdict === "SCALE") { path.style.filter = "drop-shadow(0 0 3px " + v.angleColor + ")"; path.style.strokeWidth = "4"; }
+      }
+      // The winning number, counted up (公理四: 数字主角、文案宣判).
+      if (d.verdict === "SCALE") {
+        var vwrap = el("div", "race-verdict");
+        vwrap.innerHTML = '<span class="race-bignum" id="raceBignum">0.00%</span>' +
+          '<span class="race-bignum-note"><b>' + esc(v.workingTitle) + '</b> scaled. Last-3-day CTR cleared the preregistered scale line.</span>';
+        raceCardHolder.card.appendChild(vwrap);
+        countUp(document.getElementById("raceBignum"), d.finalCTR * 100, 1100, function (x) { return x.toFixed(2) + "%"; });
+      }
     });
   });
 
@@ -1055,8 +1295,8 @@ const THEATER_JS = `
     queueAction(
       "still locked: " + (DATA.hero.videoRelSrc ? "image-to-video render queued, pending station 8b approval" : "no rendered video for this wave"),
       function () {
-        var c = el("article", "evidence-card hero-card");
-        var mediaHTML = '<div class="hero-media">' +
+        var c = el("article", "evidence-card tier1 hero-card");
+        var mediaHTML = '<div class="evidence-eyebrow">the winner &middot; the cut, held as a still</div><div class="hero-media">' +
           (DATA.hero.imgURI ? '<img id="heroImg" src="' + DATA.hero.imgURI + '" alt="' + esc(DATA.hero.workingTitle) + '" />' : "") +
           "</div>" +
           '<div class="hero-caption"><div class="evidence-title">' + esc(DATA.hero.workingTitle) + '</div><p class="evidence-caption" id="heroCopy"></p></div>';
@@ -1098,6 +1338,7 @@ const THEATER_JS = `
   // SAME chip crossfade in place -- no new card, no video appearing
   // anywhere that wasn't already showing a still a moment before.
   queueHeader("rollout", "station 8b / rollout");
+  queueChapter("Act IV", "The winner ships to every channel in that channel's native format.");
   var allChannels = [];
   DATA.rollouts.forEach(function (draft) {
     draft.channels.forEach(function (ch) { allChannels.push(ch); });
@@ -1105,9 +1346,23 @@ const THEATER_JS = `
   var videoChannels = allChannels.filter(function (ch) { return ch.nativeFormat === "video"; });
   var chipVideoRefs = {};
   var chipCounter = 0;
-
-  function renderChannelChip(ch) {
-    var c = el("article", "evidence-card");
+  // One shelf per rollout draft (公理三 Tier 2): the channel cuts stand
+  // side by side, channel name + role, the way a channel manager reads the
+  // lineup -- not one full-width card each. A video-native channel keeps
+  // its still-cover cell here and crossfades in place after the spend log
+  // line; the full-size play is the featured cut below.
+  var draftShelves = {};
+  function renderChannelCell(draft, di, ch) {
+    var holder = draftShelves[di];
+    if (!holder) {
+      var card = el("article", "evidence-card");
+      var noteHTML = draft.operatorNote ? '<p class="evidence-caption" style="margin-top:5px">' + esc(draft.operatorNote) + '</p>' : "";
+      card.innerHTML = '<div class="evidence-eyebrow">the channel cuts &middot; ' + esc(draft.workingTitle) + '</div>' + noteHTML + '<div class="rollout-shelf"></div>';
+      addCard(card, draft.operatorNote || ("rollout draft for " + draft.workingTitle + ", every channel cut re-expressed native to its surface"));
+      holder = { card: card, shelf: card.querySelector(".rollout-shelf") };
+      draftShelves[di] = holder;
+    }
+    var cell = el("div", "rollout-cell");
     var isVideoChannel = ch.nativeFormat === "video" && !!ch.videoRelSrc;
     var mediaHTML = "";
     if (isVideoChannel) {
@@ -1123,14 +1378,19 @@ const THEATER_JS = `
       mediaHTML = '<div class="rollout-chip-media"><img src="' + ch.coverURI + '" alt="' + esc(ch.channel) + '" /></div>';
     }
     var ctaTag = ch.ctaPolicy ? '<span class="cta-tag cta-' + esc(ch.ctaPolicy.level) + '">CTA ' + esc(ch.ctaPolicy.level) + '</span>' : "";
-    c.innerHTML = mediaHTML + '<div class="rollout-meta"><div class="rollout-channel">' + esc(ch.channel) +
-      '</div><div class="rollout-role">' + esc(ch.role) + '</div><p class="rollout-copy">' + esc(ch.channelCopy) +
-      '</p><p class="rollout-kpi">' + esc(ch.kpi) + "</p>" + ctaTag + "</div>";
-    addCard(c, ch.ctaPolicy ? ch.kpiThresholdNote + " / cta: " + ch.ctaPolicy.reason : ch.kpiThresholdNote);
+    cell.innerHTML = mediaHTML + '<div class="rollout-meta"><div class="rollout-channel">' + esc(ch.channel) +
+      '</div><div class="rollout-role">' + esc(ch.role) + '</div><p class="rollout-copy">' + esc(ch.channelCopy) + "</p>" + ctaTag + "</div>";
+    cell.setAttribute("data-evidence", "1");
+    cell.dataset.evidenceNote = ch.ctaPolicy ? ch.kpiThresholdNote + " / cta: " + ch.ctaPolicy.reason : ch.kpiThresholdNote;
+    holder.shelf.appendChild(cell);
+    requestAnimationFrame(function () { cell.classList.add("in"); });
+    holder.card.scrollIntoView({ block: "start" });
   }
 
-  allChannels.forEach(function (ch) {
-    queueAction("shipping " + ch.channel + " cut: " + ch.kpi, function () { renderChannelChip(ch); });
+  DATA.rollouts.forEach(function (draft, di) {
+    draft.channels.forEach(function (ch) {
+      queueAction("shipping " + ch.channel + " cut: " + ch.kpi, function () { renderChannelCell(draft, di, ch); });
+    });
   });
 
   if (videoChannels.length > 0) {
@@ -1139,23 +1399,14 @@ const THEATER_JS = `
       .filter(Boolean)
       .join(" / ") || "backend not recorded in this readout";
     var spendHold = 2000;
-    // THE WORK keeps the literal spend fact (station 8b's real gate is
-    // paid API spend, that is true and stays on the record) -- but the
-    // full-screen overlay itself is where the audience's eyes actually
-    // are, and the show it sells there is the deliverable, not the
-    // invoice: skill/SKILL.md's own contract line ("format follows the
-    // channel: tiktok -> video, ...") restated as what's about to land,
-    // not what it costs. gateChannels is deduped so a wave with several
-    // video-native channels still reads as one sentence, not a list.
-    var gateChannelNames = videoChannels
-      .map(function (ch) { return ch.channel; })
-      .filter(function (name, i, arr) { return arr.indexOf(name) === i; });
-    var gateText = "format follows the channel: " + gateChannelNames.join(" + ") + " ships video";
+    // The station-8b video-spend approval is real (paid API budget, stills
+    // are not), and the fact stays on THE WORK log. The full-screen gate
+    // that used to announce it is gone (taste verdict). Causality holds by
+    // timeline order alone: the crossfade and every featured card below are
+    // queued strictly after this approval line, so no rendered motion ever
+    // appears before the line that approved its spend.
     queueAction(
-      videoChannels.length + " video" + (videoChannels.length > 1 ? "s" : "") + " pending real generation spend: " + backends,
-      function () {
-        runApprovalGate(gateText, spendHold);
-      }
+      videoChannels.length + " video" + (videoChannels.length > 1 ? "s" : "") + " pending real generation spend: " + backends
     );
     cursor += spendHold;
     queueAction("operator approved video spend", function () {
@@ -1206,9 +1457,13 @@ const THEATER_JS = `
       var eyebrow = "the " + fv.channel + " cut · " + ordinal;
       var mediaId = "featured" + fvIndex;
       queueAction(eyebrow + ": " + fv.workingTitle + " image-to-video render ships in full", function () {
-        var c = el("article", "evidence-card hero-card featured-video-card");
-        c.innerHTML = '<div class="evidence-eyebrow">' + esc(eyebrow) + '</div>' +
+        var c = el("article", "evidence-card tier1 hero-card featured-video-card");
+        // No pre-pause (公理二 revised): a small tag pressed into the card's
+        // own corner, riding in with the card's own entrance.
+        var tagText = esc(("the " + fv.channel + " cut · " + ordinal).toUpperCase());
+        c.innerHTML =
           '<div class="hero-media">' +
+          '<div class="featured-tag">' + tagText + '</div>' +
           (fv.coverURI ? '<img id="' + mediaId + 'Img" class="breathe" src="' + fv.coverURI + '" alt="' + esc(fv.workingTitle) + '" />' : "") +
           '<video id="' + mediaId + 'Video" muted loop playsinline src="' + esc(fv.videoRelSrc) + '"></video>' +
           '<div class="shimmer" id="' + mediaId + 'Shimmer"></div>' +
@@ -1245,15 +1500,54 @@ const THEATER_JS = `
   }
 
   queueHeader("rollout", "station 9 / learn");
+  queueChapter("Act V", "The library keeps what won and hands it to the next wave.");
   queueAction("library.jsonl += wave " + String(DATA.libraryNewLine.wave).padStart(2, "0") + ": winners [" + (DATA.libraryNewLine.winners.join(", ") || "none") + "]", function () {
-    var c = el("article", "evidence-card");
+    var c = el("article", "evidence-card tier3");
     var rows = DATA.libraryBefore.map(function (e) {
       return '<div class="rollout-role">wave ' + e.wave + ": " + (e.winners.length ? esc(e.winners.join(", ")) : "no SCALE verdicts") + "</div>";
     }).join("");
-    c.innerHTML = '<div class="evidence-eyebrow">library: cross-wave winners</div>' + rows +
-      '<div class="rollout-copy">wave ' + DATA.libraryNewLine.wave + ": " + (DATA.libraryNewLine.winners.join(", ") || "no SCALE verdicts") + " (just recorded)</div>";
+    // injectedLearnings returns here as a footnote (作战包修订二): the trait
+    // this wave carried forward, shown at the beat that WRITES the next one,
+    // not at the open.
+    var carried = DATA.injectedLearnings
+      ? '<p class="evidence-caption" style="margin-top:8px">carried into this wave: ' + esc(DATA.injectedLearnings) + "</p>"
+      : "";
+    c.innerHTML = '<div class="evidence-eyebrow">library &middot; cross-wave winners</div>' + rows +
+      '<div class="rollout-copy">wave ' + DATA.libraryNewLine.wave + ": " + (DATA.libraryNewLine.winners.join(", ") || "no SCALE verdicts") + " (just recorded)</div>" + carried;
     addCard(c, "library.jsonl, appended by station 9, injected into wave " + (DATA.waveNumber + 1) + "'s insight prompt");
   });
+
+  // ============= THE BILL: the whole wave's output, counted (北极星2b) =============
+  // A Tier-1 in-flow tally, the payoff beat -- all this work, done for you.
+  // Every figure is countable from readout; nothing is authored. No
+  // left-column log line: the log is the machine's and stays untouched, the
+  // bill is pure evidence-column narration dropped straight on the timeline.
+  at(cursor, function () {
+    var stillsCount = DATA.variants.filter(function (v) { return v.imgURI; }).length;
+    var videosCount = DATA.featuredVideos.length;
+    var winnersCount = DATA.variants.filter(function (v) { return v.decision && v.decision.verdict === "SCALE"; }).length;
+    var videoSeconds = Math.round(DATA.featuredVideos.reduce(function (a, fv) { return a + (fv.durationSec || 0); }, 0));
+    var items = [
+      { to: 1, label: "cultural moment in" },
+      { to: DATA.variants.length, label: "bets placed" },
+      { to: DATA.namedAssets.length, label: "assets named" },
+      { to: stillsCount, label: "stills made" },
+      { to: videosCount, label: "videos rendered" },
+      { to: winnersCount, label: "scaled to rollout" },
+      { to: videoSeconds, label: "seconds of finished video" }
+    ];
+    var c = el("article", "evidence-card tier1 bill-card");
+    c.innerHTML = '<div class="evidence-eyebrow">the bill</div>' +
+      '<p class="bill-lead">Everything the machine produced from one moment.</p>' +
+      '<div class="bill-grid">' + items.map(function (it, i) {
+        return '<div class="bill-item"><div class="bill-num" id="bill' + i + '">0</div><div class="bill-label">' + esc(it.label) + "</div></div>";
+      }).join("") + "</div>";
+    addCard(c, "every figure counted from readout.json: variants, namedAssets, produced stills, rendered videos, SCALE verdicts, ffprobe durations");
+    items.forEach(function (it, i) {
+      countUp(document.getElementById("bill" + i), it.to, 900 + i * 120, function (x) { return String(Math.round(x)); });
+    });
+  });
+  cursor += 3800 * PACE;
 
   queueAction("$ " + DATA.installCmd, function () {
     var c = el("article", "evidence-card closing-card");
