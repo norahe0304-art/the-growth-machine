@@ -4,3 +4,9 @@ dist/
 .env.local
 *.log
 .DS_Store
+references/meta.local.md
+STATE.md
+waves/**/STATE.md
+*.old.mp4
+*.old.html
+.debug-journal.md

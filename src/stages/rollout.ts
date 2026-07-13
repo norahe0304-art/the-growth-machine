@@ -295,9 +295,9 @@ function slugTagFrom(text: string): string {
 // ============================================================
 // ParticipationKit: the ugc-loop concept's real deliverable, in place of a
 // faked "UGC" image. creatorShotList follows the phone-shot, testimonial
-// voice discipline references/meta.md's Tier 1 corpus (Nora's own
-// 30x-product-to-ugc scoring pass) distills: cold open on the thing already
-// in use, honest before state, one clear beat held long enough to
+// voice discipline references/meta.md's Tier 1 corpus (or your own
+// references/meta.local.md when present) distills: cold open on the thing
+// already in use, honest before state, one clear beat held long enough to
 // register, a casual verbal CTA rather than a polished tag-on.
 // ============================================================
 function participationKitFor(variant: Variant): ParticipationKit {

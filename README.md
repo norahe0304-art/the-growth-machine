@@ -1,5 +1,11 @@
 # The Growth Machine
 
+This is an independent portfolio project analyzing OpenAI's public creative and
+marketing patterns. It is not affiliated with, endorsed by, or produced on behalf of
+OpenAI. "OpenAI" and "ChatGPT" are used descriptively as case-study subjects; the
+default brand pack is a demonstration of the machine's architecture, swappable for any
+brand.
+
 The machine runs on the agent you already pay for.
 
 The Growth Book explains the formula. This runs it. It does not run as a standalone
@@ -31,6 +37,9 @@ name. None of it comes from a live campaign. The machine's job is to prove out d
 logic. It does not buy media. Do not read the CTR numbers as real performance data. Read the
 SCALE/KILL/ITERATE calls as a demonstration of how a machine would decide, given real
 thresholds and a plausible curve shape.
+
+Every person appearing in generated assets — wedding photos, couples, hands — is
+AI-generated demonstration material and corresponds to no real individual.
 
 ## Every step leaves a record
 
@@ -328,3 +337,9 @@ boundary" above). A holdout only earns its keep once the pipeline is wired to a 
 account with real spend to hold out from; until then a holdout arm here would just be an
 unfunded control group producing noise. Revisit this once `measure`'s input source is a
 live spend feed instead of a metrics file.
+
+## License
+
+The MIT license covers the code (`src/`, `scripts/`, `bin/`, `skill/`). Generated assets
+under `waves/` and the brand-pack analysis under `brand/` are not covered by the MIT
+grant; all rights reserved.

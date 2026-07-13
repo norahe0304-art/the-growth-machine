@@ -1,5 +1,9 @@
 # Brand Memory
 
+This is an independent portfolio analysis, not affiliated with or endorsed by any brand
+named below; the pack is a demonstration of the machine's architecture, swappable for
+any brand.
+
 A pluggable brand pack. `brand/openai/` holds four files: `brand.md` (voice and
 stance), `design.md` (visual grammar), `channels.md` (channel precedent), and
 `history.md` (the nine-fire track record and the four laws). Every claim cites a

@@ -2,18 +2,16 @@
 
 ## Live and corpus sources, three tiers
 
-### Tier 1, Nora's own corpus (primary ammo)
+### Tier 1, your own corpus (primary ammo, bring your own)
 
-Repo: github.com/norahe0304-art/30x-product-to-ugc
+Bring your own reference library. The machine looks for an optional local corpus at
+`references/meta.local.md` first; when present, its scored entries and house rules
+take priority over everything below. When absent, the machine falls back to the
+starter rules in this file.
 
-Roughly 1100 Meta Ad Library entries, each scored against a viral benchmark scorecard,
-plus 38 house rules distilled from that scoring pass. This is the primary ammo for Meta
-and IG produce work.
-
-How to consume it. Pull the 38 rules directly when writing a produce-station brief for a
-Meta or IG asset, they are pre-distilled and already validated against roughly 1100 real
-ads. Pull individual scored entries when the moment needs a close analog, matching on
-category and format over brand.
+How to consume it. Pull house rules directly when writing a produce-station brief for
+a Meta or IG asset. Pull individual scored entries when the moment needs a close
+analog, matching on category and format over brand.
 
 ### Tier 2, meta-ads-scraper (optional tool, ToS flagged)
 
@@ -39,6 +37,9 @@ to active ads, treat run length as the same battle-tested signal tier 2 automate
 
 ## Starter rules
 
+Starter rules: generic UGC ad craft, usable as-is; supply your own corpus for sharper,
+brand-specific rules.
+
 The core UGC syntax below starts from the Battle-tested (30 day plus) concept tier
 defined above. An ad that survives 30 days of live spend without being pulled has cleared
 the market's own filter already. The Growth Book's Brief Anatomy chapter names this same
@@ -48,19 +49,15 @@ from the book this repo runs, and both treat sustained time-in-market as the evi
 bar a concept has to clear.
 
 1. Cold open on the product already in use, in the hand or on the face, before any
-   branding. Distilled from the 38-rule corpus.
+   branding.
 2. Write the hook as a spoken sentence a real customer would say, in the voice of a
-   testimonial rather than ad copy. First person, plain words. Distilled from the
-   38-rule corpus.
+   testimonial rather than ad copy. First person, plain words.
 3. Show the before state honestly, do not exaggerate the problem past what is credible.
-   Distilled from the 38-rule corpus.
 4. Cut to the specific mechanism or moment that caused the change, one clear beat held
-   long enough to register, rather than a fast montage. Distilled from the 38-rule
-   corpus.
+   long enough to register, rather than a fast montage.
 5. Keep the CTA verbal and casual, delivered in the same voice as the rest of the video
-   instead of a separate polished tag-on. Distilled from the 38-rule corpus.
+   instead of a separate polished tag-on.
 6. Static image ads should mimic a screenshot or a text-message aesthetic over a
-   studio-lit product shot when the goal is feed-native trust. Distilled from the
-   38-rule corpus.
+   studio-lit product shot when the goal is feed-native trust.
 7. Caption text should read as a comment or a testimonial fragment, staying below the
-   register of a headline. Distilled from the 38-rule corpus.
+   register of a headline.

@@ -29,7 +29,8 @@ deliverable here, following `nativeFormat`.
 One real image generation call, the same posture station 5 takes for the concept-level
 still. Apply the same brand-pack and reference rules station 5 sets: fold `design.md`'s
 matching prompt fragment into the adapted image prompt, splice in `references/meta.md`'s
-UGC syntax for a `ugc-still` channel. If `codex` is installed and authenticated:
+UGC syntax (or your own `references/meta.local.md`, which takes priority when present)
+for a `ugc-still` channel. If `codex` is installed and authenticated:
 
 ```bash
 codex exec --skip-git-repo-check - <<PROMPT

@@ -261,8 +261,9 @@ shot 2 introduces the new element as contrast, shot 3 lands the hook copy. `asse
 `brand/<pack>/design.md`'s "Prompt fragments" section into `brief.generationPrompts.image`,
 picking dark gradient, diagram accent, paper-white, or UGC by what the brief's register
 already calls for. When a later channel cut (station 8b) carries `nativeFormat: ugc-still`,
-also splice in the UGC syntax from `references/meta.md`'s starter rules before generating
-that channel's image. When a later channel cut is a `tiktok` `video` script, self-check the
+also splice in the UGC syntax from `references/meta.md`'s starter rules (or your own
+`references/meta.local.md`, which takes priority when present) before generating that
+channel's image. When a later channel cut is a `tiktok` `video` script, self-check the
 three-shot script against `references/tiktok.md`'s starter rules before it ships. If `codex`
 is installed and authenticated, run it against the (possibly fragment-augmented)
 `brief.generationPrompts.image`:
@@ -447,8 +448,8 @@ before validation and before real generation runs below:
 creditRule}` at the `RolloutDraft` level (once per draft, not once per channel):
 `mechanic` is one sentence naming what a real user actually does to participate;
 `creatorShotList` is 3 to 4 real-phone shot instructions for a real creator, styled per
-`references/meta.md`'s starter rules (Nora's own `30x-product-to-ugc` Tier 1 corpus, 38
-house rules distilled from roughly 1100 Meta Ad Library entries); `seedCaptions` is exactly
+`references/meta.md`'s Tier 1 corpus (or your own `references/meta.local.md` when
+present); `seedCaptions` is exactly
 3 ready-to-use captions handed to real users, written as a testimonial a real person would
 say, not ad copy; `creditRule` is one sentence on how credit passes from one participant to
 the next, this is what turns single posts into a loop. For every other `angleType`, set
