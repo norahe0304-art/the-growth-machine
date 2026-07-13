@@ -143,6 +143,11 @@ Every variant this machine produces must satisfy: **existing asset x one new ele
 Before generating, call `node scripts/machine.mjs learn get` (no stdin) to fetch
 `injectedLearnings`, the previous wave's winning traits, if any. If it is non-null, extend
 those traits while keeping the formula rules intact; that is where real evolution happens.
+Inheritance is not allowed to narrow the gene pool: the variant whose `angleType` matches
+the previous winner is the **defender** and extends the inherited traits; of the other two,
+at least one is the **challenger** and must break from the inherited traits on at least one
+dimension (a different `assetKind`, or a hook family the library has not yet crowned).
+Exploit with the defender, explore with the challenger, every wave, no exceptions.
 
 Also before generating, read `brand/<pack>/brand.md` for voice and stance and
 `brand/<pack>/history.md` for the track record and its four laws, when the pack exists.

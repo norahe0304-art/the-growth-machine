@@ -110,6 +110,11 @@ moment: "<moment>"
 wave <N>.
 Winning traits from the previous wave, if any (extend these while keeping the formula
 rules intact): <output of `node scripts/machine.mjs learn get`, or "none">
+If winning traits were injected: the variant whose angleType matches the previous winner
+is the defender and extends them; of the other two, at least one is the challenger and
+must break from the inherited traits on at least one dimension (a different assetKind,
+or a hook family the library has not yet crowned). Exploit with the defender, explore
+with the challenger, every wave, no exceptions.
 
 Output strict JSON, nothing outside it:
 {"variants":[{"id":"v1","asset":"...","assetKind":"thing|interaction","newElement":"...","angle":"...","angleType":"moment|evergreen|ugc-loop","workingTitle":"..."}, ...3 total, one of each angleType]}
