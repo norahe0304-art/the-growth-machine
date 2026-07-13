@@ -620,9 +620,9 @@
           "role": "discovery",
           "nativeFormat": "video",
           "assetName": "TT_CONV_MOF_EVG_STIL_THEC_THEWED_ANYO_V04",
-          "assetPath": null,
+          "assetPath": "waves/wave-04/assets/rollout/TT_CONV_MOF_EVG_MOTN_THEC_THEWED_ANYO_V04.mp4",
           "coverPath": "waves/wave-04/assets/rollout/TT_CONV_MOF_EVG_STIL_THEC_THEWED_ANYO_V04.png",
-          "videoDurationSec": null,
+          "videoDurationSec": 5.9,
           "illustrativeLabel": null,
           "assetSpec": "Vertical 9:16, a 10 second image to video render off the winning still, cover frame carries no baked text, hook text composited by ffmpeg drawtext in the first two and last four and a half seconds.",
           "channelScript": [
@@ -650,7 +650,8 @@
             ],
             "altText": "A restored wedding photograph glowing with color against its faded original, held in two hands, then the couple begins to dance.",
             "postingNote": "Pending real render (image to video generation plus ffmpeg assembly, see readout note). Once shipped, post inside the first 48 hours of the observation window and pin as the top profile post."
-          }
+          },
+          "productionNote": "image to video via MiniMax Hailuo 2.3 Fast (Seedance privacy gate declined the realistic faces, machine rerouted backends), ffmpeg vertical cut and type overlay"
         },
         {
           "channel": "instagram",
@@ -775,9 +776,9 @@
           "role": "discovery",
           "nativeFormat": "video",
           "assetName": "TT_ENGT_BOF_LOOP_STIL_COUP_THEWED_COUP_V04",
-          "assetPath": null,
+          "assetPath": "waves/wave-04/assets/rollout/TT_ENGT_BOF_LOOP_MOTN_COUP_THEWED_COUP_V04.mp4",
           "coverPath": "waves/wave-04/assets/rollout/TT_ENGT_BOF_LOOP_STIL_COUP_THEWED_COUP_V04.png",
-          "videoDurationSec": null,
+          "videoDurationSec": 6,
           "illustrativeLabel": null,
           "assetSpec": "Vertical 9:16, an 8 second image to video render off the winning side by side still, cover frame carries no baked text, hook text composited by ffmpeg drawtext.",
           "channelScript": [
@@ -805,7 +806,8 @@
             ],
             "altText": "A silhouette wedding pose beside an ordinary couple recreating the same pose in their kitchen, credit tag visible.",
             "postingNote": "Pending real render (image to video generation plus ffmpeg assembly, see readout note). Once shipped, post inside the first 48 hours and keep the template one tap away."
-          }
+          },
+          "productionNote": "image to video via Seedance 2 Fast, ffmpeg vertical cut and type overlay"
         },
         {
           "channel": "instagram",
