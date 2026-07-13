@@ -630,7 +630,7 @@
           "illustrativeLabel": null,
           "channelCopy": "Retrograde did not change how you argue. It just reminded you that you always come back the same way.",
           "channelScript": null,
-          "assetSpec": "A 16:9 editorial still of the reading card with the graft visible, the hook ships as post text and is never baked into the image, tuned so the first observed line reads at a glance in a fast feed.",
+          "assetSpec": "A 16:9 quote card on paper white: the hook line \"You return with care.\" set in large black serif type, the reconnection double-speech-bubble line icon centered beneath it, no reading card and no body copy, baked-in text as the licensed exception for X's text-forward native grammar.",
           "executionSteps": [
             "Post the reading card as a single image with one dry line above it.",
             "Time the post to the first full retrograde week when miscommunication is already the feed topic.",
@@ -697,7 +697,7 @@
           "illustrativeLabel": null,
           "channelCopy": "See the one way you always fix a conversation. Tap to read yours.",
           "channelScript": null,
-          "assetSpec": "A 1:1 crop safe inside a circular profile mask, the reading reduced to its title and one line, the hook ships as an in product prompt and is never baked into the image.",
+          "assetSpec": "A 1:1 canvas with a thin circular outline centered and safe-zone true to the profile mask: the reconnection double-speech-bubble line icon and the label \"Your repair move\" both fully inside the circle, no card, no dense body copy, a functional in-app tile rather than a cropped reading card.",
           "executionSteps": [
             "Offer the reading as a one tap card on the profile surface after a long chat session.",
             "Let the user reveal their repair move and save it to their profile.",

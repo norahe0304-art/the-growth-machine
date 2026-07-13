@@ -408,6 +408,14 @@ winner actually goes out, following this prompt contract verbatim:
 > Format follows the channel: a video channel ships a three shot script plus a cover frame,
 > a ugc channel ships a candid creator still, an editorial channel ships a native still, an
 > in-product surface ships a mask safe crop. Write `assetSpec` accordingly.
+> A channel cut is a re-expression, not a resize: no two channels may ship what reads as
+> the same image reformatted. Keep the concept (the asset x element graft) and the lineage
+> name, re-author the creative form in each channel's native grammar: x is text-forward
+> and conversational (a quote card, a screenshot-native frame, one provocable line over a
+> minimal still), instagram is a creator-aesthetic still that could sit on a real person's
+> grid, an in-app surface is a functional UI-true crop. Self-check before shipping: would
+> this brand's channel manager post this, natively, today? If two cuts pass only as
+> duplicates of each other, re-author one of them.
 >
 > Output shape: `{"variantId":"...","name":"...","channels":[{"channel":"...",
 > "role":"discovery|amplification|retention|conversion","assetSpec":"...",

@@ -9,4 +9,5 @@ STATE.md
 waves/**/STATE.md
 *.old.mp4
 *.old.html
+*.old.png
 .debug-journal.md
