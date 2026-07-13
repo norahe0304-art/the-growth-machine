@@ -13,7 +13,7 @@ next person that it recruits its own next user.
 
 The book's formula is: existing asset x one new element. Asset means one of two things. It
 is a thing people already own, or an interaction people already know how to do. You feed
-this machine any moment. It runs that moment through six stations. It comes out the other
+this machine any moment. It runs that moment through ten stations. It comes out the other
 end with named assets, generated creative, a test plan, a market response simulation, and a
 machine made scale/kill/iterate call. Then it does it again, and the next wave knows what
 won last time.
@@ -60,7 +60,7 @@ This symlinks `skill/` into `~/.claude/skills/growth-machine`. Restart Claude Co
 open this repo and say something like "run the growth machine on the world cup final." The
 agent reads `skill/SKILL.md`, reasons through insight, brief, and judge itself, and calls
 `scripts/machine.mjs` for naming, plan, simulate, decide, report, and learn. See
-`skill/SKILL.md` for the full six station contract, and `skill/CODEX.md` for the Codex CLI
+`skill/SKILL.md` for the full ten station contract, and `skill/CODEX.md` for the Codex CLI
 equivalent, driven through `codex exec` instead of a single reasoning session.
 
 ### CLI headless mode (optional, needs OPENAI_API_KEY)
@@ -104,11 +104,14 @@ SCALE'd, what traits they shared, and a learnings string that gets injected into
 wave's insight/brief prompts. That is the evolution loop. It is not a metaphor. It is an
 actual string concatenated into the next LLM call, whichever mode produced it.
 
-## Six stations, ten files
+## Ten stations
 
-The book names six stations. The code splits two of them into helper stages (naming and
-learn call no LLM, plan is a hybrid), and adds one conditional station of its own, rollout,
-that only fires on a SCALE verdict. That gives ten files for six conceptual stops.
+The pipeline is ten stations: insight, brief, naming, plan, produce, judge, simulate,
+decide, rollout (station 8b, conditional on a SCALE verdict), and learn. The Growth Book
+itself describes the formula at a coarser grain, six conceptual stations (insight, brief,
+produce, judge, simulate, decide); this repo's code adds naming, plan, rollout, and learn as
+the deterministic scaffolding around those six, which is where the other four files come
+from. Ten stations, ten files.
 
 ```
 moment
@@ -169,7 +172,7 @@ Stations 3, 4, 7, 8, and 9 (naming, plan, simulate, decide, learn) are
 deterministic. Both modes run the exact same code for them, `src/stages/*.ts`, either
 through `bin/growth-machine` or through `scripts/machine.mjs`.
 
-There is an eleventh file, `measure.ts`. It is not part of the six station loop above. It runs
+There is an eleventh file, `measure.ts`. It is not part of the ten station loop above. It runs
 after the fact, against a wave that has already shipped a report. See "Measure: simulator to
 instrument" below.
 

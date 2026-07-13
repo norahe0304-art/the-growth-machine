@@ -2,7 +2,7 @@
 name: growth-machine
 description: >
   Runs any moment (a news event, a topic, a cultural beat) through The Growth Machine's
-  six-station pipeline, with the agent itself acting as the insight/brief/judge model, no
+  ten-station pipeline, with the agent itself acting as the insight/brief/judge model, no
   API key, no per-token bill beyond the subscription already running this conversation.
   Naming, plan, simulate, decide, and learn run as deterministic scripts. Produce's real
   image call goes through codex exec when available, or hands the image prompt to the user
@@ -23,10 +23,11 @@ description: >
   post-hoc)
 [OUTPUT]: waves/wave-NN/{brief-v1.json, brief-v2.json, brief-v3.json, plan.json,
   assets/*.png, readout.json, report.html} + one appended library.jsonl line per wave
-[POS]: the skill-layer twin of bin/growth-machine, same ten files in src/, same six
-  conceptual stations plus rollout's conditional station 8b, same taxonomy, same thresholds.
-  The only thing that changes between CLI mode and skill mode is who calls the LLM stations:
-  a paid OpenAI API key in CLI mode, the agent's own weights in skill mode. See CODEX.md for
+[POS]: the skill-layer twin of bin/growth-machine, same ten files in src/, same ten-station
+  pipeline (insight, brief, naming, plan, produce, judge, simulate, decide, rollout as
+  station 8b conditional on a SCALE verdict, learn), same taxonomy, same thresholds. The
+  only thing that changes between CLI mode and skill mode is who calls the LLM stations: a
+  paid OpenAI API key in CLI mode, the agent's own weights in skill mode. See CODEX.md for
   the Codex CLI equivalent of this
   file, same stations, same contracts, `codex exec` idiom instead of native reasoning.
 [PROTOCOL]: update this header on change, then check CLAUDE.md
@@ -35,8 +36,8 @@ description: >
 # The Growth Machine, skill mode
 
 The machine runs on the agent you already pay for. `insight`, `brief`, and `judge` are LLM
-stations. In CLI mode `src/lib/openai-client.ts` calls OpenAI to run them. In skill mode you
-,  the agent reading this file, are the model. You write the JSON those stations would have
+stations. In CLI mode `src/lib/openai-client.ts` calls OpenAI to run them. In skill mode you,
+the agent reading this file, are the model. You write the JSON those stations would have
 returned, directly, by following the prompt contracts below. No API key, no HTTP call, no
 per-token bill beyond the subscription already running this conversation.
 
@@ -51,7 +52,7 @@ already specify). Its real image call is the one station that still wants a mode
 image-generation capability, use `codex exec` if it is installed and authenticated; if it
 is not, hand the image prompt to the user instead of failing the wave.
 
-`measure` is untouched, it was never part of the six-station loop (it runs after the fact,
+`measure` is untouched, it was never part of the ten-station loop (it runs after the fact,
 against a wave that already shipped). Use the existing CLI for it: see "Measure" below.
 
 This skill is itself an instance of The Growth Book's Pitch 05, the routine exchange: a
@@ -549,10 +550,10 @@ Returns `{"moment": "...", "lastWave": N}` (or `null` if `library.jsonl` is empt
 `lastWave + 1` as the new wave number and the same `moment` string, then run stations 1
 through 9 again.
 
-## Measure (unchanged, post-hoc, not part of the six-station loop)
+## Measure (unchanged, post-hoc, not part of the ten-station loop)
 
 `measure` runs after a wave has already shipped a report, against real channel numbers. It
-was never part of the loop above and stays exactly as the standalone CLI already built it , 
+was never part of the loop above and stays exactly as the standalone CLI already built it,
 call it directly, no skill-layer wrapper needed:
 
 ```bash
@@ -563,5 +564,29 @@ Or interactively (prompts once per still asset) with `--wave <N>` and no `--file
 re-decides every measured asset against `ENGAGEMENT_THRESHOLDS` and rewrites that wave's
 `readout.json`, `report.html`, and `library.jsonl` line in place, everything else in the
 wave stays exactly as the simulated pass left it.
+
+## Theater, the showing (post-hoc, not a pipeline station)
+
+Not an eleventh station, produces nothing the pipeline consumes. It is the showing layer:
+once a wave has shipped `readout.json`, theater replays that real data as a split screen.
+Left, THE WORK, a station-by-station activity log proving the agent actually worked the
+wave. Right, THE EVIDENCE, real artifact cards (variants, the nine-segment name, thresholds,
+stills, judge scores, the three-curve race, the rollout) lighting up alongside the log line
+that produced them, "every frame is evidence." Nothing is invented, every card traces to a
+`WaveReadout` field. Timeline respects real causality: the winning still only crossfades
+into rendered rollout video after station 8b's approval gate, exactly how `theater.ts`
+renders it.
+
+```bash
+node scripts/machine.mjs theater <<'EOF'
+{"readout": <the WaveReadout object from Report above>}
+EOF
+```
+
+Writes `waves/wave-{NN}/theater.html`, self-contained. `machine.mjs theater-live <N>` is the
+watching-it-happen twin, generated at wave start, polling the wave dir instead of reading a
+finished readout. `scripts/record-theater.mjs` is an optional export tool, not part of the
+skill flow: it drives a real Chromium tab through `theater.html` and captures the replay to
+`theater-waveNN.mp4` for whoever wants a video file to hand around.
 
 [PROTOCOL]: 变更时更新此头部，然后检查 CLAUDE.md

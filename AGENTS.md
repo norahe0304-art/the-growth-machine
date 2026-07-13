@@ -1,4 +1,4 @@
-# The Growth Machine - 六站式增长实验执行器
+# The Growth Machine - 十站式增长实验执行器
 TypeScript + Node.js 24 + OpenAI SDK
 
 <directory>

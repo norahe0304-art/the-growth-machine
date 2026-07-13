@@ -7,18 +7,20 @@
   post-hoc)
 [OUTPUT]: waves/wave-NN/{brief-v1.json, brief-v2.json, brief-v3.json, plan.json,
   assets/*.png, readout.json, report.html} + one appended library.jsonl line per wave
-[POS]: the Codex-CLI twin of skill/SKILL.md, same six stations plus rollout's conditional
-  station 8b, same JSON contracts, same scripted stages. Where SKILL.md has Claude Code
-  reason directly inside one conversation, this file drives every LLM station through a
-  separate `codex exec` call, because Codex CLI's exec mode is one-shot and headless rather
-  than a persistent reasoning loop. Whoever runs this (a shell, a script, a human, another
-  agent) is the orchestrator; codex exec is the LLM engine for
+[POS]: the Codex-CLI twin of skill/SKILL.md, same ten-station pipeline (insight, brief,
+  naming, plan, produce, judge, simulate, decide, rollout as station 8b conditional on a
+  SCALE verdict, learn), same JSON contracts, same scripted stages. Where SKILL.md has
+  Claude Code reason directly inside one conversation, this file drives every LLM station
+  through a separate `codex exec` call, because Codex CLI's exec mode is one-shot and
+  headless rather than a persistent reasoning loop. Whoever runs this (a shell, a script, a
+  human, another agent) is the orchestrator; codex exec is the LLM engine for
   insight/brief/judge/produce/rollout.
 [PROTOCOL]: update this header on change, then check CLAUDE.md
 -->
 
-Same machine, same six stations plus rollout's conditional station 8b, same ten files in
-`src/`. The only thing that changes from `SKILL.md` is how the LLM stations get called:
+Same machine, same ten-station pipeline (insight, brief, naming, plan, produce, judge,
+simulate, decide, rollout as station 8b conditional on a SCALE verdict, learn), same ten
+files in `src/`. The only thing that changes from `SKILL.md` is how the LLM stations get called:
 instead of one agent reasoning through the whole wave in a single conversation, each LLM
 station is its own `codex exec` call, prompt in via stdin heredoc, JSON out via stdout,
 captured to a file, fed into the next station. Deterministic stations
@@ -429,5 +431,28 @@ Not part of the loop above, call the standalone CLI directly:
 ```bash
 ./bin/growth-machine measure --wave <N> --file metrics.json
 ```
+
+## Theater, the showing (post-hoc, not a pipeline station, scripted)
+
+Not an eleventh station, produces nothing the loop above consumes. Once a wave has shipped
+`readout.json`, this replays that real data as a split screen: left, THE WORK, a
+station-by-station activity log; right, THE EVIDENCE, real artifact cards (variants, the
+nine-segment name, thresholds, stills, judge scores, the curve race, the rollout) lighting
+up alongside the log line that produced them, "every frame is evidence." Nothing is
+invented, every card traces to a `WaveReadout` field. Timeline respects real causality: the
+winning still only crossfades into rendered rollout video after station 8b's approval gate.
+No `codex exec` call needed, same scripted stage as naming/plan/simulate/decide:
+
+```bash
+node scripts/machine.mjs theater <<'EOF'
+{"readout": <the WaveReadout object from Report above>}
+EOF
+```
+
+Writes `waves/wave-{NN}/theater.html`. `machine.mjs theater-live <N>` is the
+watching-it-happen twin, generated at wave start, polling the wave dir instead of a finished
+readout. `scripts/record-theater.mjs` is an optional export tool, not part of this flow: it
+drives a real Chromium tab through `theater.html` and captures the replay to
+`theater-waveNN.mp4` for whoever wants a video file to hand around.
 
 [PROTOCOL]: 变更时更新此头部，然后检查 CLAUDE.md
