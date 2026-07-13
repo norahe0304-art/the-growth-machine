@@ -613,28 +613,44 @@
     {
       "variantId": "v2",
       "name": "WEB_CONV_MOF_EVG_STIL_THEC_THEWED_ANYO_V04",
+      "participationKit": null,
       "channels": [
         {
           "channel": "tiktok",
           "role": "discovery",
           "nativeFormat": "video",
           "assetName": "TT_CONV_MOF_EVG_STIL_THEC_THEWED_ANYO_V04",
-          "assetPath": "waves/wave-04/assets/rollout/TT_CONV_MOF_EVG_STIL_THEC_THEWED_ANYO_V04.png",
-          "assetSpec": "Vertical 9:16 cover frame plus the ten second restored dance as the ChatCut edit, hook text in the first two seconds.",
+          "assetPath": null,
+          "coverPath": "waves/wave-04/assets/rollout/TT_CONV_MOF_EVG_STIL_THEC_THEWED_ANYO_V04.png",
+          "videoDurationSec": null,
+          "illustrativeLabel": null,
+          "assetSpec": "Vertical 9:16, a 10 second image to video render off the winning still, cover frame carries no baked text, hook text composited by ffmpeg drawtext in the first two and last four and a half seconds.",
           "channelScript": [
-            "Shot 1: the faded print in a shoebox",
-            "Shot 2: color returns and the couple begins the first dance",
-            "Shot 3: the hook line lands over the moving frame"
+            "Shot 1 (establish): the faded print in a shoebox, no sound cue yet.",
+            "Shot 2 (contrast): color and detail return, the couple begins the first dance, dissolve transition off the sepia frame.",
+            "Shot 3 (land): hook copy locks in: Thirty years in a shoebox. Ten seconds of the first dance. Frame holds for 1.5s, end."
           ],
           "channelCopy": "Thirty years in a shoebox. Ten seconds of the first dance.",
           "executionSteps": [
-            "Ship the ChatCut edit inside the first 48 hours.",
+            "Ship the rendered mp4 inside the first 48 hours once image to video generation and ffmpeg assembly clear self check.",
             "Open with the shoebox shot to earn the reveal.",
             "Seed to family history and nostalgia creators first.",
             "Track engagement against the preregistered thresholds daily."
           ],
           "kpi": "3.5% engagement rate inside the 21 day window",
-          "kpiThresholdNote": "Matches the preregistered scaleAt of 0.035 for the evergreen angle."
+          "kpiThresholdNote": "Matches the preregistered scaleAt of 0.035 for the evergreen angle.",
+          "postKit": {
+            "file": "TT_CONV_MOF_EVG_STIL_THEC_THEWED_ANYO_V04.mp4",
+            "caption": "Thirty years in a shoebox. Ten seconds of the first dance. Watch to the end.",
+            "hashtags": [
+              "#fyp",
+              "#storytime",
+              "#familyarchive",
+              "#weddingseason"
+            ],
+            "altText": "A restored wedding photograph glowing with color against its faded original, held in two hands, then the couple begins to dance.",
+            "postingNote": "Pending real render (image to video generation plus ffmpeg assembly, see readout note). Once shipped, post inside the first 48 hours of the observation window and pin as the top profile post."
+          }
         },
         {
           "channel": "instagram",
@@ -642,17 +658,31 @@
           "nativeFormat": "ugc-still",
           "assetName": "IG_CONV_MOF_EVG_STIL_THEC_THEWED_ANYO_V04",
           "assetPath": "waves/wave-04/assets/rollout/IG_CONV_MOF_EVG_STIL_THEC_THEWED_ANYO_V04.png",
+          "coverPath": null,
+          "videoDurationSec": null,
+          "illustrativeLabel": null,
           "assetSpec": "Square 1:1 phone shot realism: hands holding the restored print at home, caption voice first person.",
           "channelScript": null,
           "channelCopy": "Found this in my mom's closet. Watch what it did.",
           "executionSteps": [
             "Post the ugc still with the first person caption.",
-            "Pin the ChatCut edit as the follow up reel.",
+            "Pin the tiktok render as the follow up reel once it ships.",
             "Invite one restore per family thread in the caption.",
             "Track saves and shares against thresholds daily."
           ],
           "kpi": "3.5% engagement rate inside the 21 day window",
-          "kpiThresholdNote": "Matches the preregistered scaleAt of 0.035 for the evergreen angle."
+          "kpiThresholdNote": "Matches the preregistered scaleAt of 0.035 for the evergreen angle.",
+          "postKit": {
+            "file": "IG_CONV_MOF_EVG_STIL_THEC_THEWED_ANYO_V04.png",
+            "caption": "Found this in my mom's closet. Watch what it did. Thirty years in a shoebox, restored in one afternoon.",
+            "hashtags": [
+              "#reels",
+              "#throwback",
+              "#familyfirst"
+            ],
+            "altText": "A pair of hands holding a restored wedding photograph glowing with color next to its faded original underneath.",
+            "postingNote": "Post inside the first 48 hours of the observation window, reply pin the strongest family comment."
+          }
         },
         {
           "channel": "x",
@@ -660,17 +690,31 @@
           "nativeFormat": "still",
           "assetName": "XTW_CONV_MOF_EVG_STIL_THEC_THEWED_ANYO_V04",
           "assetPath": "waves/wave-04/assets/rollout/XTW_CONV_MOF_EVG_STIL_THEC_THEWED_ANYO_V04.png",
+          "coverPath": null,
+          "videoDurationSec": null,
+          "illustrativeLabel": null,
           "assetSpec": "16:9 still posted natively, hook line carried in the frame, restored print as the single subject.",
           "channelScript": null,
           "channelCopy": "They danced to this once. Watch it again.",
           "executionSteps": [
             "Post the still natively inside the first 48 hours.",
-            "Reply with the ChatCut edit once it clears judge.",
+            "Reply with the tiktok render once it clears judge and self check.",
             "Pin one clear next step link.",
             "Track engagement against thresholds daily."
           ],
           "kpi": "3.5% engagement rate inside the 21 day window",
-          "kpiThresholdNote": "Matches the preregistered scaleAt of 0.035 for the evergreen angle."
+          "kpiThresholdNote": "Matches the preregistered scaleAt of 0.035 for the evergreen angle.",
+          "postKit": {
+            "file": "XTW_CONV_MOF_EVG_STIL_THEC_THEWED_ANYO_V04.png",
+            "caption": "They danced to this once. Watch it again. Thirty years in a shoebox, restored in one afternoon.",
+            "hashtags": [
+              "#weddingseason",
+              "#familyarchive",
+              "#throwback"
+            ],
+            "altText": "A restored wedding photograph glowing with color against its faded original.",
+            "postingNote": "Post inside the first 48 hours of the observation window, pin as the top post."
+          }
         },
         {
           "channel": "in-app profile surface",
@@ -678,6 +722,9 @@
           "nativeFormat": "surface",
           "assetName": "APP_CONV_MOF_EVG_STIL_THEC_THEWED_ANYO_V04",
           "assetPath": "waves/wave-04/assets/rollout/APP_CONV_MOF_EVG_STIL_THEC_THEWED_ANYO_V04.png",
+          "coverPath": null,
+          "videoDurationSec": null,
+          "illustrativeLabel": null,
           "assetSpec": "1:1 tile tuned for the circular mask, a restore an old photo prompt with the album as the doorway.",
           "channelScript": null,
           "channelCopy": "One tap and the album dances again.",
@@ -688,35 +735,77 @@
             "Report adoption against thresholds daily."
           ],
           "kpi": "12.0% tile to restore conversion within 7 days",
-          "kpiThresholdNote": "Read against the evergreen scaleAt of 0.035, scaled up because a restore is a stronger action than a click."
+          "kpiThresholdNote": "Read against the evergreen scaleAt of 0.035, scaled up because a restore is a stronger action than a click.",
+          "postKit": {
+            "file": "APP_CONV_MOF_EVG_STIL_THEC_THEWED_ANYO_V04.png",
+            "caption": "One tap and the album dances again. Restore an old photo and watch thirty years come back in ten seconds.",
+            "hashtags": [
+              "#restore-old-photo",
+              "#profile-surface",
+              "#one-tap-upgrade"
+            ],
+            "altText": "A circular tile prompting the user to restore an old wedding photo, the album icon as the entry point.",
+            "postingNote": "Surface to users who have already uploaded at least one photo, no cold placement for new accounts."
+          }
         }
-      ]
+      ],
+      "productionNote": "The tiktok channel's real mp4 render (image to video generation via the libtv-skill plus ffmpeg drawtext/crop assembly) is BLOCKED pending LIBTV_ACCESS_KEY authorization; assetPath stays null, coverPath holds the no-text cover regenerated for this contract. See scratchpad/lane32-STATE.md."
     },
     {
       "variantId": "v3",
       "name": "WEB_ENGT_BOF_LOOP_STIL_COUP_THEWED_COUP_V04",
+      "participationKit": {
+        "mechanic": "Recreate the silhouette wedding pose at home and post it with the credit tag pointed at whoever you copied.",
+        "creatorShotList": [
+          "Cold open already mid pose, no setup shot, the recreation already in progress when the clip starts.",
+          "One clear beat held for a full second on the exact match to the reference, phone handheld, real room light, no studio lighting.",
+          "Whip the phone to whoever is laughing or reacting off camera, unscripted, audio left in.",
+          "Land on the credit tag or a spoken shoutout to the couple you recreated, casual and in your own words."
+        ],
+        "seedCaptions": [
+          "We tried the pose everyone is talking about. No regrets.",
+          "Recreating the wedding photo of the year in our actual kitchen.",
+          "Tagged the couple who did it before us. Your turn next."
+        ],
+        "creditRule": "Every recreation must tag the couple whose version it copied before it can seed the next one."
+      },
       "channels": [
         {
           "channel": "tiktok",
           "role": "discovery",
           "nativeFormat": "video",
           "assetName": "TT_ENGT_BOF_LOOP_STIL_COUP_THEWED_COUP_V04",
-          "assetPath": "waves/wave-04/assets/rollout/TT_ENGT_BOF_LOOP_STIL_COUP_THEWED_COUP_V04.png",
-          "assetSpec": "Vertical 9:16 cover frame plus the recreate attempt as the ChatCut edit, credit tag stamps in shot three.",
+          "assetPath": null,
+          "coverPath": "waves/wave-04/assets/rollout/TT_ENGT_BOF_LOOP_STIL_COUP_THEWED_COUP_V04.png",
+          "videoDurationSec": null,
+          "illustrativeLabel": null,
+          "assetSpec": "Vertical 9:16, an 8 second image to video render off the winning side by side still, cover frame carries no baked text, hook text composited by ffmpeg drawtext.",
           "channelScript": [
-            "Shot 1: the silhouette pose reference",
-            "Shot 2: the couple lines up the pose at home, laughing",
-            "Shot 3: the credit tag stamps on and the hook line lands"
+            "Shot 1 (establish): the silhouette pose reference holds, no sound cue yet.",
+            "Shot 2 (contrast): slide cut to the couple lining up the same pose at home, laughing.",
+            "Shot 3 (land): hook copy locks in: Same pose. Your house. Tag the next couple. Frame holds for 1.5s, end."
           ],
           "channelCopy": "Same pose. Your house. Tag the next couple.",
           "executionSteps": [
-            "Ship the ChatCut edit inside the first 48 hours.",
+            "Ship the rendered mp4 inside the first 48 hours once image to video generation and ffmpeg assembly clear self check.",
             "Seed three couples to start the chain with visible credits.",
             "Keep the template one tap from the video page.",
             "Track chain length per seeded template daily."
           ],
           "kpi": "5.0% engagement rate inside the 21 day window",
-          "kpiThresholdNote": "Matches the preregistered scaleAt of 0.05 for the ugc loop angle."
+          "kpiThresholdNote": "Matches the preregistered scaleAt of 0.05 for the ugc loop angle.",
+          "postKit": {
+            "file": "TT_ENGT_BOF_LOOP_STIL_COUP_THEWED_COUP_V04.mp4",
+            "caption": "Same pose. Your house. Tag the next couple. This is the recreation everyone is trying this week.",
+            "hashtags": [
+              "#fyp",
+              "#couplegoals",
+              "#recreatethepose",
+              "#weddingseason"
+            ],
+            "altText": "A silhouette wedding pose beside an ordinary couple recreating the same pose in their kitchen, credit tag visible.",
+            "postingNote": "Pending real render (image to video generation plus ffmpeg assembly, see readout note). Once shipped, post inside the first 48 hours and keep the template one tap away."
+          }
         },
         {
           "channel": "instagram",
@@ -724,6 +813,9 @@
           "nativeFormat": "ugc-still",
           "assetName": "IG_ENGT_BOF_LOOP_STIL_COUP_THEWED_COUP_V04",
           "assetPath": "waves/wave-04/assets/rollout/IG_ENGT_BOF_LOOP_STIL_COUP_THEWED_COUP_V04.png",
+          "coverPath": null,
+          "videoDurationSec": null,
+          "illustrativeLabel": "template preview, illustrative",
           "assetSpec": "Square 1:1 phone shot realism: the side by side pair as a couple's own post, credit tag visible.",
           "channelScript": null,
           "channelCopy": "We tried the pose. No regrets.",
@@ -734,7 +826,18 @@
             "Track recreations per post daily."
           ],
           "kpi": "5.0% engagement rate inside the 21 day window",
-          "kpiThresholdNote": "Matches the preregistered scaleAt of 0.05 for the ugc loop angle."
+          "kpiThresholdNote": "Matches the preregistered scaleAt of 0.05 for the ugc loop angle.",
+          "postKit": {
+            "file": "IG_ENGT_BOF_LOOP_STIL_COUP_THEWED_COUP_V04.png",
+            "caption": "We tried the pose. No regrets. Tagged the couple who did it before us, your turn next.",
+            "hashtags": [
+              "#reels",
+              "#couplegoals",
+              "#recreatethepose"
+            ],
+            "altText": "A silhouette wedding pose beside an ordinary couple recreating the same pose in their kitchen, credit tag visible. Template preview, illustrative, not a real submitted recreation.",
+            "postingNote": "This still is an AI-generated template preview, not real user content. Post it only as the seed post explaining the mechanic, replace with real recreations as they come in."
+          }
         },
         {
           "channel": "x",
@@ -742,6 +845,9 @@
           "nativeFormat": "still",
           "assetName": "XTW_ENGT_BOF_LOOP_STIL_COUP_THEWED_COUP_V04",
           "assetPath": "waves/wave-04/assets/rollout/XTW_ENGT_BOF_LOOP_STIL_COUP_THEWED_COUP_V04.png",
+          "coverPath": null,
+          "videoDurationSec": null,
+          "illustrativeLabel": null,
           "assetSpec": "16:9 still posted natively, the pair composition with the hook line in frame.",
           "channelScript": null,
           "channelCopy": "The pose everyone is talking about. Your kitchen works fine.",
@@ -752,10 +858,22 @@
             "Track engagement against thresholds daily."
           ],
           "kpi": "5.0% engagement rate inside the 21 day window",
-          "kpiThresholdNote": "Matches the preregistered scaleAt of 0.05 for the ugc loop angle."
+          "kpiThresholdNote": "Matches the preregistered scaleAt of 0.05 for the ugc loop angle.",
+          "postKit": {
+            "file": "XTW_ENGT_BOF_LOOP_STIL_COUP_THEWED_COUP_V04.png",
+            "caption": "The pose everyone is talking about. Your kitchen works fine. Recreate it, tag the couple before you.",
+            "hashtags": [
+              "#weddingseason",
+              "#recreatethepose",
+              "#couplegoals"
+            ],
+            "altText": "A silhouette wedding pose beside an ordinary couple recreating the same pose in their kitchen, credit tag visible.",
+            "postingNote": "Post inside the first 48 hours, quote the strongest recreation of each day and keep the template link pinned."
+          }
         }
       ],
-      "operatorNote": "Machine verdict was ITERATE. Operator promoted this arm to rollout on creative judgment; the override is recorded here and the preregistered thresholds still govern its channels."
+      "operatorNote": "Machine verdict was ITERATE. Operator promoted this arm to rollout on creative judgment; the override is recorded here and the preregistered thresholds still govern its channels.",
+      "productionNote": "Both video channels' real mp4 render (image to video generation via the libtv-skill plus ffmpeg drawtext/crop assembly) is BLOCKED pending LIBTV_ACCESS_KEY authorization; assetPath stays null, coverPath holds the no-text cover regenerated for this contract. See scratchpad/lane32-STATE.md."
     }
   ]
 }
