@@ -283,8 +283,15 @@ async function rolloutSection(readout: WaveReadout): Promise<string> {
               ? `video, rendered mp4${ch.videoDurationSec ? ` (${ch.videoDurationSec}s)` : ""}`
               : "video, pending render"
             : ch.nativeFormat;
+          const videoRelSrc =
+            hasRenderedVideo && ch.assetPath
+              ? path.relative(path.join("waves", `wave-${String(readout.waveNumber).padStart(2, "0")}`), ch.assetPath)
+              : null;
+          const videoTag = videoRelSrc
+            ? `<video class="rollout-video" controls muted playsinline src="${videoRelSrc}"></video>`
+            : "";
           const mediaCaption = isVideo
-            ? `<div class="rollout-media-caption">${hasRenderedVideo ? "no-text cover frame, drawtext composited at render time" : "no-text cover frame, image to video generation plus ffmpeg assembly pending"}</div>`
+            ? `<div class="rollout-media-caption">${hasRenderedVideo ? "rendered mp4 below, cover frame above" : "no-text cover frame, image to video generation plus ffmpeg assembly pending"}</div>`
             : "";
           const illustrativeNote = ch.illustrativeLabel
             ? `<div class="rollout-illustrative-note">${escapeHTML(ch.illustrativeLabel)}</div>`
@@ -298,6 +305,7 @@ async function rolloutSection(readout: WaveReadout): Promise<string> {
         <div class="rollout-body">
           <div class="rollout-media">
             ${imgURI ? `<img src="${imgURI}" alt="${escapeHTML(ch.assetName)}" />` : `<div class="rollout-media-placeholder">no channel cut generated</div>`}
+            ${videoTag}
             ${mediaCaption}
             ${illustrativeNote}
           </div>
@@ -448,7 +456,8 @@ export async function renderReport(readout: WaveReadout, libraryEntries?: Learni
   .rollout-media { margin-bottom: 10px; max-width: 240px; }
   .rollout-media img { width: 100%; height: auto; border: 1px solid #d8d5cd; display: block; }
   .rollout-media-placeholder { border: 1px dashed #d8d5cd; padding: 20px 12px; text-align: center; color: #8a8779; font-size: 12px; }
-  .rollout-media-caption { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: #8a8779; margin-top: 4px; }
+  .rollout-video { display: block; width: 100%; max-width: 320px; margin: 10px 0; border: 1px solid #e2e2e0; }
+.rollout-media-caption { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: #8a8779; margin-top: 4px; }
   .rollout-copy { margin: 0 0 8px; font-size: 14px; font-style: italic; }
   .rollout-script { margin: 0 0 8px; padding-left: 18px; font-size: 12px; color: #4a4a44; }
   .rollout-script li { margin-bottom: 2px; }
