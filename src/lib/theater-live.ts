@@ -1,6 +1,7 @@
 /**
  * [INPUT]: depends on theater.ts's exported THEATER_CSS and on wave files discovered over http:
- *   live-log.jsonl, brief-v{1,2,3}.json, plan.json, assets/, assets/rollout/, and readout.json
+ *   live-log.jsonl, brief-v{1,2,3}.json, variants.json, named-assets.json, plan.json, assets/,
+ *   assets/rollout/, and readout.json
  * [OUTPUT]: exports renderTheaterLive(waveNumber) -> string, a self-contained live workbench that
  *   polls every two seconds and renders mission-card, triptych, produce-shelf with judge-stamps,
  *   thresholded race-card, hero-card, rollout-shelves, bill-card, chapter headers, lightbox, and
@@ -133,6 +134,9 @@ const LIVE_JS = `
     if (html !== undefined) n.innerHTML = html;
     return n;
   }
+  function readString(obj, key) {
+    return obj && typeof obj === "object" && typeof obj[key] === "string" ? obj[key] : null;
+  }
 
   var logStream = document.getElementById("logStream");
   var evidenceStack = document.getElementById("evidenceStack");
@@ -172,6 +176,17 @@ const LIVE_JS = `
       if (p < 1) requestAnimationFrame(tick);
       else target.textContent = String(Math.round(to));
     })(started);
+  }
+
+  function typewriter(target, text, ms) {
+    var i = 0;
+    var per = Math.max(10, ms / Math.max(1, text.length));
+    target.innerHTML = '<span class="cursor"></span>';
+    (function tick() {
+      i++;
+      target.innerHTML = esc(text.slice(0, i)) + '<span class="cursor"></span>';
+      if (i < text.length) setTimeout(tick, per);
+    })();
   }
 
   var STAGE_KEYS = ["open", "insight", "naming", "plan", "produce", "judge", "race", "cut", "rollout"];
@@ -234,11 +249,14 @@ const LIVE_JS = `
 
   var seenBriefs = {};
   var seenAssets = {};
+  var pendingAssets = {};
   var seenRollout = {};
   var liveLogMode = false;
   var liveLogLinesSeen = 0;
   var readoutLoaded = false;
   var planLoaded = false;
+  var variantsData = null;
+  var namedAssetsData = null;
 
   function inferredLog(text) { logLine(text, false); }
 
@@ -269,8 +287,8 @@ const LIVE_JS = `
     showStage("insight");
     var variants = entry.variants || [];
     addChapter("Act I", variants.length
-      ? "The machine drafts " + variants.length + " creative bets from one cultural moment."
-      : "The machine drafts creative bets from one cultural moment.");
+      ? "The machine drafts " + variants.length + " creative bets from one seed."
+      : "The machine drafts creative bets from one seed.");
     if (variants.length) {
       var row = el("article", "evidence-card tier1 triptych");
       variants.forEach(function (v, i) {
@@ -303,7 +321,7 @@ const LIVE_JS = `
   function renderMissionEvent(entry) {
     showStage("open");
     var c = el("article", "evidence-card tier1 mission-card");
-    c.innerHTML = '<div class="evidence-eyebrow">the input &middot; one cultural moment goes in</div>' +
+    c.innerHTML = '<div class="evidence-eyebrow">the input &middot; one seed goes in</div>' +
       '<div class="evidence-title">' + esc(entry.moment || "") + '</div>' +
       '<p class="evidence-caption">' + esc(entry.objective || "") + '</p>';
     addCard(c, "mission event, live-log.jsonl");
@@ -347,7 +365,7 @@ const LIVE_JS = `
         inferredLog("consulting " + brief.referenceSet.source + ", " + (brief.referenceSet.status || "") + ": " + (brief.referenceSet.note || ""));
       }
       showStage("insight");
-      addChapter("Act I", "The machine drafts creative bets from one cultural moment.");
+      addChapter("Act I", "The machine drafts creative bets from one seed.");
       var c = el("article", "evidence-card");
       c.innerHTML = '<div class="evidence-eyebrow">' + esc(brief.workingTitle || "v" + i) + '</div>' +
         '<p class="evidence-caption">' + esc(brief.assetXElement || "") + '</p>' +
@@ -373,15 +391,66 @@ const LIVE_JS = `
     addCard(c, "plan.json, preRegisteredThresholds");
   }
 
+  async function pollVariants() {
+    if (variantsData) return;
+    var data = await getJSON("variants.json");
+    if (data && Array.isArray(data.variants)) variantsData = data.variants;
+  }
+
+  async function pollNamedAssets() {
+    if (namedAssetsData) return;
+    var data = await getJSON("named-assets.json");
+    if (Array.isArray(data)) namedAssetsData = data;
+  }
+
   var economicsLogged = false;
   var produceShelf = null;
+  var produceBlocks = {};
+
+  function resolveAsset(name) {
+    if (!variantsData || !namedAssetsData) return null;
+    var stem = name.replace(/\\.png$/i, "");
+    var takeMatch = stem.match(/_(A|B)$/i);
+    var heroVersion = takeMatch ? takeMatch[1].toUpperCase() : null;
+    var baseName = takeMatch ? stem.slice(0, -2) : stem;
+    var namedAsset = namedAssetsData.find(function (asset) {
+      return asset.format === "still" && asset.name === baseName;
+    });
+    if (!namedAsset) return null;
+    var variant = variantsData.find(function (candidate) { return candidate.id === namedAsset.variantId; });
+    return variant ? { variant: variant, heroVersion: heroVersion } : null;
+  }
+
+  function ensureLiveVariantBlock(variant) {
+    if (produceBlocks[variant.id]) return produceBlocks[variant.id];
+    if (!produceShelf) {
+      produceShelf = el("article", "evidence-card produce-shelf");
+      addCard(produceShelf, "produced stills discovered from assets/, each from a real generation call");
+    }
+    var color = ANGLE_COLOR[variant.angleType] || "#1a1a1a";
+    var block = el("section", "variant-block");
+    block.id = "variant-block-" + variant.id;
+    block.style.borderLeftColor = color;
+    block.innerHTML = '<div class="variant-block-head"><div class="variant-block-title">' + esc(variant.workingTitle || variant.id) + '</div>' +
+      '<span class="triptych-angle variant-block-angle" style="color:' + color + '">' + esc(variant.angleType || "") + '</span></div>' +
+      '<div class="variant-block-assets"></div><div class="produce-thumb-copy" id="live-copy-' + variant.id + '"></div>';
+    produceShelf.appendChild(block);
+    produceBlocks[variant.id] = block;
+    return block;
+  }
+
   async function pollAssets() {
     var files = await listDir("assets/");
     var pngs = files.filter(function (f) { return f.toLowerCase().endsWith(".png"); });
-    for (var i = 0; i < pngs.length; i++) {
-      var name = pngs[i];
+    pngs.forEach(function (name) { if (!seenAssets[name]) pendingAssets[name] = true; });
+    var queued = Object.keys(pendingAssets);
+    for (var i = 0; i < queued.length; i++) {
+      var name = queued[i];
       if (seenAssets[name]) continue;
+      var resolved = resolveAsset(name);
+      if (!resolved) continue;
       seenAssets[name] = true;
+      delete pendingAssets[name];
       showStage("produce");
       addChapter("Act II", "The machine produces each bet as a finished asset, then scores its own output.");
       if (!liveLogMode && !economicsLogged) {
@@ -389,15 +458,12 @@ const LIVE_JS = `
         inferredLog("economics: stills via codex exec, subscription, no per-token bill; video generation gated behind operator approval");
       }
       if (!liveLogMode) inferredLog("generating " + name.replace(/\\.png$/, "") + " via codex exec");
-      if (!produceShelf) {
-        produceShelf = el("article", "evidence-card produce-shelf");
-        addCard(produceShelf, "produced stills discovered from assets/, each from a real generation call");
-      }
+      var block = ensureLiveVariantBlock(resolved.variant);
       var thumb = el("div", "produce-thumb");
       thumb.setAttribute("data-asset-name", name);
-      thumb.innerHTML = '<div class="produce-frame"><img src="assets/' + esc(name) + '" alt="' + esc(name) + '" /></div>' +
-        '<div class="produce-thumb-copy"><div class="evidence-name">' + esc(name) + '</div></div>';
-      produceShelf.appendChild(thumb);
+      var takeHTML = resolved.heroVersion ? '<span class="take-label">' + esc(resolved.heroVersion) + '</span>' : "";
+      thumb.innerHTML = '<div class="produce-frame"><img src="assets/' + esc(name) + '" alt="' + esc(name) + '" />' + takeHTML + "</div>";
+      block.querySelector(".variant-block-assets").appendChild(thumb);
       var img = thumb.querySelector("img");
       (function (currentThumb, currentImg) {
         if (currentImg) currentImg.addEventListener("load", function () { currentImg.classList.add("clear"); });
@@ -406,7 +472,7 @@ const LIVE_JS = `
           if (currentImg) currentImg.classList.add("clear");
         });
       })(thumb, img);
-      produceShelf.scrollIntoView({ block: "start" });
+      block.scrollIntoView({ block: "start" });
     }
   }
 
@@ -505,27 +571,38 @@ const LIVE_JS = `
   function renderJudgeAndRace(readout) {
     showStage("judge");
     (readout.variants || []).forEach(function (v) {
-      var judge = (readout.judged || []).find(function (j) { return j.variantId === v.id && j.format === "still"; });
-      if (!judge) return;
-      var dims = [["on brief", judge.score.onBrief], ["legible", judge.score.legible], ["shareable", judge.score.shareable]];
-      if (judge.score.brandFit != null) dims.push(["brand fit", judge.score.brandFit]);
       var named = (readout.namedAssets || []).find(function (n) { return n.variantId === v.id && n.format === "still"; });
-      var filename = named ? named.name + ".png" : "";
-      var img = Array.from(document.querySelectorAll(".produce-thumb img")).find(function (candidate) {
-        return candidate.getAttribute("src") === "assets/" + filename;
+      var judges = (readout.judged || []).filter(function (j) { return j.variantId === v.id && j.format === "still"; });
+      judges.forEach(function (judge) {
+        var heroVersion = readString(judge, "heroVersion");
+        var filename = named ? named.name + (heroVersion ? "_" + heroVersion : "") + ".png" : "";
+        var thumb = Array.from(document.querySelectorAll(".produce-thumb[data-asset-name]")).find(function (candidate) {
+          return candidate.getAttribute("data-asset-name") === filename;
+        });
+        var dims = [["on brief", judge.score.onBrief], ["legible", judge.score.legible], ["shareable", judge.score.shareable]];
+        if (judge.score.brandFit != null) dims.push(["brand fit", judge.score.brandFit]);
+        if (thumb) {
+          var frame = thumb.querySelector(".produce-frame");
+          var stamp = el("div", "judge-stamp" + (judge.passed ? "" : " fail"), judge.passed ? "PASS" : "FAIL");
+          frame.appendChild(stamp);
+          requestAnimationFrame(function () { stamp.classList.add("in"); });
+          var score = el("div", "judge-score", dims.map(function (d) { return d[0] + " " + d[1]; }).join(" &middot; "));
+          thumb.appendChild(score);
+          thumb.setAttribute("data-evidence", "1");
+          thumb.dataset.evidenceNote = judge.notes || "";
+        }
+        if (!liveLogMode) inferredLog(v.id + (heroVersion ? " take " + heroVersion : "") + " judge: " +
+          dims.map(function (d) { return d[0] + " " + d[1]; }).join(", ") + " -> " + (judge.passed ? "PASS" : "FAIL"));
       });
-      var thumb = img && img.closest(".produce-thumb");
-      if (thumb) {
-        var frame = thumb.querySelector(".produce-frame");
-        var stamp = el("div", "judge-stamp" + (judge.passed ? "" : " fail"), judge.passed ? "PASS" : "FAIL");
-        frame.appendChild(stamp);
-        requestAnimationFrame(function () { stamp.classList.add("in"); });
-        var score = el("div", "judge-score", dims.map(function (d) { return d[0] + " " + d[1]; }).join(" &middot; "));
-        thumb.appendChild(score);
-        thumb.setAttribute("data-evidence", "1");
-        thumb.dataset.evidenceNote = judge.notes || "";
+
+      var produced = (readout.produced || []).find(function (asset) {
+        return asset.variantId === v.id && asset.format === "still" && typeof asset.copy === "string";
+      });
+      var copyTarget = document.getElementById("live-copy-" + v.id);
+      if (produced && copyTarget) {
+        if (!liveLogMode) inferredLog("copy: " + produced.copy);
+        typewriter(copyTarget, '"' + produced.copy + '"', 1200);
       }
-      if (!liveLogMode) inferredLog(v.id + " judge: " + dims.map(function (d) { return d[0] + " " + d[1]; }).join(", ") + " -> " + (judge.passed ? "PASS" : "FAIL"));
     });
 
     showStage("race");
@@ -697,7 +774,7 @@ const LIVE_JS = `
     var winnersCount = (readout.decided || []).filter(function (d) { return d.verdict === "SCALE"; }).length;
     var videoSeconds = Math.round(renderedVideos.reduce(function (sum, ch) { return sum + (Number(ch.videoDurationSec) || 0); }, 0));
     var items = [
-      { to: 1, label: "cultural moment in" },
+      { to: 1, label: "seed in" },
       { to: (readout.variants || []).length, label: "bets placed" },
       { to: (readout.namedAssets || []).length, label: "assets named" },
       { to: stillsCount, label: "stills made" },
@@ -706,7 +783,7 @@ const LIVE_JS = `
       { to: videoSeconds, label: "seconds of finished video" }
     ];
     var c = el("article", "evidence-card tier1 bill-card");
-    c.innerHTML = '<div class="evidence-eyebrow">the bill</div><p class="bill-lead">Everything the machine produced from one moment.</p>' +
+    c.innerHTML = '<div class="evidence-eyebrow">the bill</div><p class="bill-lead">Everything the machine produced from one seed.</p>' +
       '<div class="bill-grid">' + items.map(function (item, i) {
         return '<div class="bill-item"><div class="bill-num" id="liveBill' + i + '">0</div><div class="bill-label">' + esc(item.label) + '</div></div>';
       }).join("") + '</div>';
@@ -737,6 +814,8 @@ const LIVE_JS = `
   async function poll() {
     await pollLiveLog();
     await pollBriefs();
+    await pollVariants();
+    await pollNamedAssets();
     await pollPlan();
     await pollAssets();
     await pollRollout();

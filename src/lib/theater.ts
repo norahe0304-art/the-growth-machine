@@ -21,8 +21,8 @@
  *   white-out overlays: the earlier approval-gate takeover language was retired on taste grounds).
  *   Both human approvals (station 1 concepts, station 8b video spend) now live only as THE WORK log
  *   lines; causality is preserved by timeline order alone -- nothing produced or rendered is queued
- *   before the log line that approved it. The three produced stills land as a shelf of thumbnails
- *   with each judge verdict stamped onto its own corner (no separate scorecards). The race draws its
+ *   before the log line that approved it. Produced stills land in angle-colored variant blocks, with
+ *   each judge verdict stamped onto its own thumbnail corner (no separate scorecards). The race draws its
  *   preregistered thresholds as dashed rules on the chart and presses each verdict stamp down at its
  *   curve's terminal point; the SCALE finalCTR counts up as a restrained workspace figure. The winning still
  *   is the cut, held static forever (no video tag ever added to it). Rollout channel cuts stand in
@@ -170,10 +170,19 @@ interface TheaterVariantPayload {
   copy: string;
   imgURI: string | null;
   judge: { onBrief: number; legible: number; shareable: number; brandFit: number | null; passed: boolean; notes: string } | null;
+  stills: TheaterStillPayload[];
   curve: { predictedCTR: number[]; shareRate: number[]; seed: string } | null;
   decision: { verdict: Decision["verdict"]; reason: string; finalCTR: number; source: Decision["source"] } | null;
   referenceSet: { source: string; status: string; note: string } | null;
   rightsNote: string | null;
+}
+
+interface TheaterStillPayload {
+  name: string;
+  heroVersion: string | null;
+  copy: string;
+  imgURI: string | null;
+  judge: { onBrief: number; legible: number; shareable: number; brandFit: number | null; passed: boolean; notes: string } | null;
 }
 
 interface TheaterChannelPayload {
@@ -230,9 +239,34 @@ async function buildVariantPayload(readout: WaveReadout, variant: Variant): Prom
   const motionNamed = readout.namedAssets.find((n) => n.variantId === variant.id && n.format === "motion");
   const stillProduced = readout.produced.find((p) => p.variantId === variant.id && p.format === "still");
   const stillJudge = readout.judged.find((j) => j.variantId === variant.id && j.format === "still");
+  const stillJudges = readout.judged.filter((j) => j.variantId === variant.id && j.format === "still");
   const curve = readout.simulated.find((s) => s.variantId === variant.id && s.format === "still");
   const decision = readout.decided.find((d) => d.variantId === variant.id && d.format === "still");
   const imgURI = await assetDataURI(stillProduced?.assetPath ?? null);
+  const stills = await Promise.all(
+    readout.produced
+      .filter((p) => p.variantId === variant.id && p.format === "still")
+      .map(async (produced): Promise<TheaterStillPayload> => {
+        const heroVersion = readString(produced, "heroVersion");
+        const judge = stillJudges.find((candidate) => readString(candidate, "heroVersion") === heroVersion);
+        return {
+          name: produced.name,
+          heroVersion,
+          copy: produced.copy,
+          imgURI: await assetDataURI(produced.assetPath),
+          judge: judge
+            ? {
+                onBrief: judge.score.onBrief,
+                legible: judge.score.legible,
+                shareable: judge.score.shareable,
+                brandFit: (judge.score as unknown as { brandFit?: number }).brandFit ?? null,
+                passed: judge.passed,
+                notes: judge.notes,
+              }
+            : null,
+        };
+      })
+  );
 
   return {
     id: variant.id,
@@ -258,6 +292,7 @@ async function buildVariantPayload(readout: WaveReadout, variant: Variant): Prom
           notes: stillJudge.notes,
         }
       : null,
+    stills,
     curve: curve ? { predictedCTR: curve.predictedCTR, shareRate: curve.shareRate, seed: curve.seed } : null,
     decision: decision
       ? { verdict: decision.verdict, reason: decision.reason, finalCTR: decision.finalCTR, source: decision.source }
@@ -555,25 +590,35 @@ body { font-family: var(--font-sans); font-weight: 300; line-height: 1.5; overfl
 .plan-table th { text-align: left; text-transform: uppercase; letter-spacing: 0.04em; font-size: 10px; color: var(--muted); padding: 6px 8px; border-bottom: 1px solid var(--ink); }
 .plan-table td { padding: 8px; border-bottom: 1px solid var(--hairline); }
 
-/* produce (公理一 Tier 2): the three stills land on one shelf as
-   thumbnails, not three stacked full cards. Each judge verdict is stamped
-   straight onto its own thumbnail's corner (公理一: 不再单独成卡) instead
-   of opening a separate scorecard. max-height still caps the shelf so no
-   render runs the card off one screen (60vh contract, waves/wave-04/STATE.md).
-   .produce-media survives for theater-live.ts, which shows one still per
-   file with no shelf. */
+/* produce (公理一 Tier 2): stills land in one block per creative bet, not
+   one flat shelf that severs the asset from its plan. The angle-colored
+   rule carries the triptych's lineage forward; thumbnails remain peers
+   inside each block. Each judge verdict is stamped straight onto its own
+   thumbnail's corner (公理一: 不再单独成卡) instead of opening a separate
+   scorecard. max-height still caps the shelf so no render runs the card off
+   one screen (60vh contract, waves/wave-04/STATE.md). */
 .produce-media { display: flex; align-items: center; justify-content: center; max-height: 60vh; overflow: hidden; background: #f4f3f0; }
 .produce-media img { max-width: 100%; max-height: 60vh; width: auto; height: auto; object-fit: contain; display: block; filter: blur(14px); opacity: 0.35; transition: filter 1.1s ease, opacity 1.1s ease; }
 .produce-media img.clear { filter: blur(0); opacity: 1; }
 .produce-copy { font-size: 13px; color: var(--muted); margin-top: 10px; min-height: 1.6em; }
 
-.produce-shelf { display: flex; gap: 12px; align-items: flex-start; }
+.produce-shelf { display: flex; flex-direction: column; gap: 18px; }
+.variant-block { padding-left: 12px; border-left: 2px solid var(--hairline); }
+.variant-block-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 9px; }
+.variant-block-title { font-size: 14px; font-weight: 400; line-height: 1.2; }
+.variant-block-angle { margin-top: 0; }
+.variant-block-assets { display: flex; gap: 12px; align-items: flex-start; }
 .produce-thumb { flex: 1 1 0; opacity: 0; transform: translateY(-14px); transition: opacity 0.5s ease, transform 0.55s cubic-bezier(0.2, 1.15, 0.32, 1); }
 .produce-thumb.in { opacity: 1; transform: translateY(0); }
 .produce-frame { position: relative; height: 24vh; background: #f4f3f0; overflow: hidden; display: flex; align-items: center; justify-content: center; }
 .produce-frame img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; filter: blur(12px); opacity: 0.4; transition: filter 1s ease, opacity 1s ease; }
 .produce-frame img.clear { filter: blur(0); opacity: 1; }
 .produce-thumb-copy { font-size: 11px; color: var(--muted); margin-top: 7px; line-height: 1.4; }
+.take-label {
+  position: absolute; left: 8px; bottom: 8px; z-index: 2;
+  min-width: 22px; padding: 2px 6px; border: 1px solid var(--hairline); background: rgba(255,255,255,0.82);
+  font-family: var(--font-mono); font-size: 10px; line-height: 1.2; text-align: center; color: var(--muted);
+}
 
 /* the customs stamp: the judge verdict pressed into the still's corner,
    a small deliberate rotation, slamming down to rest (北极星2). */
@@ -1026,7 +1071,7 @@ const THEATER_JS = `
     // 数字取自真数据(variants.length / planDays),非编造。
     var openingCaption = DATA.variants.length + " variants will run a simulated " + DATA.planDays +
       " day test. The pass and kill lines were locked before any data came in.";
-    c.innerHTML = '<div class="evidence-eyebrow">the input &middot; one cultural moment goes in</div>' +
+    c.innerHTML = '<div class="evidence-eyebrow">the input &middot; one seed goes in</div>' +
       '<div class="evidence-title">' + esc(DATA.moment) + '</div>' +
       '<p class="evidence-caption">' + esc(openingCaption) + '</p>';
     addCard(c, "readout.moment + variants.length + plan.dates.days + plan.preRegisteredThresholds");
@@ -1046,7 +1091,7 @@ const THEATER_JS = `
   queueHeader("insight", "station 1 / insight");
   queueAction("reading brand/openai/brand.md");
   queueAction("reading brand/openai/history.md");
-  queueChapter("Act I", "The machine drafts " + DATA.variants.length + " creative bets from one cultural moment.");
+  queueChapter("Act I", "The machine drafts " + DATA.variants.length + " creative bets from one seed.");
   // The three proposals land side by side (公理三: 并列关系用并列版式), one
   // column sinking in as its own log line finishes typing, all sharing one
   // row -- workingTitle in sans, the asset x element formula, the angle
@@ -1150,59 +1195,81 @@ const THEATER_JS = `
   queueHeader("produce", "station 5 / produce");
   queueAction("economics: stills via codex exec, subscription, no per-token bill; video generation gated behind operator approval");
   queueChapter("Act II", "The machine produces each bet as a finished asset, then scores its own output.");
-  // The three stills land on one shelf as thumbnails (公理一 Tier 2), each
-  // sinking in on its own "generating" log line; its hook copy types under
-  // it. The judge verdict is stamped onto each thumbnail's corner later
-  // (see JUDGE) rather than opening a scorecard of its own.
+  // Each bet gets one angle-colored block (公理一 Tier 2); its stills remain
+  // peers in a row and sink in on their own "generating" log lines. Copy
+  // types once beneath the block. Judge verdicts stamp each thumbnail later
+  // (see JUDGE) rather than opening scorecards of their own.
   var produceShelf = null;
+  var produceBlocks = {};
+  function ensureProduceBlock(v) {
+    if (produceBlocks[v.id]) return produceBlocks[v.id];
+    if (!produceShelf) {
+      produceShelf = el("article", "evidence-card produce-shelf");
+      addCard(produceShelf, "produced.assetPath, real codex exec image calls, wave " + DATA.waveNumber);
+    }
+    var block = el("section", "variant-block");
+    block.id = "variant-block-" + v.id;
+    block.style.borderLeftColor = v.angleColor;
+    block.innerHTML = '<div class="variant-block-head"><div class="variant-block-title">' + esc(v.workingTitle) + '</div>' +
+      '<span class="triptych-angle variant-block-angle" style="color:' + v.angleColor + '">' + esc(v.angleType) + '</span></div>' +
+      '<div class="variant-block-assets"></div><div class="produce-thumb-copy" id="copy-' + v.id + '"></div>';
+    produceShelf.appendChild(block);
+    produceBlocks[v.id] = block;
+    return block;
+  }
   DATA.variants.forEach(function (v) {
-    queueAction("generating " + v.stillName + " via codex exec", function () {
-      if (!produceShelf) {
-        produceShelf = el("article", "evidence-card produce-shelf");
-        addCard(produceShelf, "produced.assetPath, real codex exec image calls, wave " + DATA.waveNumber);
-      }
-      var thumb = el("div", "produce-thumb");
-      thumb.id = "thumb-" + v.id;
-      var frameHTML = v.imgURI
-        ? '<div class="produce-frame"><img id="img-' + v.id + '" src="' + v.imgURI + '" alt="' + esc(v.stillName) + '" /></div>'
-        : '<div class="produce-frame"><span class="evidence-caption">no still</span></div>';
-      thumb.innerHTML = frameHTML + '<div class="produce-thumb-copy" id="copy-' + v.id + '"></div>';
-      produceShelf.appendChild(thumb);
-      requestAnimationFrame(function () { thumb.classList.add("in"); });
-      produceShelf.scrollIntoView({ block: "start" });
-      setTimeout(function () { var img = document.getElementById("img-" + v.id); if (img) img.classList.add("clear"); }, 250);
+    v.stills.forEach(function (still, i) {
+      queueAction("generating " + still.name + (still.heroVersion ? " take " + still.heroVersion : "") + " via codex exec", function () {
+        var block = ensureProduceBlock(v);
+        var thumb = el("div", "produce-thumb");
+        thumb.id = "thumb-" + v.id + "-" + i;
+        var takeHTML = still.heroVersion ? '<span class="take-label">' + esc(still.heroVersion) + '</span>' : "";
+        var frameHTML = still.imgURI
+          ? '<div class="produce-frame"><img id="img-' + v.id + "-" + i + '" src="' + still.imgURI + '" alt="' + esc(still.name) + '" />' + takeHTML + "</div>"
+          : '<div class="produce-frame"><span class="evidence-caption">no still</span>' + takeHTML + "</div>";
+        thumb.innerHTML = frameHTML;
+        block.querySelector(".variant-block-assets").appendChild(thumb);
+        requestAnimationFrame(function () { thumb.classList.add("in"); });
+        block.scrollIntoView({ block: "start" });
+        setTimeout(function () { var img = document.getElementById("img-" + v.id + "-" + i); if (img) img.classList.add("clear"); }, 250);
+      });
     });
-    queueAction("copy: " + v.copy, function () {
+    var blockCopy = v.stills.length ? v.stills[0].copy : v.copy;
+    queueAction("copy: " + blockCopy, function () {
+      ensureProduceBlock(v);
       var target = document.getElementById("copy-" + v.id);
-      if (target) typewriter(target, '"' + v.copy + '"', 1200);
+      if (target) typewriter(target, '"' + blockCopy + '"', 1200);
     });
   });
 
   // ================= JUDGE =================
   queueHeader("judge", "station 6 / judge");
   DATA.variants.forEach(function (v) {
-    var j = v.judge;
-    var line = j
-      ? v.id + " judge: onBrief " + j.onBrief + ", legible " + j.legible + ", shareable " + j.shareable + (j.brandFit != null ? ", brandFit " + j.brandFit : "") + " -> " + (j.passed ? "PASS" : "FAIL")
-      : v.id + " judge: no score recorded";
-    queueAction(line, function () {
-      // Stamp the verdict onto this still's own thumbnail corner (公理一:
-      // 不再单独成卡), a customs-stamp press-down, not a fresh scorecard.
-      var frame = document.querySelector("#thumb-" + v.id + " .produce-frame");
-      if (frame) {
-        var stamp = el("div", "judge-stamp" + (j && !j.passed ? " fail" : ""), j ? (j.passed ? "PASS" : "FAIL") : "NO SCORE");
-        frame.appendChild(stamp);
-        requestAnimationFrame(function () { stamp.classList.add("in"); });
-      }
-      var thumb = document.getElementById("thumb-" + v.id);
-      if (thumb) {
-        if (j) {
-          var scoreLine = el("div", "judge-score", "on-brief " + j.onBrief + " &middot; legible " + j.legible + " &middot; shareable " + j.shareable + (j.brandFit != null ? " &middot; brand " + j.brandFit : ""));
-          thumb.appendChild(scoreLine);
+    v.stills.forEach(function (still, i) {
+      var j = still.judge;
+      var take = still.heroVersion ? " take " + still.heroVersion : "";
+      var line = j
+        ? v.id + take + " judge: onBrief " + j.onBrief + ", legible " + j.legible + ", shareable " + j.shareable + (j.brandFit != null ? ", brandFit " + j.brandFit : "") + " -> " + (j.passed ? "PASS" : "FAIL")
+        : v.id + take + " judge: no score recorded";
+      queueAction(line, function () {
+        // Stamp the verdict onto this still's own thumbnail corner (公理一:
+        // 不再单独成卡), a customs-stamp press-down, not a fresh scorecard.
+        var thumb = document.getElementById("thumb-" + v.id + "-" + i);
+        var frame = thumb && thumb.querySelector(".produce-frame");
+        if (frame) {
+          var stamp = el("div", "judge-stamp" + (j && !j.passed ? " fail" : ""), j ? (j.passed ? "PASS" : "FAIL") : "NO SCORE");
+          frame.appendChild(stamp);
+          requestAnimationFrame(function () { stamp.classList.add("in"); });
         }
-        thumb.setAttribute("data-evidence", "1");
-        thumb.dataset.evidenceNote = j ? j.notes : "no judge record for this asset";
-      }
+        if (thumb) {
+          if (j) {
+            var scoreLine = el("div", "judge-score", "on-brief " + j.onBrief + " &middot; legible " + j.legible + " &middot; shareable " + j.shareable + (j.brandFit != null ? " &middot; brand " + j.brandFit : ""));
+            thumb.appendChild(scoreLine);
+          }
+          thumb.setAttribute("data-evidence", "1");
+          thumb.dataset.evidenceNote = j ? j.notes : "no judge record for this asset";
+        }
+      });
     });
   });
 
@@ -1424,7 +1491,7 @@ const THEATER_JS = `
     var winnersCount = DATA.variants.filter(function (v) { return v.decision && v.decision.verdict === "SCALE"; }).length;
     var videoSeconds = Math.round(renderedVideos.reduce(function (a, ch) { return a + (ch.durationSec || 0); }, 0));
     var items = [
-      { to: 1, label: "cultural moment in" },
+      { to: 1, label: "seed in" },
       { to: DATA.variants.length, label: "bets placed" },
       { to: DATA.namedAssets.length, label: "assets named" },
       { to: stillsCount, label: "stills made" },
@@ -1434,7 +1501,7 @@ const THEATER_JS = `
     ];
     var c = el("article", "evidence-card tier1 bill-card");
     c.innerHTML = '<div class="evidence-eyebrow">the bill</div>' +
-      '<p class="bill-lead">Everything the machine produced from one moment.</p>' +
+      '<p class="bill-lead">Everything the machine produced from one seed.</p>' +
       '<div class="bill-grid">' + items.map(function (it, i) {
         return '<div class="bill-item"><div class="bill-num" id="bill' + i + '">0</div><div class="bill-label">' + esc(it.label) + "</div></div>";
       }).join("") + "</div>";
