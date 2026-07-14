@@ -20,7 +20,7 @@ description: >
   stdin-free, the agent writes the JSON itself) + scripts/machine.mjs (naming/plan/simulate/
   decide/rollout-validate/report/learn, stdin-JSON-in/stdout-JSON-out) + codex exec GPT-Image
   (produce's image call, optional) + bin/growth-machine measure (measure station, unchanged,
-  post-hoc)
+  post-hoc) + skill/references/operator-funnel.md (operator control-surface mechanics)
 [OUTPUT]: waves/wave-NN/{brief-v1.json, brief-v2.json, brief-v3.json, plan.json,
   assets/*.png, readout.json, report.html} + one appended library.jsonl line per wave
 [POS]: the skill-layer twin of bin/growth-machine, same ten files in src/, same ten-station
@@ -129,6 +129,13 @@ new policy, just the ten things that actually trip a run:
   it only replays a `WaveReadout` that already shipped.
 - cwd must be the repo root (`the-growth-machine/`) before calling anything, every scripted
   stage resolves `waves/` and `library.jsonl` off `process.cwd()`.
+- A spark that cannot be anchored with a rides claim, heat evidence, source, and date to a
+  real, dated source gets cut before it is written down. Fabricated heat is never acceptable.
+- The selection stage, Card 2 treatments, never generates a finished AI image. Only a real
+  reference screenshot or approximation, or an explicitly illustrative preview, crosses the
+  operator's desk at that gate.
+- A treatment card shown to the operator carries `illustrativeLabel: "template preview,
+  illustrative"`. It is never presented as a finished asset.
 
 ## The formula, fixed
 
@@ -239,6 +246,70 @@ station 1 with the operator's feedback injected into a fresh split, and the reje
 is recorded in the wave's record. The second gate, real spend on video generation,
 works the same way. An agent running this skill on the operator's behalf relays these
 gates verbatim and waits; it does not approve them itself.
+
+### The three-card funnel
+
+The ten stations are the machine's internal organs. The three-card funnel is the operator's
+control surface over them. Full mechanics live in
+[`skill/references/operator-funnel.md`](references/operator-funnel.md). This section states
+the contract only. The funnel is operator-held and is not yet validated by a script.
+
+**Card 1, sparks.** Station 1 switches from single-shot mode to volume mode and produces 10
+to 20 raw, unpolished one-line sparks before any `Variant` exists. Before writing a spark,
+station 1 runs a trend street-scan against TikTok Creative Center, a platform trend tool, or
+an ad library and writes it to `waves/wave-NN/stage1-anchors.json`. Every spark names the
+real, currently-trending format or meme it rides, its heat evidence, source, and date. A
+spark without a real, dated anchor is cut before it is written down. Fabricating heat or
+evidence is forbidden.
+
+The operator circles 2 to 4 sparks. Only the circled lineage develops. That lineage yields
+exactly 3 variants, one per `angleType`, using the existing asset x one new element formula.
+The formula and the 3-variant, one-per-`angleType` shape do not change. Only their input
+changes. When the circled sparks do not cover all three angle types, station 1 extends or
+branches a circled lineage to fill the shortfall and never introduces an uncircled idea.
+Each backfilled variant carries the optional in-memory field
+`completionLabel: "machine-completed"`. This field is not yet validated by a script. If the
+operator rejects the spark batch, the entire batch returns to station 1 with the feedback
+folded into a fresh split. The rejection is recorded in the wave's record, in direct
+parallel with the existing accounting for a rejected variant set.
+
+Each spark must clear three death tests before it can develop:
+
+1. **The identity-asset test.** The asset is lived material that belongs to the operator
+   personally, such as a catchphrase, a family member's actual words, hometown vernacular,
+   or the operator's own well-known story. A prop, abstract mechanic, or device fails.
+2. **The one-second test.** A stranger understands the spark within one second and could
+   retell it at a dinner table.
+3. **The anchor test.** The spark names a real, currently-trending format or meme and its
+   dated heat evidence and source from the street-scan. An unanchored spark is cut.
+
+**Card 2, treatments.** A circled concept receives one treatment card, not an AI-generated
+finished image. The card carries a direct screenshot of the anchor's real viral reference,
+or a close approximation, marked for internal reference use only; a three-beat adaptation;
+one sample line of copy; and a shooting spec that names who shoots what. Its cover image is
+what the operator sees and carries `illustrativeLabel: "template preview, illustrative"`.
+The operator uses this card to choose concepts for Card 3 and set the visual register.
+
+All AI image generation for the concept moves into production after this selection. A
+UGC-format concept defaults to a real `ParticipationKit` plus a real creator shot list,
+never an AI still standing in for real user content. An AI still is valid only when the
+channel's real deliverable is static or when the asset is explicitly an illustrative
+storyboard preview. Station 8b's `ugc-loop`, `ParticipationKit`, and `illustrativeLabel`
+rules remain controlling.
+
+**Card 3, the race and channels.** The preregistered simulation in stations 7 and 8 runs
+unchanged and remains the evidence layer. Two votes determine the final verdict. The
+operator may kill an asset that station 8 passed with `SCALE`; that kill is final and the
+machine cannot revive it. The machine may return `KILL`; the operator may override that
+machine kill and advance the asset. A winner enters station 8b exactly as documented, and
+the real-spend gate on video generation does not change. Every channel cut earns its own
+verdict. Every `PostKit` requires the operator's final sign-off before anything ships.
+
+`theater-live` is the live broadcast. The stream opens when the wave opens, and the operator
+acts on the cards in real time. `theater` is the recorded replay produced after the wave has
+shipped. The `.mp4` file is cut footage assembled from either. All three read the same
+`WaveReadout` data. Only the tense differs, and every shown claim remains traceable to that
+record.
 
 ## Station 3, naming (scripted, deterministic, no LLM)
 
