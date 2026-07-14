@@ -15,7 +15,7 @@
   headless rather than a persistent reasoning loop. Whoever runs this (a shell, a script, a
   human, another agent) is the orchestrator; codex exec is the LLM engine for
   insight/brief/judge/produce/rollout.
-[PROTOCOL]: update this header on change, then check CLAUDE.md
+[PROTOCOL]: 变更时更新此头部，然后检查 AGENTS.md
 -->
 
 **Station index** — jump straight to a station without reading top to bottom:
@@ -44,6 +44,13 @@ identical to `SKILL.md`, call `scripts/machine.mjs`, do not reimplement.
 cwd must be the repo root. Confirm with `ls scripts/machine.mjs`. Do not set
 `OPENAI_API_KEY`, `plan`'s one rationale sentence should stay on its deterministic mock
 path in skill mode.
+
+Before station 1 starts, run `node scripts/machine.mjs theater-live <N>` to generate
+`waves/wave-NN/live.html`. On macOS, `open waves/wave-NN/live.html` opens the workbench,
+but live polling requires HTTP because `file://` cannot fetch, so serve the repo root with
+`python3 -m http.server` first and open the served URL. The operator should watch the live
+workbench from the first station onward so the station 1 concepts gate and station 8b video
+spend gate land with their context already visible. The workbench is the promise.
 
 Check `brand/<pack>/` for a brand pack, default pack is `openai`. When the directory
 exists, Read all four files, `brand.md`, `design.md`, `channels.md`, `history.md`, and

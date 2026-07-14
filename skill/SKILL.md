@@ -30,7 +30,7 @@ description: >
   paid OpenAI API key in CLI mode, the agent's own weights in skill mode. See CODEX.md for
   the Codex CLI equivalent of this
   file, same stations, same contracts, `codex exec` idiom instead of native reasoning.
-[PROTOCOL]: update this header on change, then check CLAUDE.md
+[PROTOCOL]: 变更时更新此头部，然后检查 AGENTS.md
 -->
 
 **Station index** — jump straight to a station without reading top to bottom:
@@ -79,6 +79,13 @@ stage resolves `waves/` and `library.jsonl` off `process.cwd()`, the same way th
 CLI does. Confirm with `ls scripts/machine.mjs` first. Do not set `OPENAI_API_KEY`, leaving
 it unset keeps `plan`'s one rationale sentence on its deterministic mock path, which is the
 correct behavior in skill mode (rules decide the plan, not a model call).
+
+Before station 1 starts, run `node scripts/machine.mjs theater-live <N>` to generate
+`waves/wave-NN/live.html`. On macOS, `open waves/wave-NN/live.html` opens the workbench,
+but live polling requires HTTP because `file://` cannot fetch, so serve the repo root with
+`python3 -m http.server` first and open the served URL. The operator should watch the live
+workbench from the first station onward so the station 1 concepts gate and station 8b video
+spend gate land with their context already visible. The workbench is the promise.
 
 Check `brand/<pack>/` for a brand pack, default pack is `openai`. When the directory
 exists, Read all four files, `brand.md`, `design.md`, `channels.md`, `history.md`, and

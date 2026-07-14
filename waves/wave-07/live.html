@@ -1,38 +1,314 @@
-/**
- * [INPUT]: depends on theater.ts's exported THEATER_CSS and on wave files discovered over http:
- *   live-log.jsonl, brief-v{1,2,3}.json, plan.json, assets/, assets/rollout/, and readout.json
- * [OUTPUT]: exports renderTheaterLive(waveNumber) -> string, a self-contained live workbench that
- *   polls every two seconds and renders mission-card, triptych, produce-shelf with judge-stamps,
- *   thresholded race-card, hero-card, rollout-shelves, bill-card, chapter headers, lightbox, and
- *   the next-station empty state as the wave lands
- * [POS]: the real-time twin of theater.ts's finished-wave replay. It preserves the station 1 and
- *   station 8b approval overlays and the file-driven polling contract while using the replay's
- *   final evidence components. Live images stay as relative asset paths because this page runs
- *   against an http-served wave directory rather than baked data URIs.
- * [PROTOCOL]: 变更时更新此头部，然后检查 AGENTS.md
- */
-import { THEATER_CSS } from "./theater.js";
-
-function escapeHTML(s: string): string {
-  return s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
-
-export function renderTheaterLive(waveNumber: number): string {
-  const waveLabel = String(waveNumber).padStart(2, "0");
-
-  return `<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>The Growth Machine, Live &middot; wave ${escapeHTML(waveLabel)}</title>
+<title>The Growth Machine, Live &middot; wave 07</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
-${THEATER_CSS}
-${LIVE_EXTRA_CSS}
+
+:root {
+  color-scheme: light;
+  --paper: #ffffff;
+  --ink: #1a1a1a;
+  --muted: #66686a;
+  --hairline: #ececec;
+  --font-sans: "Helvetica Neue", Helvetica, Inter, arial, ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: var(--paper); color: var(--ink); }
+body { font-family: var(--font-sans); font-weight: 300; line-height: 1.5; overflow: hidden; }
+.theater { height: 100vh; width: 100vw; display: flex; flex-direction: column; }
+
+.topbar {
+  flex: 0 0 auto; height: 44px; display: flex; align-items: center; justify-content: space-between;
+  padding: 0 20px; border-bottom: 1px solid var(--hairline);
+}
+.topbar-word { font-size: 12px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; }
+.topbar-stations { display: flex; gap: 10px; list-style: none; margin: 0; padding: 0; }
+.topbar-stations li { width: 7px; height: 7px; border: 1px solid var(--muted); background: transparent; }
+.topbar-stations li.active { background: var(--ink); border-color: var(--ink); }
+.topbar-stations li.done { background: var(--hairline); border-color: var(--muted); }
+
+.workspace { flex: 1 1 auto; display: flex; min-height: 0; }
+.panel { display: flex; flex-direction: column; min-height: 0; }
+.panel-work { flex: 0 0 38%; border-right: 1px solid var(--hairline); }
+.panel-evidence { flex: 1 1 62%; }
+.panel-heading {
+  flex: 0 0 auto; font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em;
+  color: var(--muted); padding: 14px 20px 10px; border-bottom: 1px solid var(--hairline);
+}
+
+.log-stream { flex: 1 1 auto; overflow-y: auto; padding: 14px 20px 40px; scroll-behavior: smooth; }
+.log-line { font-size: 13px; line-height: 1.6; color: var(--muted); margin: 1px 0; white-space: pre-wrap; word-break: break-word; }
+.log-line.header { color: var(--ink); font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; font-size: 11px; margin: 14px 0 4px; }
+.log-line .cursor { display: inline-block; width: 6px; height: 12px; background: var(--ink); margin-left: 2px; vertical-align: -2px; animation: blink 0.9s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+.evidence-stack { flex: 1 1 auto; overflow-y: auto; padding: 16px 18px 24px; display: flex; flex-direction: column; gap: 24px; scroll-behavior: smooth; }
+/* Flexbox gives every child an automatic min-height of 0 the instant it has
+   overflow != visible. Without flex-shrink:0, once total card height exceeds the
+   panel's height, the flex algorithm crushes that one card down to a
+   sliver instead of leaving it at its natural content size and letting the
+   panel scroll. Every card keeps its real height; the panel scrolls. */
+.evidence-stack > * { flex-shrink: 0; }
+
+/* ------------------------------------------------------------------
+   Tiered evidence, no card chrome. 公理一: hierarchy is carried by size,
+   whitespace and alignment -- not by borders. A box drawn around every
+   fact is the AI-layout birthmark; it is gone. Hairline survives only
+   inside a real data table and around the money-shot media stage.
+   Entrance (北极星2): sink from just above and settle with a gentle
+   physical overshoot -- a thing landing, not a fade materialising.
+   ------------------------------------------------------------------ */
+.evidence-card {
+  padding: 12px; background: #fdfcf9; opacity: 0; transform: translateY(-18px);
+  transition: opacity 0.5s ease, transform 0.62s cubic-bezier(0.2, 1.15, 0.32, 1);
+  cursor: default;
+}
+.evidence-card.in { opacity: 1; transform: translateY(0); }
+.evidence-card[data-evidence] { cursor: pointer; }
+
+.tier1 { padding: 14px 12px 16px; }
+/* Tier 3 -- the footnotes. Small, muted, tucked right under the beat it
+   annotates: name lineage, thresholds, library rows. */
+.tier3 { padding: 12px; }
+.tier3 .evidence-eyebrow { margin-bottom: 4px; }
+
+.evidence-title { font-family: var(--font-sans); font-weight: 400; font-size: 16px; margin: 0 0 7px; line-height: 1.18; }
+.tier1 .evidence-title { font-size: 18px; }
+.mission-card .evidence-title { font-size: 31px; line-height: 1.08; max-width: 14em; }
+.evidence-eyebrow { display: flex; align-items: center; gap: 10px; font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); margin-bottom: 10px; white-space: nowrap; }
+.evidence-eyebrow::after { content: ""; flex: 1 1 auto; border-top: 1px solid var(--hairline); }
+.evidence-caption { font-size: 12px; line-height: 1.42; color: var(--muted); margin: 6px 0 0; }
+.evidence-name { font-family: var(--font-mono); font-size: 11px; color: var(--ink); word-break: break-all; }
+
+/* ------------------------------------------------------------------
+   Chapter header, in the flow (公理二, revised): the narrative spoken as
+   an oversized sans line with big air above and below, scrolling past
+   as part of the evidence stream -- no full-screen takeover, no white-out
+   pause. This is how a zero-context marketer follows the story: moment in
+   -> three bets -> machine grades itself -> race -> it kills its own ->
+   winner ships -> library smarter. */
+.chapter { padding: 18px 12px; background: var(--paper); }
+.chapter-line { font-family: var(--font-sans); font-weight: 400; font-size: 18px; line-height: 1.32; color: var(--ink); max-width: 31em; margin: 0; }
+.chapter-index { display: flex; align-items: center; gap: 10px; font-family: var(--font-sans); font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); margin-bottom: 10px; }
+.chapter-index::after { content: ""; flex: 1 1 auto; border-top: 1px solid var(--hairline); }
+
+/* insight cards */
+.variant-row { display: flex; gap: 8px; font-size: 13px; margin: 4px 0; }
+.variant-row b { font-weight: 400; }
+.angle-badge { display: inline-block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; border: 1px solid currentColor; padding: 2px 7px; margin-top: 8px; }
+
+/* ------------------------------------------------------------------
+   Triptych (公理三): three proposals side by side, one entrance each as
+   its own log line types, all landing in the same row. Equal columns,
+   a single hairline rule between them, no boxes. */
+.triptych { display: flex; gap: 0; align-items: stretch; }
+.triptych-cell { flex: 1 1 0; padding: 0 14px; opacity: 0; transform: translateY(-14px); transition: opacity 0.5s ease, transform 0.55s cubic-bezier(0.2, 1.15, 0.32, 1); }
+.triptych-cell.in { opacity: 1; transform: translateY(0); }
+.triptych-cell + .triptych-cell { border-left: 1px solid var(--hairline); }
+.triptych-cell:first-child { padding-left: 2px; }
+.triptych-cell:last-child { padding-right: 2px; }
+.triptych-num { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+.triptych-title { font-family: var(--font-sans); font-size: 16px; line-height: 1.18; margin: 0 0 8px; }
+.triptych-formula { font-size: 12px; line-height: 1.45; margin-bottom: 4px; }
+.triptych-formula b { font-weight: 400; }
+.triptych-formula .x { color: var(--muted); padding: 0 3px; }
+.triptych-angle { display: inline-block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; border: 1px solid currentColor; padding: 2px 7px; margin-top: 10px; }
+
+/* naming */
+.name-segments { font-family: var(--font-mono); font-size: 13px; line-height: 2; word-break: break-all; }
+.name-segments .segment { opacity: 0; transition: opacity 0.3s ease; }
+.name-segments .segment.in { opacity: 1; }
+.name-list .evidence-name { display: block; margin: 3px 0; opacity: 0; transition: opacity 0.3s ease; }
+.name-list .evidence-name.in { opacity: 1; }
+
+/* plan */
+.plan-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.plan-table th { text-align: left; text-transform: uppercase; letter-spacing: 0.04em; font-size: 10px; color: var(--muted); padding: 6px 8px; border-bottom: 1px solid var(--ink); }
+.plan-table td { padding: 8px; border-bottom: 1px solid var(--hairline); }
+
+/* produce (公理一 Tier 2): the three stills land on one shelf as
+   thumbnails, not three stacked full cards. Each judge verdict is stamped
+   straight onto its own thumbnail's corner (公理一: 不再单独成卡) instead
+   of opening a separate scorecard. max-height still caps the shelf so no
+   render runs the card off one screen (60vh contract, waves/wave-04/STATE.md).
+   .produce-media survives for theater-live.ts, which shows one still per
+   file with no shelf. */
+.produce-media { display: flex; align-items: center; justify-content: center; max-height: 60vh; overflow: hidden; background: #f4f3f0; }
+.produce-media img { max-width: 100%; max-height: 60vh; width: auto; height: auto; object-fit: contain; display: block; filter: blur(14px); opacity: 0.35; transition: filter 1.1s ease, opacity 1.1s ease; }
+.produce-media img.clear { filter: blur(0); opacity: 1; }
+.produce-copy { font-size: 13px; color: var(--muted); margin-top: 10px; min-height: 1.6em; }
+
+.produce-shelf { display: flex; gap: 12px; align-items: flex-start; }
+.produce-thumb { flex: 1 1 0; opacity: 0; transform: translateY(-14px); transition: opacity 0.5s ease, transform 0.55s cubic-bezier(0.2, 1.15, 0.32, 1); }
+.produce-thumb.in { opacity: 1; transform: translateY(0); }
+.produce-frame { position: relative; height: 24vh; background: #f4f3f0; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.produce-frame img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; filter: blur(12px); opacity: 0.4; transition: filter 1s ease, opacity 1s ease; }
+.produce-frame img.clear { filter: blur(0); opacity: 1; }
+.produce-thumb-copy { font-size: 11px; color: var(--muted); margin-top: 7px; line-height: 1.4; }
+
+/* the customs stamp: the judge verdict pressed into the still's corner,
+   a small deliberate rotation, slamming down to rest (北极星2). */
+.judge-stamp {
+  position: absolute; top: 8px; right: 8px; z-index: 2;
+  font-family: var(--font-mono); font-size: 10px; font-weight: 500; letter-spacing: 0.04em;
+  padding: 3px 7px; border: 1.5px solid #3f5c3f; color: #3f5c3f; background: rgba(255,255,255,0.82);
+  transform: rotate(-7deg) scale(1.6); opacity: 0;
+  transition: transform 0.26s cubic-bezier(0.3, 1.4, 0.4, 1), opacity 0.2s ease;
+}
+.judge-stamp.in { opacity: 1; transform: rotate(-7deg) scale(1); }
+.judge-stamp.fail { border-color: #8a3f3f; color: #8a3f3f; }
+.judge-score { font-size: 10px; color: var(--muted); margin-top: 5px; letter-spacing: 0.02em; }
+
+/* judge -- retained for theater-live.ts, which still renders per-still
+   scorecards in poll mode; the replay stamps instead. */
+.judge-dim { display: flex; justify-content: space-between; font-size: 12px; padding: 3px 0; border-bottom: 1px solid var(--hairline); }
+.judge-pass { display: inline-block; margin-top: 8px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; border: 1px solid #4a6b4a; color: #3f5c3f; padding: 2px 7px; }
+.judge-pass.fail { border-color: #8a3f3f; color: #8a3f3f; }
+
+/* the race (公理三, Tier 1): full-width plot. Thresholds are drawn onto
+   the chart itself as faint dashed rules with a right-edge label (公理三:
+   删除独立阈值卡), and each verdict stamp presses down at its own curve's
+   terminal point, not in a separate list below. */
+.race-plot { position: relative; width: 100%; }
+.race-card svg { display: block; width: 100%; height: 240px; }
+.race-card .curve-path { fill: none; stroke-width: 2.5; }
+.race-card .threshold-line { stroke-width: 1; stroke-dasharray: 4 4; opacity: 0.5; }
+.race-card .threshold-label { font-family: var(--font-mono); font-size: 9px; }
+.curve-stamp {
+  position: absolute; z-index: 3; transform: translate(-50%, -50%) rotate(-6deg) scale(1.7);
+  font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase;
+  border: 1.5px solid currentColor; padding: 3px 8px; background: rgba(255,255,255,0.9);
+  opacity: 0; transition: transform 0.28s cubic-bezier(0.3, 1.4, 0.4, 1), opacity 0.22s ease; white-space: nowrap;
+}
+.curve-stamp.in { opacity: 1; transform: translate(-50%, -50%) rotate(-6deg) scale(1); }
+.curve-stamp.scale { color: #2f6b3f; }
+.curve-stamp.kill { color: #8a3f3f; opacity: 0; }
+.curve-stamp.kill.in { opacity: 0.85; }
+.curve-stamp.iterate { color: #6b6b63; }
+
+/* the winning number, counted up on the SCALE verdict (公理四: 数字主角). */
+.race-verdict { margin-top: 16px; display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.race-bignum { font-family: var(--font-sans); font-size: 26px; line-height: 1; color: #2f6b3f; }
+.race-bignum-note { font-size: 12px; color: var(--muted); line-height: 1.5; max-width: 20em; }
+.race-bignum-note b { color: var(--ink); font-weight: 500; }
+
+/* race-stamps / race-stamp / race-reason retained for theater-live.ts,
+   which lists verdict chips in a flex row under the chart in poll mode. */
+.race-stamps { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+.race-stamp { border: 2px solid currentColor; padding: 4px 10px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0; transform: scale(0.6); transition: opacity 0.3s ease, transform 0.3s ease; }
+.race-stamp.in { opacity: 1; transform: scale(1); }
+.race-stamp.scale { color: #2f6b3f; }
+.race-stamp.kill { color: #8a3f3f; }
+.race-stamp.iterate { color: #6b6b63; }
+.race-reason { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+/* the cut, the hero card + the money-shot card + every rollout channel
+   chip: one shared media-stage box, height capped to a fraction of the
+   viewport (not a fixed px height, so a 9:16 rollout video or portrait
+   still is never taller than the screen it's recorded in -- see
+   waves/wave-04/STATE.md for the taste-gate screenshots that set 60vh). */
+.hero-card { position: relative; overflow: hidden; }
+.hero-media, .rollout-chip-media { position: relative; width: 100%; height: 60vh; background: #f4f3f0; overflow: hidden; }
+/* contain, not cover: the concept still is 16:9 and the rendered rollout
+   video is often a vertical 9:16 mobile cut, a real aspect mismatch, not a
+   styling choice. object-fit:contain letterboxes both inside the same
+   fixed stage. */
+.hero-media img, .hero-media video, .rollout-chip-media img, .rollout-chip-media video {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;
+}
+.hero-media img, .rollout-chip-media img { opacity: 1; transition: opacity 1.4s ease, transform 6s ease; }
+.hero-media img.breathe, .rollout-chip-media img.breathe { transform: scale(1.04); }
+.hero-media img.faded, .rollout-chip-media img.faded { opacity: 0; }
+.hero-media video { opacity: 0; transition: opacity 1.4s ease; }
+.rollout-chip-media video { opacity: 1; }
+.hero-media video.shown, .rollout-chip-media video.shown { opacity: 1; }
+.hero-caption { padding-top: 12px; }
+
+.rollout-meta { padding-top: 8px; }
+.rollout-channel { font-size: 13px; font-weight: 400; text-transform: capitalize; }
+.rollout-role { font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+.rollout-copy { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.rollout-kpi { font-size: 11px; color: var(--muted); margin-top: 6px; }
+
+.rollout-shelf { display: flex; gap: 12px; align-items: flex-start; flex-wrap: wrap; }
+.rollout-cell { flex: 1 1 30%; min-width: 150px; opacity: 0; transform: translateY(-14px); transition: opacity 0.5s ease, transform 0.55s cubic-bezier(0.2, 1.15, 0.32, 1); cursor: pointer; }
+.rollout-cell.in { opacity: 1; transform: translateY(0); }
+.rollout-cell .rollout-chip-media { height: 22vh; background: #f4f3f0; }
+.rollout-cell.is-open { flex: 1 1 100%; }
+.rollout-cell.is-open .rollout-chip-media { height: 60vh; }
+.rollout-cell .rollout-meta { padding-top: 7px; }
+.rollout-cell .rollout-copy { font-size: 11px; line-height: 1.35; }
+.rollout-cell .rollout-kpi { font-size: 10px; }
+
+.cta-tag { display: inline-block; margin-top: 6px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; border: 1px solid var(--muted); padding: 2px 7px; color: var(--muted); }
+.cta-tag.cta-full { border-color: var(--ink); color: var(--ink); }
+.cta-tag.cta-soft { border-color: #8a7a4a; color: #8a7a4a; }
+
+/* the bill (北极星2b, Tier 1): the whole wave's output, counted in real
+   numbers, in the flow. This is the payoff beat -- all this work, done for
+   you. Big sans figures counted up, wide air, no chrome. Every figure
+   is countable from readout; nothing here is authored. */
+.bill-card { padding: 16px 12px 18px; }
+.bill-lead { font-family: var(--font-sans); font-size: 14px; line-height: 1.35; margin: 0 0 16px; }
+.bill-grid { display: flex; flex-wrap: wrap; gap: 20px 32px; }
+.bill-item { min-width: 84px; }
+.bill-num { font-family: var(--font-sans); font-size: 48px; line-height: 0.9; color: var(--ink); }
+.bill-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); margin-top: 7px; max-width: 10em; }
+
+/* closing */
+.closing-card .install-line { font-family: var(--font-mono); font-size: 13px; background: #f7f6f3; border: 1px solid var(--hairline); padding: 8px 10px; margin: 8px 0; }
+.closing-line { font-family: var(--font-sans); font-size: 15px; margin-top: 8px; }
+
+.bottombar { flex: 0 0 auto; position: relative; border-top: 1px solid var(--hairline); padding: 9px 20px 10px; }
+.bottombar-fill { position: absolute; top: -1px; left: 0; height: 1px; background: var(--ink); width: 0%; transition: width 0.4s ease; }
+.bottombar-caption { font-size: 11px; color: var(--muted); letter-spacing: 0.01em; }
+
+.lightbox { position: fixed; inset: 0; background: rgba(255,255,255,0.94); z-index: 50; display: flex; align-items: center; justify-content: center; padding: 40px; }
+.lightbox[hidden] { display: none; }
+.lightbox-panel { max-width: 720px; width: 100%; border: 1px solid var(--ink); background: var(--paper); padding: 24px; }
+.lightbox-media { max-height: 50vh; overflow: auto; }
+.lightbox-media img, .lightbox-media video { max-width: 100%; display: block; }
+.lightbox-note { font-size: 13px; color: var(--muted); margin-top: 14px; border-top: 1px solid var(--hairline); padding-top: 12px; }
+.lightbox-hint { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; margin-top: 10px; }
+.theater.paused .evidence-card { border-color: #c9c6bb; }
+
+/* The human approval gate: insight produces 3 proposals, then the wave
+   stops dead until an operator approves or replaces them. This is a real
+   pause in the pipeline (see skill/SKILL.md station 1), the full-viewport
+   takeover is deliberate, not decorative -- nothing else on screen is
+   allowed to compete with it while it holds. */
+.approval-gate {
+  position: fixed; inset: 0; background: var(--paper); z-index: 40;
+  display: none; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity 0.4s ease;
+}
+.approval-gate.show { display: flex; opacity: 1; }
+.approval-gate-text {
+  font-family: var(--font-sans); font-size: 18px; letter-spacing: 0.02em; color: var(--ink);
+  animation: breathe-gate 1.6s ease-in-out infinite;
+}
+@keyframes breathe-gate { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
+
+@media (max-width: 860px) {
+  .panel-work { flex-basis: 100%; }
+  .panel-evidence { display: none; }
+}
+
+
+.file-note { border: 1px solid var(--hairline); padding: 16px 18px; font-size: 13px; }
+.serve-hint { font-family: var(--font-mono); font-size: 12px; background: #f7f6f3; border: 1px solid var(--hairline); padding: 8px 10px; margin-top: 10px; }
+.awaiting-state {
+  flex: 0 0 auto; margin: 0 18px; padding: 10px 0 12px; border-top: 1px solid var(--hairline);
+  font-size: 9px; font-weight: 500; letter-spacing: 0.13em; text-transform: uppercase; color: var(--muted);
+}
+.awaiting-state[hidden] { display: none; }
+.rollout-details { margin-top: 7px; font-size: 10px; line-height: 1.4; color: var(--muted); }
+.participation-note { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--hairline); }
+.lightbox .produce-thumb, .lightbox .rollout-cell { opacity: 1; transform: none; }
+
 </style>
 </head>
 <body>
@@ -66,7 +342,7 @@ ${LIVE_EXTRA_CSS}
 
     <footer class="bottombar">
       <div class="bottombar-fill" id="progressFill"></div>
-      <div class="bottombar-caption">live: watching wave ${escapeHTML(waveLabel)} as it runs</div>
+      <div class="bottombar-caption">live: watching wave 07 as it runs</div>
     </footer>
 
     <div class="approval-gate" id="approvalGate">
@@ -83,39 +359,10 @@ ${LIVE_EXTRA_CSS}
   </div>
 
 <script>
-window.__LIVE_WAVE__ = ${JSON.stringify(waveNumber)};
+window.__LIVE_WAVE__ = 7;
 </script>
 <script>
-${LIVE_JS}
-</script>
-</body>
-</html>`;
-}
 
-const LIVE_EXTRA_CSS = `
-.file-note { border: 1px solid var(--hairline); padding: 16px 18px; font-size: 13px; }
-.serve-hint { font-family: var(--font-mono); font-size: 12px; background: #f7f6f3; border: 1px solid var(--hairline); padding: 8px 10px; margin-top: 10px; }
-.awaiting-state {
-  flex: 0 0 auto; margin: 0 18px; padding: 10px 0 12px; border-top: 1px solid var(--hairline);
-  font-size: 9px; font-weight: 500; letter-spacing: 0.13em; text-transform: uppercase; color: var(--muted);
-}
-.awaiting-state[hidden] { display: none; }
-.rollout-details { margin-top: 7px; font-size: 10px; line-height: 1.4; color: var(--muted); }
-.participation-note { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--hairline); }
-.lightbox .produce-thumb, .lightbox .rollout-cell { opacity: 1; transform: none; }
-`;
-
-// ============================================================
-// JS: a 2s poll loop. No pre-baked data and no TIMELINE; the wave itself is
-// the pacing. Two independent concerns, deliberately
-// kept apart: which FILES exist (drives every card in the right column,
-// always) and which TEXT narrates the left column (live-log.jsonl when the
-// wave process is writing one, otherwise inferred one-line-per-file-event
-// fallback). directory listings are parsed from the plain <a href="..."> the
-// stdlib http.server directory index emits, so new asset filenames don't
-// need to be known in advance.
-// ============================================================
-const LIVE_JS = `
 (function () {
   "use strict";
   var WAVE = window.__LIVE_WAVE__;
@@ -220,7 +467,7 @@ const LIVE_JS = `
     }
   }
   // Parses the plain <a href="..."> directory index emitted by
-  // \`python3 -m http.server\` (and most static file servers with listings
+  // `python3 -m http.server` (and most static file servers with listings
   // on). Filters out parent-dir links and sub-directories.
   async function listDir(path) {
     var html = await getText(path);
@@ -312,7 +559,7 @@ const LIVE_JS = `
   async function pollLiveLog() {
     var text = await getText("live-log.jsonl");
     if (!text) return false;
-    var lines = text.split("\\n").map(function (l) { return l.trim(); }).filter(Boolean);
+    var lines = text.split("\n").map(function (l) { return l.trim(); }).filter(Boolean);
     if (lines.length === 0) return false;
     liveLogMode = true;
     for (var i = liveLogLinesSeen; i < lines.length; i++) {
@@ -321,7 +568,7 @@ const LIVE_JS = `
         if (entry.type === "mission") renderMissionEvent(entry);
         else if (entry.type === "proposal") renderProposalEvent(entry);
         else if (entry.type === "decision") renderDecisionEvent(entry);
-        else logLine(entry.line, /^station|^\\$/i.test(entry.line || ""));
+        else logLine(entry.line, /^station|^\$/i.test(entry.line || ""));
       } catch (e) {
         // malformed line, skip rather than break the whole feed
       }
@@ -388,7 +635,7 @@ const LIVE_JS = `
         economicsLogged = true;
         inferredLog("economics: stills via codex exec, subscription, no per-token bill; video generation gated behind operator approval");
       }
-      if (!liveLogMode) inferredLog("generating " + name.replace(/\\.png$/, "") + " via codex exec");
+      if (!liveLogMode) inferredLog("generating " + name.replace(/\.png$/, "") + " via codex exec");
       if (!produceShelf) {
         produceShelf = el("article", "evidence-card produce-shelf");
         addCard(produceShelf, "produced stills discovered from assets/, each from a real generation call");
@@ -463,14 +710,14 @@ const LIVE_JS = `
 
   async function pollRollout() {
     var files = await listDir("assets/rollout/");
-    var media = files.filter(function (f) { return /\\.(png|mp4)$/i.test(f) && !/_raw\\.mp4$/i.test(f); });
+    var media = files.filter(function (f) { return /\.(png|mp4)$/i.test(f) && !/_raw\.mp4$/i.test(f); });
     for (var i = 0; i < media.length; i++) {
       var name = media[i];
       if (seenRollout[name]) continue;
       seenRollout[name] = true;
       showStage("rollout");
-      var isCover = /_cover\\.png$/i.test(name);
-      var assetKey = name.replace(/_cover\\.png$/i, "").replace(/\\.(png|mp4)$/i, "");
+      var isCover = /_cover\.png$/i.test(name);
+      var assetKey = name.replace(/_cover\.png$/i, "").replace(/\.(png|mp4)$/i, "");
       var existing = rolloutCells.find(function (entry) { return entry.assetKey === assetKey; });
       if (isCover && existing) {
         existing.coverSrc = "assets/rollout/" + name;
@@ -480,7 +727,7 @@ const LIVE_JS = `
       if (existing) continue;
       var token = name.split("_")[0];
       var channel = channelTokenToName(token);
-      var isVideo = /\\.mp4$/i.test(name);
+      var isVideo = /\.mp4$/i.test(name);
       if (!liveLogMode) inferredLog(isVideo ? "video rendered: " + name : "channel cut landing: " + channel);
       if (!rolloutLiveCard) {
         rolloutLiveCard = el("article", "evidence-card");
@@ -777,4 +1024,7 @@ const LIVE_JS = `
     }
   });
 })();
-`;
+
+</script>
+</body>
+</html>

@@ -12,9 +12,10 @@ STATE.md: Wave 7 执行状态与关卡审计账本，记录 seed gate、station 
 readout.json: Wave 7 全站产物真相源（WaveReadout），judge 四维含 brandFit，v1 SCALE / v2 KILL / v3 ITERATE。
 report.html: readout 的静态报告渲染，scripts/machine.mjs report 产出。
 theater.html: 事后分屏回放（左工作日志右证据卡），scripts/machine.mjs theater 产出，非流水线站。
+live.html: 实时分屏工作台，scripts/machine.mjs theater-live 产出并经 HTTP 轮询当前目录。
 
 职责边界：本目录只保存 Wave 7 的可审计实验快照；计划定义实验，洞察解释选择，简报约束创意，状态记录执行，资产承载最终投放物。
 
-变更日志：2026-07-13 建立 Wave 7 模块地图并登记 GPT-Live 打断实验快照。同日收官：登记 readout.json / report.html / theater.html，learn commit 已写入 library.jsonl。
+变更日志：2026-07-13 建立 Wave 7 模块地图并登记 GPT-Live 打断实验快照。同日收官：登记 readout.json / report.html / theater.html，learn commit 已写入 library.jsonl；补登记 live.html 人工门禁产物。
 
 [PROTOCOL]: 变更时更新此头部，然后检查 AGENTS.md

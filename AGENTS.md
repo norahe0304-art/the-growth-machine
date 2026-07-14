@@ -29,6 +29,6 @@ install.sh - 符号链接安装器，--check 子命令做 node/codex/LIBTV_ACCES
 变更日志：2026-07-12 建立 GEB L1 项目地图。2026-07-13 skill/ 补 best-practice 层：
 description 修至 1024 字符硬上限内、station index、Gotchas、station 8b 瘦身进
 skill/references/rollout-video.md、judge 评分锚点、skill/evals/ 结构化评测、
-.claude-plugin/ 分发清单、install.sh --check 预检。
+.claude-plugin/ 分发清单、install.sh --check 预检；播种 src/lib/AGENTS.md 并完成 live workbench 与完成波次回放的视觉同构。
 
 [PROTOCOL]: 变更时更新此头部，然后检查 AGENTS.md
